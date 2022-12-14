@@ -1,0 +1,31 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>com.example.demo</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>Demo</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="hong.l@topsports.com.cn" url="https://www.wonhigh.com">wonhigh</vendor>
+
+    <description>this is my first demo. ide plugin manager.</description>
+
+    <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.database</depends>
+
+    <depends optional="true" config-file="database.xml">com.intellij.database</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+
+    </extensions>
+    <actions>
+        <action id="cn.wonhigh.FirstAction" class="cn.mercury.xcode.FirstAction" text="FirstAction"
+                description="first actions">
+            <add-to-group group-id="HelpMenu" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>

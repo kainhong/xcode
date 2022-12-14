@@ -1,0 +1,15 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+
+  </extensions>
+
+    <actions>
+
+        <action id="bmd-mybatis-generate-action"
+                class="cn.mercury.xcode.actions.MybatisGeneratorMainAction"
+                text="MybatisX-Generator"
+                description="MybatisX generator idea plugin">
+            <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
