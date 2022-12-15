@@ -1,7 +1,7 @@
 package cn.mercury.xcode;
 
-import cn.mercury.xcode.model.Callback;
-import cn.mercury.xcode.model.GenerateOptions;
+import cn.mercury.xcode.generate.GenerateContext;
+import cn.mercury.xcode.generate.GenerateOptions;
 import cn.mercury.xcode.utils.CompareFileUtils;
 import cn.mercury.xcode.utils.FileUtils;
 import cn.mercury.xcode.utils.MessageDialogUtils;
@@ -49,7 +49,7 @@ public class SaveFile {
     /**
      * 回调对象
      */
-    private Callback callback;
+    private GenerateContext callback;
     /**
      * 生成配置
      */
@@ -63,7 +63,7 @@ public class SaveFile {
      * @param callback        回调
      * @param generateOptions 生成选项
      */
-    public SaveFile(@NonNull Project project, @NonNull String content, @NonNull Callback callback, @NonNull GenerateOptions generateOptions) {
+    public SaveFile(@NonNull Project project, @NonNull String content, @NonNull GenerateContext callback, @NonNull GenerateOptions generateOptions) {
         this.project = project;
         this.callback = callback;
         this.content = content.replace("\r", "");

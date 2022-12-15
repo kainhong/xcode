@@ -3,8 +3,8 @@ package cn.mercury.xcode.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.SaveFile;
-import cn.mercury.xcode.model.Callback;
-import cn.mercury.xcode.model.GenerateOptions;
+import cn.mercury.xcode.generate.GenerateContext;
+import cn.mercury.xcode.generate.GenerateOptions;
 import cn.mercury.xcode.model.SettingsStorage;
 import cn.mercury.xcode.model.table.TableInfo;
 import cn.mercury.xcode.model.template.Template;
@@ -130,7 +130,6 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 处理模板，注入全局变量（克隆一份，防止篡改）
         templates = CloneUtils.cloneByJson(templates, new TypeReference<ArrayList<Template>>() {
         });
-        TemplateUtils.addGlobalConfig(templates);
         // 生成代码
         for (TableInfo tableInfo : tableInfoList) {
             // 表名去除前缀
@@ -153,26 +152,26 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             // 设置额外代码生成服务
             param.put("generateService", new ExtraCodeGenerateUtils(this, tableInfo, generateOptions));
             for (Template template : templates) {
-                Callback callback = new Callback();
-                callback.setWriteFile(true);
-                callback.setReformat(generateOptions.getReFormat());
+                GenerateContext context = new GenerateContext();
+                context.setWriteFile(true);
+                context.setReformat(generateOptions.getReFormat());
                 // 默认名称
-                callback.setFileName(tableInfo.getName() + "Default.java");
+                context.setFileName(tableInfo.getName() + "Default.java");
                 // 默认路径
-                callback.setSavePath(tableInfo.getSavePath());
+                context.setSavePath(tableInfo.getSavePath());
                 // 设置回调对象
-                param.put("callback", callback);
+                param.put("context", context);
                 // 开始生成
-                String code = VelocityUtils.generate(template.getCode(), param);
+                String code = VelocityUtils.generate(template, param);
                 // 设置一个默认保存路径与默认文件名
-                String path = callback.getSavePath();
+                String path = context.getSavePath();
                 path = path.replace("\\", "/");
                 // 针对相对路径进行处理
                 if (path.startsWith(".")) {
                     path = project.getBasePath() + path.substring(1);
                 }
-                callback.setSavePath(path);
-                new SaveFile(project, code, callback, generateOptions).write();
+                context.setSavePath(path);
+                new SaveFile(project, code, context, generateOptions).write();
             }
         }
     }
@@ -192,9 +191,8 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         param.put("tableInfo", tableInfo);
         // 设置模型路径与导包列表
         setModulePathAndImportList(param, tableInfo);
-        // 处理模板，注入全局变量
-        TemplateUtils.addGlobalConfig(template);
-        return VelocityUtils.generate(template.getCode(), param);
+
+        return VelocityUtils.generate(template, param);
     }
 
     /**

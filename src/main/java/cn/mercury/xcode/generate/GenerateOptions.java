@@ -1,4 +1,4 @@
-package cn.mercury.xcode.model;
+package cn.mercury.xcode.generate;
 
 import lombok.Builder;
 import lombok.Data;

@@ -4,16 +4,9 @@
   </extensions>
 
     <actions>
-
-        <action id="bmd-mybatis-generate-action"
-                class="cn.mercury.xcode.actions.MybatisGeneratorMainAction"
-                text="MybatisX-Generator"
-                description="MybatisX generator idea plugin">
-            <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
-        </action>
-        <action id="bmd-mybatis-generate-action2"
-                class="cn.mercury.xcode.actions.MainAction"
-                text="X-Generator"
+        <action id="cn.mercury.xcode.actions.MainActionGroup"
+                class="cn.mercury.xcode.actions.MainActionGroup"
+                text="X-Generator" popup="true"
                 description="X generator idea plugin">
             <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
         </action>

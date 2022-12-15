@@ -1,4 +1,4 @@
-package cn.mercury.xcode.model;
+package cn.mercury.xcode.generate;
 
 import lombok.Data;
 
@@ -10,7 +10,7 @@ import lombok.Data;
  * @since 2018/07/17 13:10
  */
 @Data
-public class Callback {
+public class GenerateContext {
     /**
      * 文件名
      */

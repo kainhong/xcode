@@ -20,6 +20,9 @@ public class Template implements AbstractEditorItem<Template> {
      */
     private String code;
 
+    private String uri;
+
+    private String type;
     public Template(){
 
     }

@@ -2,7 +2,7 @@ package cn.mercury.xcode.ui;
 
 import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.StrState;
-import cn.mercury.xcode.model.GenerateOptions;
+import cn.mercury.xcode.generate.GenerateOptions;
 import cn.mercury.xcode.model.SettingsStorage;
 import cn.mercury.xcode.model.table.TableInfo;
 import cn.mercury.xcode.model.template.Template;
@@ -18,6 +18,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogPanel;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -249,6 +250,10 @@ public class SelectSavePath extends DialogWrapper {
                 groupName = tableInfo.getTemplateGroupName();
             }
         }
+
+        if(!settings.getTemplateGroupMap().containsKey(groupName)){
+            groupName = GlobalDict.DEFAULT_TEMPLATE_NAME;
+        }
         templateSelectComponent.setSelectedGroupName(groupName);
         String savePath = tableInfo.getSavePath();
         if (!StringUtils.isEmpty(savePath)) {
@@ -263,24 +268,29 @@ public class SelectSavePath extends DialogWrapper {
 
     @Override
     protected void doOKAction() {
-        onOK();
-        super.doOKAction();
+        boolean result = onOK();
+        //super.doOKAction();
+        if (this.contentPane != null && this.contentPane instanceof DialogPanel ) {
+            ((DialogPanel)this.contentPane).apply();
+        }
+        if( result )
+            this.close(0);
     }
 
     /**
      * 确认按钮回调事件
      */
-    private void onOK() {
+    private boolean onOK() {
         List<Template> selectTemplateList = templateSelectComponent.getAllSelectedTemplate();
         // 如果选择的模板是空的
         if (selectTemplateList.isEmpty()) {
             Messages.showWarningDialog("Can't Select Template!", GlobalDict.TITLE_INFO);
-            return;
+            return false;
         }
         String savePath = pathField.getText();
         if (StringUtils.isEmpty(savePath)) {
             Messages.showWarningDialog("Can't Select Save Path!", GlobalDict.TITLE_INFO);
-            return;
+            return false;
         }
         // 针对Linux系统路径做处理
         savePath = savePath.replace("\\", "/");
@@ -315,6 +325,8 @@ public class SelectSavePath extends DialogWrapper {
 
         // 生成代码
         codeGenerateService.generate(selectTemplateList, getGenerateOptions());
+
+        return true;
     }
 
     /**
@@ -326,9 +338,9 @@ public class SelectSavePath extends DialogWrapper {
         templatePanel.add(this.templateSelectComponent.getMainPanel(), BorderLayout.CENTER);
 
         //初始化Module选择
-        for (Module module : this.moduleList) {
-            moduleComboBox.addItem(module.getName());
-        }
+        this.moduleList.stream().sorted( (c1,c2)->c1.getName().compareTo(c2.getName())).forEach(m->{
+            moduleComboBox.addItem(m.getName());
+        });
     }
 
     /**

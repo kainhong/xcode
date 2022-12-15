@@ -5,7 +5,6 @@ import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.model.table.ColumnConfig;
 import cn.mercury.xcode.model.table.ColumnConfigGroup;
 import cn.mercury.xcode.model.table.ColumnConfigType;
-import cn.mercury.xcode.model.template.Template;
 import cn.mercury.xcode.model.template.TemplateGroup;
 import cn.mercury.xcode.model.type.TypeMapper;
 import cn.mercury.xcode.model.type.TypeMapperGroup;
@@ -40,7 +39,7 @@ public class SettingsStorage {
         storage.userSecure = "";
         // 默认分组名称
         storage.currTypeMapperGroupName = GlobalDict.DEFAULT_GROUP_NAME;
-        storage.currTemplateGroupName = GlobalDict.DEFAULT_GROUP_NAME;
+        storage.currTemplateGroupName = GlobalDict.DEFAULT_TEMPLATE_NAME;
         storage.currColumnConfigGroupName = GlobalDict.DEFAULT_GROUP_NAME;
         storage.currGlobalConfigGroupName = GlobalDict.DEFAULT_GROUP_NAME;
         // 默认配置信息
@@ -56,11 +55,11 @@ public class SettingsStorage {
         storage.columnConfigGroupMap = new HashMap<>(16);
         storage.columnConfigGroupMap.put(GlobalDict.DEFAULT_GROUP_NAME, columnConfigGroup);
 
-        TemplateGroup templateGroup = new TemplateGroup();
-        templateGroup.setName(GlobalDict.DEFAULT_GROUP_NAME);
-        templateGroup.setElementList(Arrays.asList(new Template("demo", "template"), new Template("entity.java", "public")));
-        storage.templateGroupMap = new HashMap<>(16);
-        storage.templateGroupMap.put(GlobalDict.DEFAULT_GROUP_NAME, templateGroup);
+//        TemplateGroup templateGroup = new TemplateGroup();
+//        templateGroup.setName(GlobalDict.DEFAULT_TEMPLATE_NAME);
+//        templateGroup.setElementList(Arrays.asList(new Template("demo", "template"), new Template("entity.java", "public")));
+//        storage.templateGroupMap = new HashMap<>(16);
+//        storage.templateGroupMap.put(GlobalDict.DEFAULT_TEMPLATE_NAME, templateGroup);
 
         GlobalConfigGroup globalConfigGroup = new GlobalConfigGroup();
         globalConfigGroup.setName(GlobalDict.DEFAULT_GROUP_NAME);
@@ -80,7 +79,7 @@ public class SettingsStorage {
         this.setCurrColumnConfigGroupName(GlobalDict.DEFAULT_GROUP_NAME);
         this.getColumnConfigGroupMap().put(GlobalDict.DEFAULT_GROUP_NAME, defaultVal.getColumnConfigGroupMap().get(GlobalDict.DEFAULT_GROUP_NAME));
         this.setCurrTemplateGroupName(GlobalDict.DEFAULT_GROUP_NAME);
-        this.getTemplateGroupMap().put(GlobalDict.DEFAULT_GROUP_NAME, defaultVal.getTemplateGroupMap().get(GlobalDict.DEFAULT_GROUP_NAME));
+        this.getTemplateGroupMap().put(GlobalDict.DEFAULT_TEMPLATE_NAME, defaultVal.getTemplateGroupMap().get(GlobalDict.DEFAULT_TEMPLATE_NAME));
         this.setCurrGlobalConfigGroupName(GlobalDict.DEFAULT_GROUP_NAME);
         this.getGlobalConfigGroupMap().put(GlobalDict.DEFAULT_GROUP_NAME, defaultVal.getGlobalConfigGroupMap().get(GlobalDict.DEFAULT_GROUP_NAME));
         this.setCurrTypeMapperGroupName(GlobalDict.DEFAULT_GROUP_NAME);
@@ -173,11 +172,11 @@ public class SettingsStorage {
         if (CollectionUtil.isEmpty(this.templateGroupMap)) {
             this.templateGroupMap = defaultVal.getTemplateGroupMap();
         }
-        if (!this.templateGroupMap.containsKey(GlobalDict.DEFAULT_GROUP_NAME)) {
-            this.templateGroupMap.put(GlobalDict.DEFAULT_GROUP_NAME, defaultVal.getTemplateGroupMap().get(GlobalDict.DEFAULT_GROUP_NAME));
+        if (!this.templateGroupMap.containsKey(GlobalDict.DEFAULT_TEMPLATE_NAME)) {
+            this.templateGroupMap.put(GlobalDict.DEFAULT_TEMPLATE_NAME, defaultVal.getTemplateGroupMap().get(GlobalDict.DEFAULT_TEMPLATE_NAME));
         }
         if (StringUtils.isEmpty(this.currTemplateGroupName)) {
-            this.setCurrTemplateGroupName(GlobalDict.DEFAULT_GROUP_NAME);
+            this.setCurrTemplateGroupName(GlobalDict.DEFAULT_TEMPLATE_NAME);
         }
 
 

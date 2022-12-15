@@ -2,8 +2,8 @@
 $!{mybatisSupport.vm}
 
 ##设置保存名称与保存位置
-$!callback.setFileName($tool.append($!{tableInfo.name}, "Dao.xml"))
-$!callback.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
+$!context.setFileName($tool.append($!{tableInfo.name}, "Mapper.xml"))
+$!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
 
 ##拿到主键
 #if(!$tableInfo.pkColumn.isEmpty())

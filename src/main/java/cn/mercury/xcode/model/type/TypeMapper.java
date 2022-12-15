@@ -3,6 +3,8 @@ package cn.mercury.xcode.model.type;
 import cn.mercury.xcode.model.AbstractItem;
 import lombok.Data;
 
+import java.util.regex.Pattern;
+
 /**
  * 类型隐射信息
  *
@@ -25,9 +27,10 @@ public class TypeMapper implements AbstractItem<TypeMapper> {
      */
     private String javaType;
 
-    public TypeMapper(){
+    public TypeMapper() {
 
     }
+
     public TypeMapper(String columnType, String javaType) {
         this.matchType = MatchType.REGEX;
         this.columnType = columnType;
@@ -38,4 +41,29 @@ public class TypeMapper implements AbstractItem<TypeMapper> {
     public TypeMapper defaultVal() {
         return new TypeMapper("demo", "java.lang.String");
     }
+
+    private Pattern regex;
+
+    private Pattern getRegex() {
+        if (regex != null)
+            return regex;
+        regex = Pattern.compile(columnType, Pattern.CASE_INSENSITIVE);
+
+        return regex;
+    }
+
+    public boolean match(String value) {
+        if (matchType == MatchType.ORDINARY) {
+            if (value.equalsIgnoreCase(columnType)) {
+                return true;
+            }
+        } else {
+            // 不区分大小写的正则匹配模式
+            if (getRegex().matcher(value).matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

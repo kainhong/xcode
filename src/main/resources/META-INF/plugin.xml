@@ -28,10 +28,4 @@
             <applicationConfigurable dynamic="true" instance="cn.mercury.xcode.ui.MainSettingForm"/>
         -->
     </extensions>
-    <actions>
-        <action id="cn.wonhigh.FirstAction" class="cn.mercury.xcode.FirstAction" text="FirstAction"
-                description="first actions">
-            <add-to-group group-id="HelpMenu" anchor="first"/>
-        </action>
-    </actions>
 </idea-plugin>

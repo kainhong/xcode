@@ -6,7 +6,6 @@ import cn.mercury.xcode.model.template.Template;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * 模板工具，主要用于对模板进行预处理
@@ -53,34 +52,15 @@ public final class TemplateUtils {
      * @param template      模板对象
      * @param globalConfigs 全局变量
      */
-    public static void addGlobalConfig(Template template, Collection<GlobalConfig> globalConfigs) {
-        if (template == null || StringUtils.isEmpty(template.getCode())) {
-            return;
+    public static String addGlobalConfig(Template template, Collection<GlobalConfig> globalConfigs) {
+        if (template == null || StringUtils.isEmpty(template.getUri())) {
+            return null;
         }
+
+        String val = ResourcesUtils.readText(template.getUri());
+
         // 模板后面添加换行符号，防止在模板末尾添加全局变量导致无法匹配问题
-        template.setCode(addGlobalConfig(template.getCode() + "\n", globalConfigs));
-    }
-
-    /**
-     * 向模板中注入全局变量
-     *
-     * @param templates     多个模板
-     * @param globalConfigs 全局变量
-     */
-    public static void addGlobalConfig(Collection<Template> templates, Collection<GlobalConfig> globalConfigs) {
-        if (CollectionUtil.isEmpty(templates)) {
-            return;
-        }
-        templates.forEach(template -> addGlobalConfig(template, globalConfigs));
-    }
-
-    /**
-     * 向模板中注入全局变量
-     *
-     * @param templates 多个模板
-     */
-    public static void addGlobalConfig(Collection<Template> templates) {
-        addGlobalConfig(templates, CurrGroupUtils.getCurrGlobalConfigGroup().getElementList());
+        return addGlobalConfig(val + "\n", globalConfigs);
     }
 
     /**
@@ -88,9 +68,7 @@ public final class TemplateUtils {
      *
      * @param template 单个模板
      */
-    public static void addGlobalConfig(Template template) {
-        if (template != null) {
-            addGlobalConfig(Collections.singleton(template));
-        }
+    public static String addGlobalConfig(Template template) {
+        return addGlobalConfig(template, CurrGroupUtils.getCurrGlobalConfigGroup().getElementList());
     }
 }

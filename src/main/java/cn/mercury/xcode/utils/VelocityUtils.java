@@ -1,5 +1,6 @@
 package cn.mercury.xcode.utils;
 
+import cn.mercury.xcode.model.template.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -44,7 +45,10 @@ public class VelocityUtils {
      * @param map      参数集合
      * @return 渲染结果
      */
-    public static String generate(String template, Map<String, Object> map) {
+    public static String generate(Template template, Map<String, Object> map) {
+        // 处理模板，注入全局变量
+        String content = TemplateUtils.addGlobalConfig(template);
+
         // 每次创建一个新实例，防止velocity缓存宏定义
         VelocityEngine velocityEngine = new VelocityEngine(INIT_PROP);
         // 创建上下文对象
@@ -55,7 +59,7 @@ public class VelocityUtils {
         StringWriter stringWriter = new StringWriter();
         try {
             // 生成代码
-            velocityEngine.evaluate(velocityContext, stringWriter, "Velocity Code Generate", template);
+            velocityEngine.evaluate(velocityContext, stringWriter, "Velocity Code Generate", content);
         } catch (Exception e) {
             // 将异常全部捕获，直接返回，用于写入模板
             StringBuilder builder = new StringBuilder("在生成代码时，模板发生了如下语法错误：\n");
@@ -72,5 +76,9 @@ public class VelocityUtils {
         }
         // 返回结果
         return sb.toString();
+    }
+
+    private static String getTemplateContent(Template template) {
+        return ResourcesUtils.readText(template.getUri());
     }
 }

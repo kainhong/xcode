@@ -1,6 +1,5 @@
 package cn.mercury.xcode.dto;
 
-import cn.mercury.xcode.model.type.MatchType;
 import cn.mercury.xcode.model.type.TypeMapper;
 import cn.mercury.xcode.utils.CurrGroupUtils;
 import cn.mercury.xcode.utils.DocCommentUtils;
@@ -9,8 +8,6 @@ import com.intellij.database.model.DasColumn;
 import com.intellij.psi.PsiField;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.regex.Pattern;
 
 /**
  * 列信息传输对象
@@ -41,16 +38,19 @@ public class ColumnInfoDTO {
 
     private String getJavaType(String dbType) {
         for (TypeMapper typeMapper : CurrGroupUtils.getCurrTypeMapperGroup().getElementList()) {
-            if (typeMapper.getMatchType() == MatchType.ORDINARY) {
-                if (dbType.equalsIgnoreCase(typeMapper.getColumnType())) {
-                    return typeMapper.getJavaType();
-                }
-            } else {
-                // 不区分大小写的正则匹配模式
-                if (Pattern.compile(typeMapper.getColumnType(), Pattern.CASE_INSENSITIVE).matcher(dbType).matches()) {
-                    return typeMapper.getJavaType();
-                }
-            }
+            if( typeMapper.match(dbType))
+                return typeMapper.getJavaType();
+
+//            if (typeMapper.getMatchType() == MatchType.ORDINARY) {
+//                if (dbType.equalsIgnoreCase(typeMapper.getColumnType())) {
+//                    return typeMapper.getJavaType();
+//                }
+//            } else {
+//                // 不区分大小写的正则匹配模式
+//                if (Pattern.compile(typeMapper.getColumnType(), Pattern.CASE_INSENSITIVE).matcher(dbType).matches()) {
+//                    return typeMapper.getJavaType();
+//                }
+//            }
         }
         return "java.lang.Object";
     }

@@ -11,12 +11,10 @@ import com.intellij.database.psi.DbTable;
 import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.JBIterable;
 import com.intellij.util.ui.JBUI;
 import org.apache.commons.lang.StringUtils;
@@ -25,11 +23,9 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
@@ -41,9 +37,10 @@ import java.util.regex.PatternSyntaxException;
  */
 public class MainAction extends AnAction {
 
-    MainAction(){
+    MainAction() {
 
     }
+
     /**
      * 构造方法
      *
@@ -61,36 +58,6 @@ public class MainAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         Project project = event.getProject();
-        if (project == null) {
-            return;
-        }
-
-        PsiElement[] psiElements = event.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
-        if (psiElements == null || psiElements.length == 0) {
-            return ;
-        }
-
-        PsiElement psiElement = event.getData(LangDataKeys.PSI_ELEMENT);
-        DbTable selectDbTable = null;
-        if (psiElement instanceof DbTable) {
-            selectDbTable = (DbTable) psiElement;
-        }
-
-        List<DbTable> dbTableList = new ArrayList<>();
-        for (PsiElement element : psiElements) {
-            if (!(element instanceof DbTable)) {
-                continue;
-            }
-            DbTable dbTable = (DbTable) element;
-            dbTableList.add(dbTable);
-        }
-        if (dbTableList.isEmpty()) {
-            return;
-        }
-
-        //保存数据到缓存
-        CacheDataUtils.getInstance().setDbTableList(dbTableList);
-        CacheDataUtils.getInstance().setSelectDbTable(selectDbTable);
 
         // 校验类型映射
         if (!typeValidator(project, CacheDataUtils.getInstance().getSelectDbTable())) {
@@ -121,16 +88,8 @@ public class MainAction extends AnAction {
             String typeName = column.getDataType().getSpecification();
             for (TypeMapper typeMapper : typeMapperList) {
                 try {
-                    if (typeMapper.getMatchType() == MatchType.ORDINARY) {
-                        if (typeName.equalsIgnoreCase(typeMapper.getColumnType())) {
-                            continue FLAG;
-                        }
-                    } else {
-                        // 不区分大小写的正则匹配模式
-                        if (Pattern.compile(typeMapper.getColumnType(), Pattern.CASE_INSENSITIVE).matcher(typeName).matches()) {
-                            continue FLAG;
-                        }
-                    }
+                    if (typeMapper.match(typeName))
+                        continue FLAG;
                 } catch (PatternSyntaxException e) {
                     if (!errorCount.contains(typeMapper.getColumnType())) {
                         Messages.showWarningDialog(
@@ -146,7 +105,7 @@ public class MainAction extends AnAction {
         return true;
     }
 
-    public static class Dialog  extends DialogWrapper {
+    public static class Dialog extends DialogWrapper {
 
         private String typeName;
 

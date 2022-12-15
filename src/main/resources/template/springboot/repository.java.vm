@@ -1,8 +1,8 @@
 ##定义初始变量
-#set($tableName = $tool.append($tableInfo.name, "Dao"))
+#set($tableName = $tool.append($tableInfo.name, "Repository"))
 ##设置回调
-$!callback.setFileName($tool.append($tableName, ".java"))
-$!callback.setSavePath($tool.append($tableInfo.savePath, "/dao"))
+$!context.setFileName($tool.append($tableName, ".java"))
+$!context.setSavePath($tool.append($tableInfo.savePath, "/repository"))
 
 ##拿到主键
 #if(!$tableInfo.pkColumn.isEmpty())

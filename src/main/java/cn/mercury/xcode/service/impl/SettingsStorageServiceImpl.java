@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  * @version 1.0.0
  * @date 2021/08/07 11:32
  */
-@State(name = "EasyCodeSetting", storages = @Storage("easy-code-setting.xml"))
+@State(name = "xCodeSetting", storages = @Storage("x-code-setting.xml"))
 public class SettingsStorageServiceImpl implements SettingsStorageService {
 
     private SettingsStorage settingsStorage = SettingsStorage.defaultVal();
