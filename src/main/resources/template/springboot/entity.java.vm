@@ -2,24 +2,37 @@
 $!{define.vm}
 
 ##使用宏定义设置回调（保存位置与文件后缀）
-#save("/entity", ".java")
+##定义初始变量
+#set($tableName = $tool.append($tableInfo.name))
+##设置回调
+$!context.setFileName($tool.append($tableName, ".java"))
+$!context.setSavePath($tool.append($tableInfo.savePath, "/model"))
 
-##使用宏定义设置包后缀
-#setPackageSuffix("entity")
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}model;
 
-##使用全局变量实现默认包导入
-$!{autoImport.vm}
 import java.io.Serializable;
+import cn.mercury.domain.BaseEntity;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import java.util.Date;
+import java.math.BigDecimal;
+
+import cn.mercury.annotation.Label;
+import cn.mercury.basic.query.Query;
+import cn.mercury.domain.AbstractEntryBuilder;
 
 ##使用宏定义实现类注释信息
 #tableComment("实体类")
-public class $!{tableInfo.name} implements Serializable {
+public class $!{tableInfo.name} extends BaseEntity<$!{tool.getClsNameByFullName($pk.type)}> implements Serializable {
     private static final long serialVersionUID = $!tool.serial();
 #foreach($column in $tableInfo.fullColumn)
     #if(${column.comment})/**
      * ${column.comment}
-     */#end
-
+     */
+    @Label("${column.comment}")
+    #end
     private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
 #end
 
@@ -28,4 +41,36 @@ public class $!{tableInfo.name} implements Serializable {
 #getSetMethod($column)
 #end
 
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
+    public $!{tableInfo.name}Builder build(){
+        return new $!{tableInfo.name}Builder(this);
+    }
+
+    public static class $!{tableInfo.name}Builder extends AbstractEntryBuilder<$!{tableInfo.name}> {
+
+        private $!{tableInfo.name}Builder($!{tableInfo.name} entry) {
+            this.obj = entry;
+        }
+
+        @Override
+        public $!{tableInfo.name} object() {
+            return this.obj;
+        }
+
+        #foreach($column in $tableInfo.fullColumn)
+        public $!{tableInfo.name}Builder $!{column.name}($!{tool.getClsNameByFullName($column.type)} value ){
+
+            this.obj.set$!{tool.firstUpperCase($column.name)}(value);
+
+            if( query == null  )
+                query = new Query();
+            this.query.where("$!{column.name}", value);
+            return this;
+        }
+        #end
+    }
 }

@@ -26,6 +26,7 @@ public class SettingsStorage {
      */
     public static SettingsStorage defaultVal() {
         try {
+
             // 从配置文件中加载配置
             String json = UrlUtil.loadText(SettingsStorage.class.getResource("/defaultConfig.json"));
             return JSON.parse(json, SettingsStorage.class);

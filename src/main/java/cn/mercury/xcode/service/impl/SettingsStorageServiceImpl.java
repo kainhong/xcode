@@ -38,7 +38,8 @@ public class SettingsStorageServiceImpl implements SettingsStorageService {
     @Override
     public void loadState(@NotNull SettingsStorage state) {
         // 加载配置后填充默认值，避免版本升级导致的配置信息不完善问题
-        state.fillDefaultVal();
-        this.settingsStorage = state;
+        //state.fillDefaultVal();
+        //this.settingsStorage = state;
+        this.settingsStorage =  SettingsStorage.defaultVal();
     }
 }

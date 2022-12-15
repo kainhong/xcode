@@ -114,7 +114,16 @@
         {
           "name":"serviceImpl",
           "uri":"/template/springboot/serviceImpl.java.vm"
+        },
+        {
+          "name":"manager",
+          "uri":"/template/springboot/manager.java.vm"
+        },
+        {
+          "name":"managerImpl",
+          "uri":"/template/springboot/managerImpl.java.vm"
         }
+
       ]
     },
     "Spring":{

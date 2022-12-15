@@ -1,0 +1,26 @@
+##定义初始变量
+#set($tableName = $tool.append("I",$tableInfo.name, "Manager"))
+##设置回调
+$!context.setFileName($tool.append($tableName, ".java"))
+$!context.setSavePath($tool.append($tableInfo.savePath, "/manager"))
+
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}manager;
+
+import $!{tableInfo.savePackageName}.model.$!{tableInfo.name};
+
+import cn.mercury.manager.IManager;
+
+/**
+ * $!{tableInfo.comment}($!{tableInfo.name})
+ *
+ * @author $!author
+ * @since $!time.currTime()
+ */
+public interface $!{tableName} extends IManager<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}>{
+
+}

@@ -1,5 +1,5 @@
 ##定义初始变量
-#set($tableName = $tool.append($tableInfo.name, "Service"))
+#set($tableName = $tool.append("I",$tableInfo.name, "Service"))
 ##设置回调
 $!context.setFileName($tool.append($tableName, ".java"))
 $!context.setSavePath($tool.append($tableInfo.savePath, "/service"))
@@ -11,9 +11,9 @@ $!context.setSavePath($tool.append($tableInfo.savePath, "/service"))
 
 #if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}service;
 
-import $!{tableInfo.savePackageName}.entity.$!{tableInfo.name};
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import $!{tableInfo.savePackageName}.model.$!{tableInfo.name};
+
+import topmall.framework.service.IService;
 
 /**
  * $!{tableInfo.comment}($!{tableInfo.name})表服务接口
@@ -21,47 +21,6 @@ import org.springframework.data.domain.PageRequest;
  * @author $!author
  * @since $!time.currTime()
  */
-public interface $!{tableName} {
-
-    /**
-     * 通过ID查询单条数据
-     *
-     * @param $!pk.name 主键
-     * @return 实例对象
-     */
-    $!{tableInfo.name} queryById($!pk.shortType $!pk.name);
-
-    /**
-     * 分页查询
-     *
-     * @param $!tool.firstLowerCase($!{tableInfo.name}) 筛选条件
-     * @param pageRequest      分页对象
-     * @return 查询结果
-     */
-    Page<$!{tableInfo.name}> queryByPage($!{tableInfo.name} $!tool.firstLowerCase($!{tableInfo.name}), PageRequest pageRequest);
-
-    /**
-     * 新增数据
-     *
-     * @param $!tool.firstLowerCase($!{tableInfo.name}) 实例对象
-     * @return 实例对象
-     */
-    $!{tableInfo.name} insert($!{tableInfo.name} $!tool.firstLowerCase($!{tableInfo.name}));
-
-    /**
-     * 修改数据
-     *
-     * @param $!tool.firstLowerCase($!{tableInfo.name}) 实例对象
-     * @return 实例对象
-     */
-    $!{tableInfo.name} update($!{tableInfo.name} $!tool.firstLowerCase($!{tableInfo.name}));
-
-    /**
-     * 通过主键删除数据
-     *
-     * @param $!pk.name 主键
-     * @return 是否成功
-     */
-    boolean deleteById($!pk.shortType $!pk.name);
+public interface $!{tableName} extends IService<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}>{
 
 }
