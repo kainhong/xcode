@@ -20,7 +20,13 @@
     <depends optional="true" config-file="database.xml">com.intellij.database</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-
+        <applicationService serviceImplementation="cn.mercury.xcode.service.impl.SettingsStorageServiceImpl"/>
+        <!--项目服务-->
+        <projectService serviceImplementation="cn.mercury.xcode.service.impl.TableInfoSettingsServiceImpl"/>
+        <projectService serviceInterface="cn.mercury.xcode.service.CodeGenerateService" serviceImplementation="cn.mercury.xcode.service.impl.CodeGenerateServiceImpl"/>
+        <!--系统设置面板
+            <applicationConfigurable dynamic="true" instance="cn.mercury.xcode.ui.MainSettingForm"/>
+        -->
     </extensions>
     <actions>
         <action id="cn.wonhigh.FirstAction" class="cn.mercury.xcode.FirstAction" text="FirstAction"

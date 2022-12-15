@@ -36,7 +36,6 @@ public class MybatisGeneratorMainAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();
-
         logger.info(project.getBasePath());
 
         PsiElement[] tableElements = e.getData(LangDataKeys.PSI_ELEMENT_ARRAY);

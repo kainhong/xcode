@@ -11,5 +11,11 @@
                 description="MybatisX generator idea plugin">
             <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
         </action>
+        <action id="bmd-mybatis-generate-action2"
+                class="cn.mercury.xcode.actions.MainAction"
+                text="X-Generator"
+                description="X generator idea plugin">
+            <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
+        </action>
     </actions>
 </idea-plugin>
