@@ -18,6 +18,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.DialogPanel;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -320,6 +321,8 @@ public class SelectSavePath extends DialogWrapper {
         if (module != null) {
             tableInfo.setSaveModelName(module.getName());
         }
+        
+        //VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
         // 保存配置
         tableInfoService.saveTableInfo(tableInfo);
 
