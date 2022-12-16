@@ -6,7 +6,7 @@ $!{define.vm}
 #set($tableName = $tool.append($tableInfo.name))
 ##设置回调
 $!context.setFileName($tool.append($tableName, ".java"))
-$!context.setSavePath($tool.append($tableInfo.savePath, "/model"))
+$!context.setSavePath($sourcePath)
 
 #if(!$tableInfo.pkColumn.isEmpty())
     #set($pk = $tableInfo.pkColumn.get(0))
@@ -31,8 +31,9 @@ public class $!{tableInfo.name} extends BaseEntity<$!{tool.getClsNameByFullName(
     #if(${column.comment})/**
      * ${column.comment}
      */
-    @Label("${column.comment}")
+    @Label("$!{tool.caseCommentLabel(${column.comment})}")
     #end
+
     private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
 #end
 

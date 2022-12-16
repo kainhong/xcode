@@ -33,4 +33,12 @@ public class GenerateOptions {
      * 提示选否
      */
     private Boolean titleRefuse;
+
+    private String savePath;
+
+    private String moduleName;
+    /**
+     * 多模块
+     */
+    private boolean mixed;
 }

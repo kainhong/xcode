@@ -3,11 +3,12 @@ package cn.mercury.xcode.service;
 import cn.mercury.xcode.generate.GenerateOptions;
 import cn.mercury.xcode.model.table.TableInfo;
 import cn.mercury.xcode.model.template.Template;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.database.psi.DbTable;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * 代码生成服务，Project级别Service
@@ -24,7 +25,9 @@ public interface CodeGenerateService {
      * @return 实例对象
      */
     static CodeGenerateService getInstance(@NotNull Project project) {
-        return ServiceManager.getService(project, CodeGenerateService.class);
+        //return ApplicationManager.getApplication().getService(CodeGenerateService.class);
+        //return ServiceManager.getService(project, CodeGenerateService.class);
+        return project.getService(CodeGenerateService.class);
     }
 
     /**
@@ -33,7 +36,7 @@ public interface CodeGenerateService {
      * @param templates       模板
      * @param generateOptions 生成选项
      */
-    void generate(Collection<Template> templates, GenerateOptions generateOptions);
+    void generate(Collection<Template> templates, GenerateOptions generateOptions, List<DbTable> tables);
 
     /**
      * 生成代码

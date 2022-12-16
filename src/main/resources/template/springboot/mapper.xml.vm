@@ -29,11 +29,11 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
         <if test="null!=params.queryCondition and ''!=params.queryCondition">
             And ${params.queryCondition}
         </if>
-        #foreach($column in $tableInfo.fullColumn)
+    #foreach($column in $tableInfo.fullColumn)
         <if test="$!column.name != null#if($column.type.equals("java.lang.String")) and ''!=params.$!column.name #end">
-            And $!column.obj.name = #{params.$!column.name}
+            And `$!column.obj.name` = #{params.$!column.name}
         </if>
-        #end
+    #end
 
     </sql>
     <!--查询单个-->
@@ -95,12 +95,12 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="$!pk.name" useGeneratedKeys="true">
-        Insert Into $!{tableInfo.obj.name}(#foreach($column in $tableInfo.otherColumn)$!column.obj.name#if($velocityHasNext), #end#end)
+        Insert Into $!{tableInfo.obj.name}(#foreach($column in $tableInfo.otherColumn)`$!column.obj.name`#if($velocityHasNext), #end#end)
         Values (#foreach($column in $tableInfo.otherColumn)#{$!{column.name}}#if($velocityHasNext), #end#end)
     </insert>
 
     <insert id="insertBatch" keyProperty="$!pk.name" useGeneratedKeys="true">
-        Insert Into $!{tableInfo.obj.name}(#foreach($column in $tableInfo.otherColumn)$!column.obj.name#if($velocityHasNext), #end#end)
+        Insert Into $!{tableInfo.obj.name}(#foreach($column in $tableInfo.otherColumn)`$!column.obj.name`#if($velocityHasNext), #end#end)
         Values
         <foreach collection="entities" item="entity" separator=",">
         (#foreach($column in $tableInfo.otherColumn)#{entity.$!{column.name}}#if($velocityHasNext), #end#end)
@@ -114,7 +114,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
             (#foreach($column in $tableInfo.otherColumn)#{entity.$!{column.name}}#if($velocityHasNext), #end#end)
         </foreach>
         On Duplicate Key Update
-        #foreach($column in $tableInfo.otherColumn)$!column.obj.name = values($!column.obj.name)#if($velocityHasNext),
+        #foreach($column in $tableInfo.otherColumn)`$!column.obj.name` = values($!column.obj.name)#if($velocityHasNext),
         #end#end
 
     </insert>

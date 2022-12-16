@@ -25,7 +25,7 @@ repositories {
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
-    version.set("2022.1")
+    version.set("2021.3.3")
     type.set("IU")
     plugins.set(listOf("DatabaseTools","java"))
 }

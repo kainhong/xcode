@@ -1,8 +1,11 @@
 package cn.mercury.xcode.utils;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.mercury.xcode.model.ProjectTree;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -11,7 +14,10 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.model.java.JavaSourceRootType;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 模块工具类
@@ -26,6 +32,37 @@ public final class ModuleUtils {
      */
     private ModuleUtils() {
         throw new UnsupportedOperationException();
+    }
+
+    public static ProjectTree getProjectTree(Project project){
+        //TODO: 路径规则不明确，不可用
+        List<ProjectTree.ModuleNode> nodes = Arrays.stream(ModuleManager.getInstance(project).getModules())
+                .map(m->{
+                    ProjectTree.ModuleNode node = new ProjectTree.ModuleNode();
+                    node.setName(m.getName());
+                    node.setPath(ModuleUtil.getModuleDirPath(m));
+                    node.setModule(m);
+                    return node;
+                })
+                .sorted(Comparator.comparing(ProjectTree.ModuleNode::getPath))
+                .collect(Collectors.toList());
+
+        ProjectTree tree = new ProjectTree();
+        tree.setProject(project);
+        tree.setName(project.getName());
+        tree.setPath(project.getProjectFilePath());
+
+
+
+        for(ProjectTree.ModuleNode node :nodes){
+            var parent = tree.findParent(node.getPath());
+            if( parent == null )
+                tree.getChildren().add(node);
+            else
+                parent.getChildren().add(node);
+        }
+
+        return tree;
     }
 
     /**

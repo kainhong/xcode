@@ -99,6 +99,14 @@ public class NameUtils {
         return fullName.substring(className.lastIndexOf('.') + 1);
     }
 
+    Pattern regex = Pattern.compile("(\\w|[\\u4e00-\\u9fa5])+");
+    public String caseCommentLabel(String comment){
+        Matcher m = regex.matcher(comment);
+        if( !m.find() )
+            return comment;
+        return m.group();
+    }
+
     /**
      * 通过java全名获取类名
      *

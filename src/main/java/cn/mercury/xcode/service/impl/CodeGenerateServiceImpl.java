@@ -13,13 +13,13 @@ import cn.mercury.xcode.service.SettingsStorageService;
 import cn.mercury.xcode.service.TableInfoSettingsService;
 import cn.mercury.xcode.utils.*;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.intellij.database.psi.DbTable;
 import com.intellij.database.util.DasUtil;
 import com.intellij.database.util.DbUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.psi.PsiClass;
 import com.intellij.util.ReflectionUtil;
 import org.apache.commons.lang.StringUtils;
 
@@ -44,10 +44,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
      * 表信息服务
      */
     private TableInfoSettingsService tableInfoService;
-    /**
-     * 缓存数据工具
-     */
-    private CacheDataUtils cacheDataUtils;
+
     /**
      * 导入包时过滤的包前缀
      */
@@ -57,7 +54,6 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         this.project = project;
         this.moduleManager = ModuleManager.getInstance(project);
         this.tableInfoService = TableInfoSettingsService.getInstance();
-        this.cacheDataUtils = CacheDataUtils.getInstance();
     }
 
     /**
@@ -67,24 +63,18 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
      * @param generateOptions 生成选项
      */
     @Override
-    public void generate(Collection<Template> templates, GenerateOptions generateOptions) {
+    public void generate(Collection<Template> templates, GenerateOptions generateOptions, List<DbTable> tables) {
         // 获取选中表信息
         TableInfo selectedTableInfo;
         List<TableInfo> tableInfoList;
-        if (Boolean.TRUE.equals(generateOptions.getEntityModel())) {
-            selectedTableInfo = tableInfoService.getTableInfo(cacheDataUtils.getSelectPsiClass());
-            tableInfoList = cacheDataUtils.getPsiClassList().stream().map(item -> tableInfoService.getTableInfo(item)).collect(Collectors.toList());
-        } else {
-            selectedTableInfo = tableInfoService.getTableInfo(cacheDataUtils.getSelectDbTable());
-            tableInfoList = cacheDataUtils.getDbTableList().stream().map(item -> tableInfoService.getTableInfo(item)).collect(Collectors.toList());
-        }
+
+        selectedTableInfo = tableInfoService.getTableInfo(tables.get(0));
+        tableInfoList = tables.stream().map(item -> tableInfoService.getTableInfo(item)).collect(Collectors.toList());
+
         // 校验选中表的保存路径是否正确
         if (StringUtils.isEmpty(selectedTableInfo.getSavePath())) {
             if (selectedTableInfo.getObj() != null) {
                 Messages.showInfoMessage(selectedTableInfo.getObj().getName() + "表配置信息不正确，请尝试重新配置", GlobalDict.TITLE_INFO);
-            } else if (selectedTableInfo.getPsiClassObj() != null) {
-                PsiClass psiClassObj = (PsiClass) selectedTableInfo.getPsiClassObj();
-                Messages.showInfoMessage(psiClassObj.getName() + "类配置信息不正确，请尝试重新配置", GlobalDict.TITLE_INFO);
             } else {
                 Messages.showInfoMessage("配置信息不正确，请尝试重新配置", GlobalDict.TITLE_INFO);
             }
@@ -137,43 +127,70 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 String newName = tableInfo.getObj().getName().substring(tableInfo.getPreName().length());
                 tableInfo.setName(NameUtils.getInstance().getClassName(newName));
             }
-            // 构建参数
-            Map<String, Object> param = getDefaultParam();
-            // 其他参数
-            if (otherParam != null) {
-                param.putAll(otherParam);
-            }
-            // 所有表信息对象
-            param.put("tableInfoList", tableInfoList);
-            // 表信息对象
-            param.put("tableInfo", tableInfo);
-            // 设置模型路径与导包列表
-            setModulePathAndImportList(param, tableInfo);
-            // 设置额外代码生成服务
-            param.put("generateService", new ExtraCodeGenerateUtils(this, tableInfo, generateOptions));
-            for (Template template : templates) {
-                GenerateContext context = new GenerateContext();
-                context.setWriteFile(true);
-                context.setReformat(generateOptions.getReFormat());
-                // 默认名称
-                context.setFileName(tableInfo.getName() + "Default.java");
-                // 默认路径
-                context.setSavePath(tableInfo.getSavePath());
-                // 设置回调对象
-                param.put("context", context);
-                // 开始生成
-                String code = VelocityUtils.generate(template, param);
-                // 设置一个默认保存路径与默认文件名
-                String path = context.getSavePath();
-                path = path.replace("\\", "/");
-                // 针对相对路径进行处理
-                if (path.startsWith(".")) {
-                    path = project.getBasePath() + path.substring(1);
-                }
-                context.setSavePath(path);
-                new SaveFile(project, code, context, generateOptions).write();
-            }
+
+            generateTable(templates, generateOptions, otherParam, tableInfo);
         }
+    }
+
+    private void generateTable(Collection<Template> templates, GenerateOptions generateOptions, Map<String, Object> otherParam, TableInfo tableInfo) {
+        // 构建参数
+        Map<String, Object> param = getDefaultParam();
+        // 其他参数
+        if (otherParam != null) {
+            param.putAll(otherParam);
+        }
+
+        // 表信息对象
+        param.put("tableInfo", tableInfo);
+        // 设置模型路径与导包列表
+        setModulePathAndImportList(param, tableInfo);
+        // 设置额外代码生成服务
+        param.put("generateService", new ExtraCodeGenerateUtils(this, tableInfo, generateOptions));
+        String packagePath = tableInfo.getSavePackageName().replace(".", "/");
+
+        for (Template template : templates) {
+            GenerateContext context = new GenerateContext();
+            context.setWriteFile(true);
+            context.setReformat(generateOptions.getReFormat());
+            // 默认名称
+            context.setFileName(tableInfo.getName() + "Default.java");
+            // 默认路径
+            context.setSavePath(tableInfo.getSavePath());
+            // 设置回调对象
+            String path = getSavePath(template, generateOptions, tableInfo.getSavePath());
+            param.put("context", context);
+            param.put("modulePath", path);
+
+            if (generateOptions.isMixed())
+                param.put("sourcePath", path + "/src/main/java/" + packagePath + "/" + template.getPackageSuffix());
+            else
+                param.put("sourcePath", path);
+
+            context.setSavePath(path);
+
+            // 开始生成
+            String code = VelocityUtils.generate(template, param);
+
+            // 设置一个默认保存路径与默认文件名
+            new SaveFile(project, code, context, generateOptions).write();
+        }
+    }
+
+    private String getSavePath(Template template, GenerateOptions generateOptions, String savePath) {
+        String path = savePath;
+        path = path.replace("\\", "/");
+        // 针对相对路径进行处理
+        if (path.startsWith(".")) {
+            path = project.getBasePath() + path.substring(1);
+        }
+
+        if (!generateOptions.isMixed())
+            return path;
+
+        if (StringUtils.isEmpty(template.getPath()))
+            return path;
+
+        return path + "/" + String.format(template.getPath(), generateOptions.getModuleName()) + "/";
     }
 
     /**

@@ -1,5 +1,7 @@
 package cn.mercury.xcode.utils;
 
+import com.intellij.ide.projectView.ProjectView;
+import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -87,5 +89,14 @@ public class ProjectUtils {
             throw new NullPointerException();
         }
         return LocalFileSystem.getInstance().findFileByPath(basePath);
+    }
+
+    public static Module getSelectedModule(Project project){
+        ProjectView projectView = ProjectView.getInstance(project);
+        AbstractProjectViewPane selectedPane = projectView.getProjectViewPaneById( projectView.getCurrentViewId() );
+        Object selectedElement = selectedPane.getSelectedElement();
+        if( selectedElement instanceof  Module)
+            return (Module)selectedElement;
+        return null;
     }
 }

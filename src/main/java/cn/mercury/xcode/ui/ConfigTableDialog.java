@@ -48,7 +48,7 @@ public class ConfigTableDialog extends DialogWrapper {
 
     private void initPanel() {
         init();
-        this.tableInfo = TableInfoSettingsService.getInstance().getTableInfo(CacheDataUtils.getInstance().getSelectDbTable());
+        this.tableInfo = TableInfoSettingsService.getInstance().getTableInfo(CacheDataUtils.getInstance().getDbTableList().get(0));
         setTitle("Config Table " + this.tableInfo.getObj().getName());
         ConfigTableModel model = new ConfigTableModel(this.tableInfo);
         JBTable table = new JBTable(model);

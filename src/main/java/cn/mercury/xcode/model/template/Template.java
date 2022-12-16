@@ -23,6 +23,10 @@ public class Template implements AbstractEditorItem<Template> {
     private String uri;
 
     private String type;
+
+    private String path;
+
+    private String packageSuffix;
     public Template(){
 
     }

@@ -60,7 +60,7 @@ public class MainAction extends AnAction {
         Project project = event.getProject();
 
         // 校验类型映射
-        if (!typeValidator(project, CacheDataUtils.getInstance().getSelectDbTable())) {
+        if (!typeValidator(project, CacheDataUtils.getInstance().getDbTableList())) {
             // 没通过不打开窗口
             return;
         }
@@ -68,28 +68,38 @@ public class MainAction extends AnAction {
         new SelectSavePath(event.getProject()).show();
     }
 
+    private Set<String> getAllColumnsDataType(List<DbTable> dbTables) {
+        Set<String> types = new HashSet<>();
+        for (DbTable d : dbTables) {
+            JBIterable<? extends DasColumn> columns = DasUtil.getColumns(d);
+            for (DasColumn column : columns) {
+                String typeName = column.getDataType().getSpecification();
+                types.add(typeName);
+            }
+        }
+        return types;
+    }
 
     /**
      * 类型校验，如果存在未知类型则引导用于去条件类型
      *
-     * @param dbTable 原始表对象
+     * @param dbTables 原始表对象
      * @return 是否验证通过
      */
-    private boolean typeValidator(Project project, DbTable dbTable) {
+    private boolean typeValidator(Project project, List<DbTable> dbTables) {
         // 处理所有列
-        JBIterable<? extends DasColumn> columns = DasUtil.getColumns(dbTable);
+        Set<String> allColumnTypes = getAllColumnsDataType(dbTables);
+
         List<TypeMapper> typeMapperList = CurrGroupUtils.getCurrTypeMapperGroup().getElementList();
 
         // 简单的记录报错弹窗次数，避免重复报错
         Set<String> errorCount = new HashSet<>();
 
-        FLAG:
-        for (DasColumn column : columns) {
-            String typeName = column.getDataType().getSpecification();
+        allColumnTypes.forEach(t -> {
             for (TypeMapper typeMapper : typeMapperList) {
                 try {
-                    if (typeMapper.match(typeName))
-                        continue FLAG;
+                    if (typeMapper.match(t))
+                        return;
                 } catch (PatternSyntaxException e) {
                     if (!errorCount.contains(typeMapper.getColumnType())) {
                         Messages.showWarningDialog(
@@ -99,9 +109,8 @@ public class MainAction extends AnAction {
                     }
                 }
             }
-            // 没找到类型，提示用户选择输入类型
-            new Dialog(project, typeName).showAndGet();
-        }
+            new Dialog(project, t).showAndGet();
+        });
         return true;
     }
 
@@ -122,7 +131,7 @@ public class MainAction extends AnAction {
         private void initPanel() {
             setTitle(GlobalDict.TITLE_INFO);
             String msg = String.format("数据库类型%s，没有找到映射关系，请输入想转换的类型？", typeName);
-            JLabel label = new JLabel(msg);
+            var label = new JLabel(msg);
             this.mainPanel = new JPanel(new BorderLayout());
             this.mainPanel.setBorder(JBUI.Borders.empty(5, 10, 7, 10));
             mainPanel.add(label, BorderLayout.NORTH);

@@ -2,7 +2,7 @@
 #set($tableName = $tool.append($tableInfo.name, "Repository"))
 ##设置回调
 $!context.setFileName($tool.append($tableName, ".java"))
-$!context.setSavePath($tool.append($tableInfo.savePath, "/repository"))
+$!context.setSavePath($tool.append($sourcePath, "/repository"))
 
 ##拿到主键
 #if(!$tableInfo.pkColumn.isEmpty())

@@ -1,7 +1,6 @@
 package cn.mercury.xcode.utils;
 
 import com.intellij.database.psi.DbTable;
-import com.intellij.psi.PsiClass;
 import lombok.Data;
 
 import java.util.List;
@@ -34,22 +33,10 @@ public class CacheDataUtils {
     private CacheDataUtils() {
     }
 
-    /**
-     * 当前选中的表
-     */
-    private DbTable selectDbTable;
+
     /**
      * 所有选中的表
      */
     private List<DbTable> dbTableList;
 
-    /**
-     * 选中的类
-     */
-    private PsiClass selectPsiClass;
-
-    /**
-     * 所有选中的表
-     */
-    private List<PsiClass> psiClassList;
 }

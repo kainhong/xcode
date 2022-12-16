@@ -2,13 +2,13 @@
 #set($tableName = $tool.append($tableInfo.name, "Controller"))
 ##设置回调
 $!context.setFileName($tool.append($tableName, ".java"))
-$!context.setSavePath($tool.append($tableInfo.savePath, "/controller"))
+$!context.setSavePath($tool.append($sourcePath, "/controller"))
 ##拿到主键
 #if(!$tableInfo.pkColumn.isEmpty())
     #set($pk = $tableInfo.pkColumn.get(0))
 #end
 
-#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}controller;
+#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.web.#{end}controller;
 
 import $!{tableInfo.savePackageName}.model.$!{tableInfo.name};
 import $!{tableInfo.savePackageName}.service.$!{tableInfo.name}Service;

@@ -3,6 +3,7 @@ package cn.mercury.xcode.ui;
 import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.StrState;
 import cn.mercury.xcode.generate.GenerateOptions;
+import cn.mercury.xcode.model.ProjectTree;
 import cn.mercury.xcode.model.SettingsStorage;
 import cn.mercury.xcode.model.table.TableInfo;
 import cn.mercury.xcode.model.template.Template;
@@ -18,7 +19,6 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.DialogPanel;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -36,6 +36,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 选择保存路径
@@ -114,22 +116,11 @@ public class SelectSavePath extends DialogWrapper {
      */
     private List<Module> moduleList;
 
-    /**
-     * 实体模式生成代码
-     */
-    private boolean entityMode;
 
     /**
      * 模板选择组件
      */
     private TemplateSelectComponent templateSelectComponent;
-
-    /**
-     * 构造方法
-     */
-    public SelectSavePath(Project project) {
-        this(project, false);
-    }
 
     @Override
     protected @Nullable JComponent createCenterPanel() {
@@ -139,14 +130,16 @@ public class SelectSavePath extends DialogWrapper {
     /**
      * 构造方法
      */
-    public SelectSavePath(Project project, boolean entityMode) {
+    public SelectSavePath(Project project) {
         super(project);
-        this.entityMode = entityMode;
         this.project = project;
         this.tableInfoService = TableInfoSettingsService.getInstance();
         this.codeGenerateService = CodeGenerateService.getInstance(project);
         // 初始化module，存在资源路径的排前面
         this.moduleList = new LinkedList<>();
+
+        ProjectTree projectTree = ModuleUtils.getProjectTree(project);
+
         for (Module module : ModuleManager.getInstance(project).getModules()) {
             // 存在源代码文件夹放前面，否则放后面
             if (ModuleUtils.existsSourcePath(module)) {
@@ -191,7 +184,8 @@ public class SelectSavePath extends DialogWrapper {
                         // 刷新路径
                         refreshPath();
                     }
-                } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e1) {
+                } catch (NoSuchMethodException | IllegalAccessException | InstantiationException |
+                         InvocationTargetException e1) {
                     ExceptionUtil.rethrow(e1);
                 }
             });
@@ -227,12 +221,7 @@ public class SelectSavePath extends DialogWrapper {
 
     private void refreshData() {
         // 获取选中的表信息（鼠标右键的那张表），并提示未知类型
-        TableInfo tableInfo;
-        if(entityMode) {
-            tableInfo = tableInfoService.getTableInfo(cacheDataUtils.getSelectPsiClass());
-        } else {
-            tableInfo = tableInfoService.getTableInfo(cacheDataUtils.getSelectDbTable());
-        }
+        TableInfo tableInfo = tableInfoService.getTableInfo(cacheDataUtils.getDbTableList().get(0));
 
         // 设置默认配置信息
         if (!StringUtils.isEmpty(tableInfo.getSaveModelName())) {
@@ -252,7 +241,7 @@ public class SelectSavePath extends DialogWrapper {
             }
         }
 
-        if(!settings.getTemplateGroupMap().containsKey(groupName)){
+        if (!settings.getTemplateGroupMap().containsKey(groupName)) {
             groupName = GlobalDict.DEFAULT_TEMPLATE_NAME;
         }
         templateSelectComponent.setSelectedGroupName(groupName);
@@ -271,10 +260,10 @@ public class SelectSavePath extends DialogWrapper {
     protected void doOKAction() {
         boolean result = onOK();
         //super.doOKAction();
-        if (this.contentPane != null && this.contentPane instanceof DialogPanel ) {
-            ((DialogPanel)this.contentPane).apply();
+        if (this.contentPane != null && this.contentPane instanceof DialogPanel) {
+            ((DialogPanel) this.contentPane).apply();
         }
-        if( result )
+        if (result)
             this.close(0);
     }
 
@@ -306,14 +295,19 @@ public class SelectSavePath extends DialogWrapper {
                 savePath = savePath.replace(basePath, ".");
             }
         }
+        generate(selectTemplateList, savePath);
+
+        notify(project);
+
+        return true;
+    }
+
+    private void generate(List<Template> selectTemplateList, String savePath) {
         // 保存配置
-        TableInfo tableInfo;
-        if(!entityMode) {
-            tableInfo = tableInfoService.getTableInfo(cacheDataUtils.getSelectDbTable());
-        } else {
-            tableInfo = tableInfoService.getTableInfo(cacheDataUtils.getSelectPsiClass());
-        }
+        TableInfo tableInfo = tableInfoService.getTableInfo(cacheDataUtils.getDbTableList().get(0));
+
         tableInfo.setSavePath(savePath);
+
         tableInfo.setSavePackageName(packageField.getText());
         tableInfo.setPreName(preField.getText());
         tableInfo.setTemplateGroupName(templateSelectComponent.getselectedGroupName());
@@ -321,15 +315,29 @@ public class SelectSavePath extends DialogWrapper {
         if (module != null) {
             tableInfo.setSaveModelName(module.getName());
         }
-        
         //VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
         // 保存配置
         tableInfoService.saveTableInfo(tableInfo);
 
-        // 生成代码
-        codeGenerateService.generate(selectTemplateList, getGenerateOptions());
+        Set<String> paths = selectTemplateList.stream()
+                .filter(c -> StringUtils.isNotBlank(c.getPath()))
+                .map(c -> c.getPath()).collect(Collectors.toSet());
 
-        return true;
+        boolean mixed = (paths.size() >= 2);
+
+        GenerateOptions op = getGenerateOptions(savePath, mixed);
+
+        op.setModuleName(module.getName());
+        // 生成代码
+        codeGenerateService.generate(selectTemplateList, op, cacheDataUtils.getDbTableList());
+
+
+    }
+
+
+    private void notify(Project project) {
+        Notifier.notifyInformation(project,
+                GlobalDict.TITLE_INFO, " generate finished");
     }
 
     /**
@@ -341,7 +349,7 @@ public class SelectSavePath extends DialogWrapper {
         templatePanel.add(this.templateSelectComponent.getMainPanel(), BorderLayout.CENTER);
 
         //初始化Module选择
-        this.moduleList.stream().sorted( (c1,c2)->c1.getName().compareTo(c2.getName())).forEach(m->{
+        this.moduleList.stream().sorted((c1, c2) -> c1.getName().compareTo(c2.getName())).forEach(m -> {
             moduleComboBox.addItem(m.getName());
         });
     }
@@ -351,13 +359,14 @@ public class SelectSavePath extends DialogWrapper {
      *
      * @return {@link GenerateOptions}
      */
-    private GenerateOptions getGenerateOptions() {
+    private GenerateOptions getGenerateOptions(String savePath, boolean mixed) {
         return GenerateOptions.builder()
-                .entityModel(this.entityMode)
                 .reFormat(reFormatCheckBox.isSelected())
                 .titleSure(titleSureCheckBox.isSelected())
                 .titleRefuse(titleRefuseCheckBox.isSelected())
                 .unifiedConfig(unifiedConfigCheckBox.isSelected())
+                .savePath(savePath)
+                .mixed(mixed)
                 .build();
     }
 
@@ -400,6 +409,8 @@ public class SelectSavePath extends DialogWrapper {
      * 刷新目录
      */
     private void refreshPath() {
+        if( StringUtils.isNotEmpty(pathField.getText()))
+            return;
         String packageName = packageField.getText();
         // 获取基本路径
         String path = getBasePath();

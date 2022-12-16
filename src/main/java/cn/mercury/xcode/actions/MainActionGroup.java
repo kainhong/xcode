@@ -86,7 +86,6 @@ public class MainActionGroup extends ActionGroup {
 
         //保存数据到缓存
         cacheDataUtils.setDbTableList(dbTableList);
-        cacheDataUtils.setSelectDbTable(selectDbTable);
         this.notExistsChildren = false;
         return getMenuList();
     }
@@ -115,12 +114,14 @@ public class MainActionGroup extends ActionGroup {
         AnAction clearConfigAction = new AnAction("Clear Config") {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
-                DbTable dbTable = CacheDataUtils.getInstance().getSelectDbTable();
-                if (dbTable == null) {
+                List<DbTable> dbTables = CacheDataUtils.getInstance().getDbTableList();
+                if (dbTables == null) {
                     return;
                 }
-                TableInfoSettingsService.getInstance().removeTableInfo(dbTable);
-                Messages.showInfoMessage(dbTable.getName() + "表配置信息已重置成功", GlobalDict.TITLE_INFO);
+                for (DbTable dbTable : dbTables)
+                    TableInfoSettingsService.getInstance().removeTableInfo(dbTable);
+
+                Messages.showInfoMessage("表配置信息已重置成功", GlobalDict.TITLE_INFO);
             }
         };
         // 返回所有菜单

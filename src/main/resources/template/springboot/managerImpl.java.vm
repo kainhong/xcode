@@ -2,7 +2,7 @@
 #set($tableName = $tool.append($tableInfo.name, "Manager"))
 ##设置回调
 $!context.setFileName($tool.append($tableName, ".java"))
-$!context.setSavePath($tool.append($tableInfo.savePath, "/manager/impl"))
+$!context.setSavePath($tool.append($sourcePath, "/manager/impl"))
 
 ##拿到主键
 #if(!$tableInfo.pkColumn.isEmpty())
@@ -13,6 +13,7 @@ $!context.setSavePath($tool.append($tableInfo.savePath, "/manager/impl"))
 
 import $!{tableInfo.savePackageName}.model.$!{tableInfo.name};
 import $!{tableInfo.savePackageName}.service.I$!{tableInfo.name}Service;
+import $!{tableInfo.savePackageName}.manager.I$!{tableInfo.name}Manager;
 
 import org.springframework.stereotype.Service;
 import topmall.framework.service.IService;
