@@ -35,13 +35,21 @@ public final class TemplateUtils {
         }
         for (GlobalConfig globalConfig : globalConfigs) {
             String name = globalConfig.getName();
-            // 正则被替换字符转义处理
-            String value = globalConfig.getValue().replace("\\", "\\\\").replace("$", "\\$");
+            String value = null;
+            if (StringUtils.isNotEmpty(globalConfig.getValue())) {
+                // 正则被替换字符转义处理
+                value = globalConfig.getValue();
+            }
+            else{
+                value = ResourcesUtils.readText(globalConfig.getUri());
+            }
 
+            value = value.replace("\\", "\\\\").replace("$", "\\$");
             // 将不带{}的变量加上{}
             template = template.replaceAll("\\$!?" + name + "(\\W)", "\\$!{" + name + "}$1");
             // 统一替换
             template = template.replaceAll("\\$!?\\{" + name + "}", value);
+
         }
         return template;
     }

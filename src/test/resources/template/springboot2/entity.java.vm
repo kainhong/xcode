@@ -6,7 +6,7 @@ $!{define.vm}
 #set($tableName = $tool.append($tableInfo.name))
 ##设置回调
 $!context.setFileName($tool.append($tableName, ".java"))
-$!context.setSavePath($tool.append($sourcePath, ".common",".model"))
+$!context.setSavePath($sourcePath)
 
 #if(!$tableInfo.pkColumn.isEmpty())
     #set($pk = $tableInfo.pkColumn.get(0))
@@ -14,18 +14,18 @@ $!context.setSavePath($tool.append($sourcePath, ".common",".model"))
 #if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}model;
 
 import java.io.Serializable;
+import cn.mercury.domain.BaseEntity;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import java.util.Date;
 import java.math.BigDecimal;
 
-import cn.mercury.domain.IEntry;
 import cn.mercury.annotation.Label;
 import cn.mercury.basic.query.Query;
 import cn.mercury.domain.AbstractEntryBuilder;
 
 ##使用宏定义实现类注释信息
 #tableComment("实体类")
-public class $!{tableInfo.name} implements Serializable,IEntry{
+public class $!{tableInfo.name} extends BaseEntity<$!{tool.getClsNameByFullName($pk.type)}> implements Serializable {
     private static final long serialVersionUID = $!tool.serial();
 #foreach($column in $tableInfo.fullColumn)
     #if(${column.comment})/**

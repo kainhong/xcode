@@ -17,6 +17,8 @@ public class TemplateGroup implements AbstractGroup<TemplateGroup, Template> {
      * 分组名称
      */
     private String name;
+
+    private String version;
     /**
      * 元素对象
      */
@@ -40,5 +42,13 @@ public class TemplateGroup implements AbstractGroup<TemplateGroup, Template> {
     @Override
     public void setElementList(List<Template> elementList) {
         this.elementList = elementList;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

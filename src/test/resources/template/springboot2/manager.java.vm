@@ -1,8 +1,8 @@
 ##定义初始变量
-#set($tableName = $tool.append($tableInfo.name, "Manager"))
+#set($tableName = $tool.append("I",$tableInfo.name, "Manager"))
 ##设置回调
 $!context.setFileName($tool.append($tableName, ".java"))
-$!context.setSavePath($tool.append($sourcePath, ""))
+$!context.setSavePath($tool.append($sourcePath, "/manager"))
 
 ##拿到主键
 #if(!$tableInfo.pkColumn.isEmpty())
@@ -13,10 +13,7 @@ $!context.setSavePath($tool.append($sourcePath, ""))
 
 import $!{tableInfo.savePackageName}.model.$!{tableInfo.name};
 
-import java.util.List;
-import java.util.Map;
-import com.yougou.logistics.base.common.exception.ManagerException;
-import com.yougou.logistics.base.manager.BaseCrudManager;
+import cn.mercury.manager.IManager;
 
 /**
  * $!{tableInfo.comment}($!{tableInfo.name})
@@ -24,6 +21,6 @@ import com.yougou.logistics.base.manager.BaseCrudManager;
  * @author $!author
  * @since $!time.currTime()
  */
-public interface $!{tableName} extends BaseCrudManager{
+public interface $!{tableName} extends IManager<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}>{
 
 }

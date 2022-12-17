@@ -2,7 +2,7 @@
 #set($tableName = $tool.append($tableInfo.name, "ServiceImpl"))
 ##设置回调
 $!context.setFileName($tool.append($tableName, ".java"))
-$!context.setSavePath($tool.append($sourcePath, "/service"))
+$!context.setSavePath($tool.append($sourcePath, ""))
 
 ##拿到主键
 #if(!$tableInfo.pkColumn.isEmpty())
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import com.yougou.logistics.base.common.exception.ServiceException;
 import com.yougou.logistics.base.service.BaseCrudServiceImpl;
-
+import com.yougou.logistics.base.dal.database.BaseCrudMapper;
 /**
  * $!{tableInfo.comment}($!{tableInfo.name})表服务实现类
  *

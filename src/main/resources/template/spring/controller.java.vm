@@ -22,7 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import $!{tableInfo.savePackageName}.common.model.$!{tableInfo.name};
+import $!{tableInfo.savePackageName}.model.$!{tableInfo.name};
 import $!{tableInfo.savePackageName}.manager.I$!{tableInfo.name}Manager;
 
 

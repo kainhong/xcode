@@ -1,8 +1,8 @@
 ##定义初始变量
-#set($tableName = $tool.append($tableInfo.name, "Service"))
+#set($tableName = $tool.append("I",$tableInfo.name, "Service"))
 ##设置回调
 $!context.setFileName($tool.append($tableName, ".java"))
-$!context.setSavePath($tool.append($sourcePath, ""))
+$!context.setSavePath($tool.append($sourcePath, "/service"))
 
 ##拿到主键
 #if(!$tableInfo.pkColumn.isEmpty())
@@ -12,8 +12,8 @@ $!context.setSavePath($tool.append($sourcePath, ""))
 #if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}service;
 
 import $!{tableInfo.savePackageName}.model.$!{tableInfo.name};
-import com.yougou.logistics.base.common.exception.ServiceException;
-import com.yougou.logistics.base.service.BaseCrudService;
+
+import topmall.framework.service.IService;
 
 /**
  * $!{tableInfo.comment}($!{tableInfo.name})表服务接口
@@ -21,6 +21,6 @@ import com.yougou.logistics.base.service.BaseCrudService;
  * @author $!author
  * @since $!time.currTime()
  */
-public interface $!{tableName} extends  BaseCrudService{
+public interface $!{tableName} extends IService<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}>{
 
 }

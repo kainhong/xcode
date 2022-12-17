@@ -160,7 +160,7 @@ public class SettingsStorage {
     /**
      * 扩展模板文件路径
      */
-    private String extendTemplatePath;
+    private String extendTemplateFile;
 
     public void fillDefaultVal() {
         SettingsStorage defaultVal = defaultVal();
@@ -300,11 +300,11 @@ public class SettingsStorage {
         this.globalConfigGroupMap = globalConfigGroupMap;
     }
 
-    public String getExtendTemplatePath() {
-        return extendTemplatePath;
+    public String getExtendTemplateFile() {
+        return extendTemplateFile;
     }
 
-    public void setExtendTemplatePath(String extendTemplatePath) {
-        this.extendTemplatePath = extendTemplatePath;
+    public void setExtendTemplateFile(String extendTemplateFile) {
+        this.extendTemplateFile = extendTemplateFile;
     }
 }

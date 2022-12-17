@@ -20,6 +20,8 @@ public class GlobalConfig implements AbstractEditorItem<GlobalConfig> {
      */
     private String value;
 
+    private String uri;
+
     public GlobalConfig(){
 
     }
@@ -68,5 +70,13 @@ public class GlobalConfig implements AbstractEditorItem<GlobalConfig> {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 }
