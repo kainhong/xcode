@@ -91,17 +91,18 @@ public class SettingsStorageServiceImpl implements SettingsStorageService {
                     logger.info("skip load extend template file:" + g1.getName());
                     continue;
                 }
-
-                boolean ok = handleTemplatePath(path, g1);
-                if (ok) {
-                    groups.put(g1.getName(), g1);
-                }
+            }
+            boolean ok = handleTemplatePath(path, g1);
+            if (ok) {
+                groups.put(g1.getName(), g1);
             }
         }
 
     }
 
-    private boolean handleTemplatePath(String parentPath, TemplateGroup group) {
+    private boolean handleTemplatePath(String parent, TemplateGroup group) {
+        var parentPath = parent.substring(0,parent.lastIndexOf("\\"));
+
         for (Template tpl : group.getElementList()) {
             var path = tpl.getUri();
             if (path.startsWith("./")) {
