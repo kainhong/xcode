@@ -9,7 +9,7 @@ $!context.setSavePath($tool.append($sourcePath, "/manager/impl"))
     #set($pk = $tableInfo.pkColumn.get(0))
 #end
 
-#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}manager.impl;
+#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}manager;
 
 import $!{tableInfo.savePackageName}.model.$!{tableInfo.name};
 import $!{tableInfo.savePackageName}.service.I$!{tableInfo.name}Service;
@@ -18,7 +18,7 @@ import $!{tableInfo.savePackageName}.manager.I$!{tableInfo.name}Manager;
 import org.springframework.stereotype.Service;
 import topmall.framework.service.IService;
 import topmall.framework.manager.BaseManager;
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -30,7 +30,7 @@ import javax.annotation.Resource;
 @Service("$!tool.firstLowerCase($!{tableInfo.name})Manager")
 public class $!{tableName} extends BaseManager<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}> implements I$!{tableInfo.name}Manager {
 
-    @Resource
+    @Autowired
     private I$!{tableInfo.name}Service service;
 
     protected IService<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}> getService(){

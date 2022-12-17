@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.mercury.dlinq.BrandRepository">
+    <!-- auto generate kain -->
+    <resultMap id="baseResultMap" type="cn.mercury.dlinq.model.Brand">
+        
+        <id column="id" property="id" jdbcType="INTEGER" />
+        
+        <result column="brand_no" property="brandNo" jdbcType="CHAR" />
+        
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        
+        <result column="en_name" property="enName" jdbcType="VARCHAR" />
+        
+        <result column="en_short_name" property="enShortName" jdbcType="VARCHAR" />
+        
+        <result column="opcode" property="opcode" jdbcType="CHAR" />
+        
+        <result column="category" property="category" jdbcType="VARCHAR" />
+        
+        <result column="belonger" property="belonger" jdbcType="VARCHAR" />
+        
+        <result column="status" property="status" jdbcType="TINYINT" />
+        
+        <result column="sys_no" property="no" jdbcType="VARCHAR" />
+        
+        <result column="search_code" property="searchCode" jdbcType="VARCHAR" />
+        
+        <result column="parent_brand_id" property="parentBrandId" jdbcType="INTEGER" />
+        
+        <result column="logo_url" property="logoUrl" jdbcType="VARCHAR" />
+        
+        <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+        
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+        
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        
+        <result column="time_seq" property="timeSeq" jdbcType="BIGINT" />
+        
+        <result column="organ_type_no" property="organTypeNo" jdbcType="VARCHAR" />
+        
+    </resultMap>
+
+    <sql id="column_list">
+        `id`,`brand_no`,`name`,`en_name`,`en_short_name`,`opcode`,`category`,`belonger`,`status`,`sys_no`,`search_code`,`parent_brand_id`,`logo_url`,`create_user`,`create_time`,`update_user`,`update_time`,`remark`,`time_seq`,`organ_type_no`
+    </sql>
+
+    <sql id="condition">
+        <if test="null!=params">
+            <if test="null!=params.queryCondition and ''!=params.queryCondition">
+                AND ${params.queryCondition}
+            </if>
+            
+            <if test="null!=params.id ">
+                
+                AND `id`=#{params.id}
+                
+            </if>
+            
+            <if test="null!=params.brandNo  and ''!=params.brandNo ">
+                
+                AND `brand_no`=#{params.brandNo}
+                
+            </if>
+            
+            <if test="null!=params.name  and ''!=params.name ">
+                
+                AND `name` like '%${params.name}%'
+                
+            </if>
+            
+            <if test="null!=params.enName  and ''!=params.enName ">
+                
+                AND `en_name` like '%${params.enName}%'
+                
+            </if>
+            
+            <if test="null!=params.enShortName  and ''!=params.enShortName ">
+                
+                AND `en_short_name` like '%${params.enShortName}%'
+                
+            </if>
+            
+            <if test="null!=params.opcode  and ''!=params.opcode ">
+                
+                AND `opcode`=#{params.opcode}
+                
+            </if>
+            
+            <if test="null!=params.category  and ''!=params.category ">
+                
+                AND `category`=#{params.category}
+                
+            </if>
+            
+            <if test="null!=params.belonger  and ''!=params.belonger ">
+                
+                AND `belonger`=#{params.belonger}
+                
+            </if>
+            
+            <if test="null!=params.status ">
+                
+                AND `status`=#{params.status}
+                
+            </if>
+            
+            <if test="null!=params.no  and ''!=params.no ">
+                
+                AND `sys_no`=#{params.no}
+                
+            </if>
+            
+            <if test="null!=params.searchCode  and ''!=params.searchCode ">
+                
+                AND `search_code`=#{params.searchCode}
+                
+            </if>
+            
+            <if test="null!=params.parentBrandId ">
+                
+                AND `parent_brand_id`=#{params.parentBrandId}
+                
+            </if>
+            
+            <if test="null!=params.logoUrl  and ''!=params.logoUrl ">
+                
+                AND `logo_url`=#{params.logoUrl}
+                
+            </if>
+            
+            <if test="null!=params.createUser  and ''!=params.createUser ">
+                
+                AND `create_user`=#{params.createUser}
+                
+            </if>
+            
+            <if test="null!=params.createTime ">
+                
+                AND `create_time`=#{params.createTime}
+                
+            </if>
+            
+            <if test="null!=params.updateUser  and ''!=params.updateUser ">
+                
+                AND `update_user`=#{params.updateUser}
+                
+            </if>
+            
+            <if test="null!=params.updateTime ">
+                
+                AND `update_time`=#{params.updateTime}
+                
+            </if>
+            
+            <if test="null!=params.remark  and ''!=params.remark ">
+                
+                AND `remark`=#{params.remark}
+                
+            </if>
+            
+            <if test="null!=params.timeSeq ">
+                
+                AND `time_seq`=#{params.timeSeq}
+                
+            </if>
+            
+            <if test="null!=params.organTypeNo  and ''!=params.organTypeNo ">
+                
+                AND `organ_type_no`=#{params.organTypeNo}
+                
+            </if>
+            
+        </if>
+    </sql>
+
+    <sql id="uniqe_condition">
+        
+        <if test="null!=brandNo and ''!=brandNo">
+            AND `brand_no`=#{brandNo}
+        </if>
+        
+    </sql>
+
+    <select id="findByPrimaryKey" resultType="cn.mercury.dlinq.model.Brand" >
+        SELECT
+        <include refid="column_list" />
+        FROM brand
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByUnique" resultType="cn.mercury.dlinq.model.Brand" >
+        SELECT
+        <include refid="column_list" />
+        FROM brand
+        <where>
+            <include refid="uniqe_condition" />
+        </where>
+    </select>
+
+    <select id="findByParam" resultType="cn.mercury.dlinq.model.Brand" parameterType="map">
+        SELECT
+        <include refid="column_list" />
+        FROM brand
+        <where>
+            <include refid="condition" />
+        </where>
+        
+        LIMIT 1
+        
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) as s FROM brand
+        <where>
+            <include refid="condition" />
+        </where>
+    </select>
+
+    <select id="selectByPage" resultType="cn.mercury.dlinq.model.Brand" parameterType="map">
+        
+        SELECT
+        <include refid="column_list" />
+        FROM brand
+        <where>
+            <include refid="condition" />
+        </where>
+        <if test="orderby != null and ''!=orderby">
+            ORDER BY ${orderby}
+        </if>
+        LIMIT ${page.startRowNum},${page.pageSize}
+        
+    </select>
+
+    <select id="selectByParams" resultType="cn.mercury.dlinq.model.Brand" parameterType="map">
+        SELECT
+        <include refid="column_list" />
+        FROM brand
+        <where>
+            <include refid="condition" />
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey">
+        DELETE FROM brand
+        WHERE undefined = #{id}
+    </delete>
+
+    <delete id="deleteByUnique">
+        DELETE FROM brand
+        <where>
+            <include refid="condition" />
+        </where>
+    </delete>
+
+    <delete id="deleteByParams" parameterType="map">
+        DELETE
+        FROM brand
+        <where>
+            <include refid="condition" />
+            <if test="params.ids!=null and ''!=params.ids ">
+                AND undefined in ( ${params.ids} )
+            </if>
+        </where>
+    </delete>
+
+    <insert id="insert" parameterType="cn.mercury.dlinq.model.Brand"  useGeneratedKeys="true" keyProperty="id"  >
+        INSERT INTO brand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            
+            <if test="id != null">
+                `id`,
+            </if>
+            
+            <if test="brandNo != null">
+                `brand_no`,
+            </if>
+            
+            <if test="name != null">
+                `name`,
+            </if>
+            
+            <if test="enName != null">
+                `en_name`,
+            </if>
+            
+            <if test="enShortName != null">
+                `en_short_name`,
+            </if>
+            
+            <if test="opcode != null">
+                `opcode`,
+            </if>
+            
+            <if test="category != null">
+                `category`,
+            </if>
+            
+            <if test="belonger != null">
+                `belonger`,
+            </if>
+            
+            <if test="status != null">
+                `status`,
+            </if>
+            
+            <if test="no != null">
+                `sys_no`,
+            </if>
+            
+            <if test="searchCode != null">
+                `search_code`,
+            </if>
+            
+            <if test="parentBrandId != null">
+                `parent_brand_id`,
+            </if>
+            
+            <if test="logoUrl != null">
+                `logo_url`,
+            </if>
+            
+            <if test="createUser != null">
+                `create_user`,
+            </if>
+            
+            <if test="createTime != null">
+                `create_time`,
+            </if>
+            
+            <if test="updateUser != null">
+                `update_user`,
+            </if>
+            
+            <if test="updateTime != null">
+                `update_time`,
+            </if>
+            
+            <if test="remark != null">
+                `remark`,
+            </if>
+            
+            <if test="timeSeq != null">
+                `time_seq`,
+            </if>
+            
+            <if test="organTypeNo != null">
+                `organ_type_no`,
+            </if>
+            
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            
+            <if test="id != null">
+                #{id},
+            </if>
+            
+            <if test="brandNo != null">
+                #{brandNo},
+            </if>
+            
+            <if test="name != null">
+                #{name},
+            </if>
+            
+            <if test="enName != null">
+                #{enName},
+            </if>
+            
+            <if test="enShortName != null">
+                #{enShortName},
+            </if>
+            
+            <if test="opcode != null">
+                #{opcode},
+            </if>
+            
+            <if test="category != null">
+                #{category},
+            </if>
+            
+            <if test="belonger != null">
+                #{belonger},
+            </if>
+            
+            <if test="status != null">
+                #{status},
+            </if>
+            
+            <if test="no != null">
+                #{no},
+            </if>
+            
+            <if test="searchCode != null">
+                #{searchCode},
+            </if>
+            
+            <if test="parentBrandId != null">
+                #{parentBrandId},
+            </if>
+            
+            <if test="logoUrl != null">
+                #{logoUrl},
+            </if>
+            
+            <if test="createUser != null">
+                #{createUser},
+            </if>
+            
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            
+            <if test="updateUser != null">
+                #{updateUser},
+            </if>
+            
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            
+            <if test="remark != null">
+                #{remark},
+            </if>
+            
+            <if test="timeSeq != null">
+                #{timeSeq},
+            </if>
+            
+            <if test="organTypeNo != null">
+                #{organTypeNo},
+            </if>
+            
+        </trim>
+    </insert>
+
+
+    <insert id="insertForUpdate" parameterType="cn.mercury.dlinq.model.Brand"  useGeneratedKeys="true" keyProperty="undefined"  >
+        <!-- 未实现 -->
+    </insert>
+
+
+
+    <update id="update" parameterType="cn.mercury.dlinq.model.Brand">
+        UPDATE brand
+        <set>
+            
+            <if test="brandNo != null">
+                `brand_no` = #{brandNo},
+            </if> 
+            <if test="name != null">
+                `name` = #{name},
+            </if> 
+            <if test="enName != null">
+                `en_name` = #{enName},
+            </if> 
+            <if test="enShortName != null">
+                `en_short_name` = #{enShortName},
+            </if> 
+            <if test="opcode != null">
+                `opcode` = #{opcode},
+            </if> 
+            <if test="category != null">
+                `category` = #{category},
+            </if> 
+            <if test="belonger != null">
+                `belonger` = #{belonger},
+            </if> 
+            <if test="status != null">
+                `status` = #{status},
+            </if> 
+            <if test="no != null">
+                `sys_no` = #{no},
+            </if> 
+            <if test="searchCode != null">
+                `search_code` = #{searchCode},
+            </if> 
+            <if test="parentBrandId != null">
+                `parent_brand_id` = #{parentBrandId},
+            </if> 
+            <if test="logoUrl != null">
+                `logo_url` = #{logoUrl},
+            </if> 
+            <if test="createUser != null">
+                `create_user` = #{createUser},
+            </if> 
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if> 
+            <if test="updateUser != null">
+                `update_user` = #{updateUser},
+            </if> 
+            <if test="remark != null">
+                `remark` = #{remark},
+            </if> 
+            <if test="timeSeq != null">
+                `time_seq` = #{timeSeq},
+            </if> 
+            <if test="organTypeNo != null">
+                `organ_type_no` = #{organTypeNo},
+            </if> 
+            update_time =  now() 
+        </set>
+        WHERE id = #{id} OR brand_no = #{brandNo}
+    </update>
+        <!-- auto generate end-->
+
+
+</mapper>

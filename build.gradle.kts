@@ -37,6 +37,9 @@ dependencies {
     implementation("org.freemarker:freemarker:2.3.29")
     implementation("com.itranswarp:compiler:1.0")
     implementation("cn.hutool:hutool-core:5.8.0")
+    implementation("org.dom4j:dom4j:2.1.3")
+    implementation("jaxen:jaxen:1.1.1")
+
     testImplementation("junit:junit:4.12")
     testImplementation("commons-io:commons-io:2.8.0")
 

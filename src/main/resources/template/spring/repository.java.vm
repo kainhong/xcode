@@ -1,21 +1,21 @@
 ##定义初始变量
-#set($tableName = $tool.append($tableInfo.name, "Repository"))
+#set($tableName = $tool.append($tableInfo.name, "Mapper"))
 ##设置回调
 $!context.setFileName($tool.append($tableName, ".java"))
-$!context.setSavePath($tool.append($sourcePath, "/repository"))
+$!context.setSavePath($tool.append($sourcePath, "/database"))
 
 ##拿到主键
 #if(!$tableInfo.pkColumn.isEmpty())
     #set($pk = $tableInfo.pkColumn.get(0))
 #end
 
-#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}repository;
+#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}.database;
 
-import $!{tableInfo.savePackageName}.model.$!{tableInfo.name};
+import $!{tableInfo.savePackageName}.common.model.$!{tableInfo.name};
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
-import topmall.framework.repository.IRepository;
+import com.yougou.logistics.base.dal.database.BaseCrudMapper;
 
 /**
  * $!{tableInfo.comment}($!{tableInfo.name})表数据库访问层
@@ -24,6 +24,6 @@ import topmall.framework.repository.IRepository;
  * @since $!time.currTime()
  */
 @Mapper
-public interface $!{tableName} extends IRepository<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}>{
+public interface $!{tableName} extends BaseCrudMapper {
 
 }

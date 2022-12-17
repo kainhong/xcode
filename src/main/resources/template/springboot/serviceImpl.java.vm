@@ -18,8 +18,7 @@ import $!{tableInfo.savePackageName}.service.I$!{tableInfo.name}Service;
 import org.springframework.stereotype.Service;
 import topmall.framework.repository.IRepository;
 import topmall.framework.service.BaseService;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import javax.annotation.Resource;
 
 /**
  * $!{tableInfo.comment}($!{tableInfo.name})表服务实现类
@@ -29,7 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Service("$!tool.firstLowerCase($!{tableInfo.name})Service")
 public class $!{tableName} extends BaseService<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}> implements I$!{tableInfo.name}Service {
-    @Autowired
+    @Resource
     private $!{tableInfo.name}Repository repository;
 
     protected IRepository<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}> getRepository(){

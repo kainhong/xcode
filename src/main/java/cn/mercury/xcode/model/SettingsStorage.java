@@ -157,6 +157,11 @@ public class SettingsStorage {
     @JsonProperty("globalConfig")
     private Map<String, GlobalConfigGroup> globalConfigGroupMap;
 
+    /**
+     * 扩展模板文件路径
+     */
+    private String extendTemplatePath;
+
     public void fillDefaultVal() {
         SettingsStorage defaultVal = defaultVal();
         if (CollectionUtil.isEmpty(this.typeMapperGroupMap)) {
@@ -293,5 +298,13 @@ public class SettingsStorage {
 
     public void setGlobalConfigGroupMap(Map<String, GlobalConfigGroup> globalConfigGroupMap) {
         this.globalConfigGroupMap = globalConfigGroupMap;
+    }
+
+    public String getExtendTemplatePath() {
+        return extendTemplatePath;
+    }
+
+    public void setExtendTemplatePath(String extendTemplatePath) {
+        this.extendTemplatePath = extendTemplatePath;
     }
 }

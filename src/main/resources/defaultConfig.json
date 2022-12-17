@@ -89,49 +89,49 @@
       "elementList":[
         {
           "name":"controller",
-          "uri":"/template/springboot/controller.java.vm",
+          "uri":"classpath:/template/springboot/controller.java.vm",
           "packageSuffix":"web",
           "path":"%s-web"
         },
         {
           "name":"repository",
-          "uri":"/template/springboot/repository.java.vm",
+          "uri":"classpath:/template/springboot/repository.java.vm",
           "packageSuffix":"",
           "path":"%s-domain"
         },
         {
           "name":"entity",
-          "uri":"/template/springboot/entity.java.vm",
+          "uri":"classpath:/template/springboot/entity.java.vm",
           "packageSuffix":"model",
           "path":"%s-model"
         },
         {
           "name":"mapper",
-          "uri":"/template/springboot/mapper.xml.vm",
+          "uri":"classpath:/template/springboot/mapper.xml.vm",
           "packageSuffix":"",
           "path":"%s-domain"
         },
         {
           "name":"service",
-          "uri":"/template/springboot/service.java.vm",
+          "uri":"classpath:/template/springboot/service.java.vm",
           "packageSuffix":"",
           "path":"%s-domain"
         },
         {
           "name":"serviceImpl",
-          "uri":"/template/springboot/serviceImpl.java.vm",
+          "uri":"classpath:/template/springboot/serviceImpl.java.vm",
           "packageSuffix":"",
           "path":"%s-domain"
         },
         {
           "name":"manager",
-          "uri":"/template/springboot/manager.java.vm",
+          "uri":"classpath:/template/springboot/manager.java.vm",
           "packageSuffix":"",
           "path":"%s-domain"
         },
         {
           "name":"managerImpl",
-          "uri":"/template/springboot/managerImpl.java.vm",
+          "uri":"classpath:/template/springboot/managerImpl.java.vm",
           "packageSuffix":"",
           "path":"%s-domain"
         }
@@ -143,39 +143,51 @@
       "elementList":[
         {
           "name":"controller",
-          "uri":"/template/spring/controller.java.vm",
+          "uri":"classpath:/template/spring/controller.java.vm",
           "packageSuffix":"web",
           "path":"%s-web"
         },
         {
           "name":"repository",
-          "uri":"/template/spring/repository.java.vm",
-          "packageSuffix":"domain",
-          "path":"%s-domain"
+          "uri":"classpath:/template/spring/repository.java.vm",
+          "packageSuffix":"dal",
+          "path":"%s-dal"
         },
         {
           "name":"entity",
-          "uri":"/template/spring/entity.java.vm",
-          "packageSuffix":"model",
-          "path":"%s-model"
+          "uri":"classpath:/template/spring/entity.java.vm",
+          "packageSuffix":"common",
+          "path":"%s-common"
         },
         {
           "name":"mapper",
-          "uri":"/template/spring/mapper.xml.vm",
-          "packageSuffix":"domain",
-          "path":"%s-domain"
+          "uri":"classpath:/template/spring/mapper.xml.vm",
+          "packageSuffix":"dal",
+          "path":"%s-dal"
         },
         {
           "name":"service",
-          "uri":"/template/spring/service.java.vm",
-          "packageSuffix":"domain",
-          "path":"%s-domain"
+          "uri":"classpath:/template/spring/service.java.vm",
+          "packageSuffix":"service",
+          "path":"%s-service"
         },
         {
           "name":"serviceImpl",
-          "uri":"/template/spring/serviceImpl.java.vm",
-          "packageSuffix":"domain",
-          "path":"%s-domain"
+          "uri":"classpath:/template/spring/serviceImpl.java.vm",
+          "packageSuffix":"service",
+          "path":"%s-service"
+        },
+        {
+          "name":"manager",
+          "uri":"classpath:/template/spring/manager.java.vm",
+          "packageSuffix":"manager",
+          "path":"%s-manager"
+        },
+        {
+          "name":"managerImpl",
+          "uri":"classpath:/template/spring/managerImpl.java.vm",
+          "packageSuffix":"manager",
+          "path":"%s-manager"
         }
       ]
     }

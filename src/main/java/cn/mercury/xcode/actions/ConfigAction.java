@@ -21,7 +21,7 @@ public class ConfigAction extends AnAction {
      * @param text 菜单名称
      */
     ConfigAction(@Nullable String text) {
-        super(text);
+        super(text, text, Icons.load("icons/config.svg"));
     }
 
     /**

@@ -11,14 +11,12 @@ $!context.setSavePath($tool.append($sourcePath, "/controller"))
 #if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.web.#{end}controller;
 
 import $!{tableInfo.savePackageName}.model.$!{tableInfo.name};
-import $!{tableInfo.savePackageName}.service.$!{tableInfo.name}Service;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
+import $!{tableInfo.savePackageName}.manager.I$!{tableInfo.name}Manager;
 import org.springframework.web.bind.annotation.*;
-
+import topmall.framework.web.controller.ApiController;
+import cn.mercury.manager.IManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.Resource;
-
 /**
  * $!{tableInfo.comment}($!{tableInfo.name})表控制层
  *
@@ -31,8 +29,8 @@ public class $!{tableName}  extends ApiController<$!{tableInfo.name},$!{tool.get
     /**
      * 服务对象
      */
-    @Autowired
-    private I$!{tableInfo.name}Manager $!tool.firstLowerCase($tableInfo.name)Manager;
+    @Resource
+    private I$!{tableInfo.name}Manager manager;
 
     protected IManager<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}> getManager(){
         return manager;

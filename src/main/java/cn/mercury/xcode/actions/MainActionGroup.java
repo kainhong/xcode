@@ -105,12 +105,14 @@ public class MainActionGroup extends ActionGroup {
             mainAction = new MainAction("Generate Code");
             actionManager.registerAction(mainActionId, mainAction);
         }
+
         // 表配置菜单
         AnAction configAction = actionManager.getAction(configActionId);
         if (configAction == null) {
             configAction = new ConfigAction("Config Table");
             actionManager.registerAction(configActionId, configAction);
         }
+
         AnAction clearConfigAction = new AnAction("Clear Config") {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
