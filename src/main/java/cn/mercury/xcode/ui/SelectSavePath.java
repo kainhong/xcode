@@ -1,9 +1,9 @@
 package cn.mercury.xcode.ui;
 
+import cn.hutool.core.io.FileUtil;
 import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.StrState;
 import cn.mercury.xcode.generate.GenerateOptions;
-import cn.mercury.xcode.model.ProjectTree;
 import cn.mercury.xcode.model.SettingsStorage;
 import cn.mercury.xcode.model.table.TableInfo;
 import cn.mercury.xcode.model.template.Template;
@@ -15,6 +15,7 @@ import cn.mercury.xcode.utils.CacheDataUtils;
 import cn.mercury.xcode.utils.ModuleUtils;
 import cn.mercury.xcode.utils.ProjectUtils;
 import com.intellij.openapi.fileChooser.FileChooser;
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -75,6 +76,10 @@ public class SelectSavePath extends DialogWrapper {
      * 路径选择按钮
      */
     private JButton pathChooseButton;
+
+    private JButton btnSelectExtendTemplate;
+
+    private JTextField txtExtendTemplate;
     /**
      * 模板面板
      */
@@ -138,7 +143,7 @@ public class SelectSavePath extends DialogWrapper {
         // 初始化module，存在资源路径的排前面
         this.moduleList = new LinkedList<>();
 
-        ProjectTree projectTree = ModuleUtils.getProjectTree(project);
+        //ProjectTree projectTree = ModuleUtils.getProjectTree(project);
 
         for (Module module : ModuleManager.getInstance(project).getModules()) {
             // 存在源代码文件夹放前面，否则放后面
@@ -217,6 +222,33 @@ public class SelectSavePath extends DialogWrapper {
                 pathField.setText(virtualFile.getPath());
             }
         });
+
+        btnSelectExtendTemplate.addActionListener(e -> {
+            //将当前选中的model设置为基础路径
+            VirtualFile path = ProjectUtils.getBaseDir(project);
+            Module module = getSelectModule();
+            if (module != null) {
+                path = ModuleUtils.getSourcePath(module);
+            }
+            FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false , true, false, false);
+
+            VirtualFile virtualFile = FileChooser.chooseFile(descriptor, project, path);
+            if (virtualFile != null) {
+                if(FileUtil.exist(virtualFile.getPath() + "/setting.json")){
+                    Messages.showWarningDialog("配置文件不正确,请确保文件夹下面存在setting.json", GlobalDict.TITLE_INFO);
+                    return;
+                }
+                boolean ok = SettingsStorageService.getInstance().reloadTemplate(virtualFile.getPath());
+                if (ok) {
+                    SettingsStorageService.getInstance().getState().setExtendTemplateFile(virtualFile.getPath());
+                    txtExtendTemplate.setText(virtualFile.getPath());
+                    this.templateSelectComponent.refreshData();
+                } else {
+                    Messages.showWarningDialog("请确保配置文件和模板文件格式是否正确", GlobalDict.TITLE_INFO);
+                }
+
+            }
+        });
     }
 
     private void refreshData() {
@@ -235,6 +267,11 @@ public class SelectSavePath extends DialogWrapper {
         }
         SettingsStorage settings = SettingsStorageService.getSettingsStorage();
         String groupName = settings.getCurrTemplateGroupName();
+
+        if (StringUtils.isNotEmpty(settings.getExtendTemplateFile())) {
+            this.txtExtendTemplate.setText(settings.getExtendTemplateFile());
+        }
+
         if (!StringUtils.isEmpty(tableInfo.getTemplateGroupName())) {
             if (settings.getTemplateGroupMap().containsKey(tableInfo.getTemplateGroupName())) {
                 groupName = tableInfo.getTemplateGroupName();
@@ -409,7 +446,7 @@ public class SelectSavePath extends DialogWrapper {
      * 刷新目录
      */
     private void refreshPath() {
-        if( StringUtils.isNotEmpty(pathField.getText()))
+        if (StringUtils.isNotEmpty(pathField.getText()))
             return;
         String packageName = packageField.getText();
         // 获取基本路径

@@ -24,6 +24,8 @@ public class TemplateGroup implements AbstractGroup<TemplateGroup, Template> {
      */
     private List<Template> elementList;
 
+    private String type;
+
     @Override
     public String getName() {
         return name;
@@ -50,5 +52,13 @@ public class TemplateGroup implements AbstractGroup<TemplateGroup, Template> {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

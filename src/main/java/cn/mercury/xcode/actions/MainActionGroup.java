@@ -113,7 +113,7 @@ public class MainActionGroup extends ActionGroup {
             actionManager.registerAction(configActionId, configAction);
         }
 
-        AnAction clearConfigAction = new AnAction("Clear Config") {
+        AnAction clearConfigAction = new AnAction("Clear Config","Clear Config" ,Icons.load("icons/clear.svg")) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 List<DbTable> dbTables = CacheDataUtils.getInstance().getDbTableList();

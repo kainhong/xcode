@@ -37,17 +37,13 @@ import java.util.regex.PatternSyntaxException;
  */
 public class MainAction extends AnAction {
 
-    MainAction() {
-
-    }
-
     /**
      * 构造方法
      *
      * @param text 菜单名称
      */
     MainAction(@Nullable String text) {
-        super(text);
+        super(text, text, Icons.load("icons/run.svg"));
     }
 
     /**

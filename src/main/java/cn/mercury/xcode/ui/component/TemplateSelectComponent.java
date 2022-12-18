@@ -87,7 +87,7 @@ public class TemplateSelectComponent {
         this.refreshData();
     }
 
-    private void refreshData() {
+    public void refreshData() {
         this.groupComboBox.removeAllItems();
         for (String groupName : SettingsStorageService.getSettingsStorage().getTemplateGroupMap().keySet()) {
             this.groupComboBox.addItem(groupName);

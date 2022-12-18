@@ -16,7 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 设置储存服务实现
@@ -50,33 +52,46 @@ public class SettingsStorageServiceImpl implements SettingsStorageService {
     @Override
     public void loadState(@NotNull SettingsStorage state) {
         // 加载配置后填充默认值，避免版本升级导致的配置信息不完善问题
-        //state.fillDefaultVal();
-        //this.settingsStorage = state;
+        state.fillDefaultVal();
+        this.settingsStorage = state;
 
+        //dev
+        //this.settingsStorage = SettingsStorage.defaultVal();
 
-        this.settingsStorage = SettingsStorage.defaultVal();
         try {
-            loadExtend();
+            String path = this.settingsStorage.getExtendTemplateFile();
+            loadExtend(path, false);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
     }
 
 
-    private void loadExtend() {
-        String path = this.settingsStorage.getExtendTemplateFile();
-        if (StringUtils.isEmpty(path))
-            return;
+    private boolean loadExtend(String path, boolean reset) {
 
-        String json = FileUtil.readUtf8String(path);
+        if (StringUtils.isEmpty(path))
+            return false;
+        File file = new File(path + "/template.json");
+        if (!file.exists() || file.isDirectory())
+            return false;
+
+        String json = FileUtil.readUtf8String(file);
         Map<String, TemplateGroup> extGroups = JSON.parse(json, new TypeReference<Map<String, TemplateGroup>>() {
 
         });
 
         Map<String, TemplateGroup> groups = this.settingsStorage.getTemplateGroupMap();
 
+        if (groups.size() > 0 && extGroups.size() > 0) {
+            reset(groups);
+        }
+
         for (Map.Entry<String, TemplateGroup> kv : extGroups.entrySet()) {
+
             TemplateGroup g1 = kv.getValue();
+            if (g1.getName().equals("Spring") || g1.getName().equals("SpringBoot"))
+                continue;
+
             if (!kv.getKey().equals(g1.getName())) {
                 g1.setName(kv.getKey());
             }
@@ -92,29 +107,51 @@ public class SettingsStorageServiceImpl implements SettingsStorageService {
                     continue;
                 }
             }
+
             boolean ok = handleTemplatePath(path, g1);
             if (ok) {
+                g1.setType("extend");
                 groups.put(g1.getName(), g1);
             }
         }
+        return true;
 
     }
 
-    private boolean handleTemplatePath(String parent, TemplateGroup group) {
-        var parentPath = parent.substring(0,parent.lastIndexOf("\\"));
+    private void reset(Map<String, TemplateGroup> groups) {
+        List<String> keys = groups.keySet().stream().collect(Collectors.toList());
+        for (String key : keys) {
+            var group = groups.get(key);
+            if ("extend".equals(group.getType())) {
+                groups.remove(key);
+            }
+        }
+    }
 
+    private boolean handleTemplatePath(String parent, TemplateGroup group) {
         for (Template tpl : group.getElementList()) {
             var path = tpl.getUri();
             if (path.startsWith("./")) {
-                path = parentPath + "/" + path;
+                path = parent + "/" + path;
             }
             File file = new File(path);
 
-            if (!file.exists() || !file.isFile())
+            if (!file.exists() || !file.isFile()) {
+                logger.error("file not exist:" + file.getAbsolutePath());
                 return false;
+            }
 
             tpl.setUri("file:" + file.getAbsolutePath());
         }
         return true;
+    }
+
+    @Override
+    public boolean reloadTemplate(String path) {
+        try {
+            return this.loadExtend(path, true);
+        } catch (Exception ex) {
+            return false;
+        }
     }
 }

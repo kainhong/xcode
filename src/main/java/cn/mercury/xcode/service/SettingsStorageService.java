@@ -28,4 +28,6 @@ public interface SettingsStorageService extends PersistentStateComponent<Setting
     static SettingsStorage getSettingsStorage() {
         return getInstance().getState();
     }
+
+    boolean reloadTemplate(String path);
 }

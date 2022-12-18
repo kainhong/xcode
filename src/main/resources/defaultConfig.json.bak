@@ -6,6 +6,7 @@
   "currTemplateGroupName":"Default",
   "currColumnConfigGroupName":"Default",
   "currGlobalConfigGroupName":"Default",
+  "extendTemplateFile":"E:\\work\\xcode\\src\\test\\resources\\template\\springboot2.json",
   "typeMapper":{
     "Default":{
       "name":"Default",
