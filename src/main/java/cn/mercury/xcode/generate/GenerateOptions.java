@@ -41,4 +41,6 @@ public class GenerateOptions {
      * 多模块
      */
     private boolean mixed;
+
+    private String packageName;
 }

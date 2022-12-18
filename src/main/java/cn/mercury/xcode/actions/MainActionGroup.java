@@ -1,6 +1,7 @@
 package cn.mercury.xcode.actions;
 
 import cn.mercury.xcode.GlobalDict;
+import cn.mercury.xcode.service.SettingsStorageService;
 import cn.mercury.xcode.service.TableInfoSettingsService;
 import cn.mercury.xcode.utils.CacheDataUtils;
 import com.intellij.database.psi.DbTable;
@@ -122,7 +123,7 @@ public class MainActionGroup extends ActionGroup {
                 }
                 for (DbTable dbTable : dbTables)
                     TableInfoSettingsService.getInstance().removeTableInfo(dbTable);
-
+                SettingsStorageService.getInstance().getState().resetDefaultVal();
                 Messages.showInfoMessage("表配置信息已重置成功", GlobalDict.TITLE_INFO);
             }
         };

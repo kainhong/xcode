@@ -151,13 +151,13 @@
         {
           "name":"repository",
           "uri":"classpath:/template/spring/repository.java.vm",
-          "packageSuffix":"dal",
+          "packageSuffix":"dal.database",
           "path":"%s-dal"
         },
         {
           "name":"entity",
           "uri":"classpath:/template/spring/entity.java.vm",
-          "packageSuffix":"common",
+          "packageSuffix":"common.model",
           "path":"%s-common"
         },
         {

@@ -21,7 +21,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
     </resultMap>
 
     <sql id="column_list">
-        #allSqlColumn()
+#allSqlColumn()
 
     </sql>
 
@@ -29,12 +29,11 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
         <if test="null!=params.queryCondition and ''!=params.queryCondition">
             And ${params.queryCondition}
         </if>
-    #foreach($column in $tableInfo.fullColumn)
+#foreach($column in $tableInfo.fullColumn)
         <if test="$!column.name != null#if($column.type.equals("java.lang.String")) and ''!=params.$!column.name #end">
             And `$!column.obj.name` = #{params.$!column.name}
         </if>
-    #end
-
+#end
     </sql>
     <!--查询单个-->
     <select id="findByPrimaryKey" resultMap="baseResultMap" >
@@ -50,7 +49,6 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
         Select
         <include refid="column_list" />
         From $!tableInfo.obj.name
-
         <where>
             <include refid="uniqe_condition" />
         </where>
@@ -83,7 +81,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
     <select id="selectByParams" resultMap="baseResultMap" parameterType="map">
         Select
         <include refid="column_list" />
-        From $!tableInfo.obj.name
+        From `$!tableInfo.obj.name`
         <where>
             <include refid="condition" />
         </where>
@@ -95,27 +93,48 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="$!pk.name" useGeneratedKeys="true">
-        Insert Into $!{tableInfo.obj.name}(#foreach($column in $tableInfo.otherColumn)`$!column.obj.name`#if($velocityHasNext), #end#end)
-        Values (#foreach($column in $tableInfo.otherColumn)#{$!{column.name}}#if($velocityHasNext), #end#end)
+        Insert Into `$!{tableInfo.obj.name}` (
+#foreach($column in $tableInfo.fullColumn)
+         `$!column.obj.name` #if($velocityHasNext),
+#end#end )
+        Values (
+#foreach($column in $tableInfo.otherColumn)
+        #{$!{column.name}} #if($velocityHasNext),
+#end#end
+        )
     </insert>
 
     <insert id="insertBatch" keyProperty="$!pk.name" useGeneratedKeys="true">
-        Insert Into $!{tableInfo.obj.name}(#foreach($column in $tableInfo.otherColumn)`$!column.obj.name`#if($velocityHasNext), #end#end)
-        Values
+        Insert Into `$!{tableInfo.obj.name}` (
+#foreach($column in $tableInfo.fullColumn)
+           `$!column.obj.name`#if($velocityHasNext),
+#end#end
+        ) Values
         <foreach collection="entities" item="entity" separator=",">
-        (#foreach($column in $tableInfo.otherColumn)#{entity.$!{column.name}}#if($velocityHasNext), #end#end)
+        (
+#foreach($column in $tableInfo.otherColumn)
+            #{entity.$!{column.name}}#if($velocityHasNext),
+#end#end
+        )
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="$!pk.name" useGeneratedKeys="true">
-        Insert Into $!{tableInfo.obj.name}(#foreach($column in $tableInfo.otherColumn)$!column.obj.name#if($velocityHasNext), #end#end)
-        Values
+        Insert Into `$!{tableInfo.obj.name}`
+#foreach($column in $tableInfo.fullColumn)
+        `$!column.obj.name` #if($velocityHasNext),
+#end#end
+       )Values
         <foreach collection="entities" item="entity" separator=",">
-            (#foreach($column in $tableInfo.otherColumn)#{entity.$!{column.name}}#if($velocityHasNext), #end#end)
+         (
+#foreach($column in $tableInfo.otherColumn)
+         #{entity.$!{column.name}}#if($velocityHasNext),
+#end#end )
         </foreach>
         On Duplicate Key Update
-        #foreach($column in $tableInfo.otherColumn)`$!column.obj.name` = values($!column.obj.name)#if($velocityHasNext),
-        #end#end
+#foreach($column in $tableInfo.otherColumn)
+        `$!column.obj.name` = values($!column.obj.name) #if($velocityHasNext),
+#end#end
 
     </insert>
 
@@ -125,7 +144,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
         <set>
 #foreach($column in $tableInfo.otherColumn)
             <if test="$!column.name != null#if($column.type.equals("java.lang.String")) and $!column.name != ''#end">
-                $!column.obj.name = #{$!column.name},
+                `$!column.obj.name` = #{$!column.name},
             </if>
 #end
         </set>

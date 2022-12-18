@@ -161,10 +161,20 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             param.put("context", context);
             param.put("modulePath", path);
 
-            if (generateOptions.isMixed())
-                param.put("sourcePath", path + "/src/main/java/" + packagePath + "/" + template.getPackageSuffix());
+            if (generateOptions.isMixed() || !path.contains("/src/main/java/"))
+                param.put("sourcePath", path + "/src/main/java/"
+                        + packagePath + "/"
+                        +  template.getPackageSuffix().replaceAll("\\.","/"));
             else
                 param.put("sourcePath", path);
+
+            String packageName = generateOptions.getPackageName();
+
+            if(StringUtils.isNotEmpty( template.getPackageSuffix() ))
+                packageName  += "." + template.getPackageSuffix();
+
+            param.put("packageName",packageName);
+            param.put(template.getName() + "PackageName",packageName);
 
             context.setSavePath(path);
 
