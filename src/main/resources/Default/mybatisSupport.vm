@@ -27,6 +27,6 @@
 
 ##定义宏，查询所有列
 #macro(allSqlColumn)#foreach($column in $tableInfo.fullColumn)
-        `$column.obj.name`#if($velocityHasNext),
-#end
+`$column.obj.name`#if($velocityHasNext),
+    #end
 #end#end

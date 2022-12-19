@@ -98,6 +98,7 @@ public class SettingsStorage {
         defaultVal.getTypeMapperGroupMap().forEach((k, v) -> {
             getTypeMapperGroupMap().put(k, v);
         });
+
     }
 
     /**

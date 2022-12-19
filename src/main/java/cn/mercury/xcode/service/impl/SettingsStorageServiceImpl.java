@@ -1,6 +1,8 @@
 package cn.mercury.xcode.service.impl;
 
 import cn.hutool.core.io.FileUtil;
+import cn.mercury.xcode.model.GlobalConfig;
+import cn.mercury.xcode.model.GlobalConfigGroup;
 import cn.mercury.xcode.model.SettingsStorage;
 import cn.mercury.xcode.model.template.Template;
 import cn.mercury.xcode.model.template.TemplateGroup;
@@ -45,6 +47,8 @@ public class SettingsStorageServiceImpl implements SettingsStorageService {
         return settingsStorage;
     }
 
+
+
     /**
      * 加载配置
      *
@@ -81,8 +85,16 @@ public class SettingsStorageServiceImpl implements SettingsStorageService {
                 template.setValue(content);
             }
         }
+        Map<String, GlobalConfigGroup> configGroups = this.settingsStorage.getGlobalConfigGroupMap();
+        for (GlobalConfigGroup value : configGroups.values()) {
+            for (GlobalConfig globalConfig : value.getElementList()) {
+                if (StringUtils.isNotEmpty(globalConfig.getValue()) && !force)
+                    continue;
+                String content = ResourcesUtils.readText(globalConfig.getUri());
+                globalConfig.setValue(content);
+            }
+        }
     }
-
 
     private boolean loadExtend(String path, boolean reset) {
 
@@ -161,6 +173,13 @@ public class SettingsStorageServiceImpl implements SettingsStorageService {
             tpl.setValue(FileUtil.readUtf8String(file));
         }
         return true;
+    }
+
+    @Override
+    public void reset() {
+        @Nullable SettingsStorage state = this.getState();
+        state.resetDefaultVal();
+        this.loadState(state);
     }
 
     @Override

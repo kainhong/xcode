@@ -123,8 +123,9 @@ public class MainActionGroup extends ActionGroup {
                 }
                 for (DbTable dbTable : dbTables)
                     TableInfoSettingsService.getInstance().removeTableInfo(dbTable);
+
                 SettingsStorageService.getInstance().getState().resetDefaultVal();
-                Messages.showInfoMessage("表配置信息已重置成功", GlobalDict.TITLE_INFO);
+                Messages.showInfoMessage("配置信息已重置成功", GlobalDict.TITLE_INFO);
             }
         };
         // 返回所有菜单

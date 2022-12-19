@@ -7,7 +7,7 @@
 
 ##定义设置包名后缀的宏定义，调用方式：#setPackageSuffix("Test")
 #macro(setPackageSuffix $suffix)
-#if($suffix!="")package #end#if($tableInfo.savePackageName!="")$!{tableInfo.savePackageName}.#{end}$!suffix;
+    #if($suffix!="")package #end#if($tableInfo.savePackageName!="")$!{tableInfo.savePackageName}.#{end}$!suffix;
 #end
 
 ##定义直接保存路径与文件名简化的宏定义，调用方式：#save("/entity", ".java")
@@ -19,21 +19,21 @@
 ##定义表注释的宏定义，调用方式：#tableComment("注释信息")
 #macro(tableComment $desc)
 /**
- * $!{tableInfo.comment}($!{tableInfo.name})$desc
- *
- * @author $!author
- * @since $!time.currTime()
- */
+* $!{tableInfo.comment}($!{tableInfo.name})$desc
+*
+* @author $!author
+* @since $!time.currTime()
+*/
 #end
 
 ##定义GET，SET方法的宏定义，调用方式：#getSetMethod($column)
 #macro(getSetMethod $column)
 
-    public $!{tool.getClsNameByFullName($column.type)} get$!{tool.firstUpperCase($column.name)}() {
-        return $!{column.name};
-    }
+public $!{tool.getClsNameByFullName($column.type)} get$!{tool.firstUpperCase($column.name)}() {
+return $!{column.name};
+}
 
-    public void set$!{tool.firstUpperCase($column.name)}($!{tool.getClsNameByFullName($column.type)} $!{column.name}) {
-        this.$!{column.name} = $!{column.name};
-    }
+public void set$!{tool.firstUpperCase($column.name)}($!{tool.getClsNameByFullName($column.type)} $!{column.name}) {
+this.$!{column.name} = $!{column.name};
+}
 #end

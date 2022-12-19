@@ -1,10 +1,11 @@
-package cn.mercury.xcode.ui;
+package cn.mercury.xcode.ui.base;
 
 import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.factory.CellEditorFactory;
 import cn.mercury.xcode.model.table.ColumnConfig;
 import cn.mercury.xcode.model.table.TableInfo;
 import cn.mercury.xcode.service.TableInfoSettingsService;
+import cn.mercury.xcode.ui.ConfigTableModel;
 import cn.mercury.xcode.utils.CacheDataUtils;
 import cn.mercury.xcode.utils.CurrGroupUtils;
 import cn.mercury.xcode.utils.ProjectUtils;

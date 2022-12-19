@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "cn.mercury"
-version = "1.0.0000"
+version = "1.0.0a"
 
 repositories {
     mavenLocal()

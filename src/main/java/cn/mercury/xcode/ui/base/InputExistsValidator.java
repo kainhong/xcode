@@ -1,4 +1,4 @@
-package cn.mercury.xcode.ui;
+package cn.mercury.xcode.ui.base;
 
 import com.intellij.openapi.ui.InputValidator;
 import org.apache.commons.lang.StringUtils;

@@ -1,4 +1,4 @@
-package cn.mercury.xcode.ui;
+package cn.mercury.xcode.ui.base;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorSettings;

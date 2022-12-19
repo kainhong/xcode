@@ -62,6 +62,6 @@ public class Template implements AbstractEditorItem<Template> {
 
     @Override
     public String fileContent() {
-        return this.code;
+        return this.value;
     }
 }

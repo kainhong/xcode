@@ -1,6 +1,6 @@
 package cn.mercury.xcode.actions;
 
-import cn.mercury.xcode.ui.ConfigTableDialog;
+import cn.mercury.xcode.ui.base.ConfigTableDialog;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
