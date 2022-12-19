@@ -27,6 +27,9 @@ public class Template implements AbstractEditorItem<Template> {
     private String path;
 
     private String packageSuffix;
+
+    private String value;
+
     public Template(){
 
     }

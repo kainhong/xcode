@@ -78,7 +78,4 @@ public class VelocityUtils {
         return sb.toString();
     }
 
-    private static String getTemplateContent(Template template) {
-        return ResourcesUtils.readText(template.getUri());
-    }
 }

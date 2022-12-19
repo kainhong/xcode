@@ -6,6 +6,7 @@ import cn.mercury.xcode.model.template.Template;
 import cn.mercury.xcode.model.template.TemplateGroup;
 import cn.mercury.xcode.service.SettingsStorageService;
 import cn.mercury.xcode.utils.JSON;
+import cn.mercury.xcode.utils.ResourcesUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -60,9 +61,25 @@ public class SettingsStorageServiceImpl implements SettingsStorageService {
 
         try {
             String path = this.settingsStorage.getExtendTemplateFile();
+
+            loadContext(false);
+
             loadExtend(path, false);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+        }
+    }
+
+    private void loadContext(boolean force) {
+        Map<String, TemplateGroup> groups = this.settingsStorage.getTemplateGroupMap();
+        for (TemplateGroup group : groups.values()) {
+            for (Template template : group.getElementList()) {
+                if (StringUtils.isNotEmpty(template.getValue()) && !force)
+                    continue;
+
+                String content = ResourcesUtils.readText(template.getUri());
+                template.setValue(content);
+            }
         }
     }
 
@@ -140,8 +157,8 @@ public class SettingsStorageServiceImpl implements SettingsStorageService {
                 logger.error("file not exist:" + file.getAbsolutePath());
                 return false;
             }
-
             tpl.setUri("file:" + file.getAbsolutePath());
+            tpl.setValue(FileUtil.readUtf8String(file));
         }
         return true;
     }
@@ -149,6 +166,7 @@ public class SettingsStorageServiceImpl implements SettingsStorageService {
     @Override
     public boolean reloadTemplate(String path) {
         try {
+            loadContext(true);
             return this.loadExtend(path, true);
         } catch (Exception ex) {
             return false;
