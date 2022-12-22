@@ -13,7 +13,7 @@ $!context.setSavePath($tool.append($sourcePath, ""))
 
 import javax.annotation.Resource;
 
-import $!{tableInfo.savePackageName}.model.$!{tableInfo.name};
+import $!{tableInfo.savePackageName}.common.model.$!{tableInfo.name};
 import $!{tableInfo.savePackageName}.service.$!{tableInfo.name}Service;
 import $!{tableInfo.savePackageName}.manager.$!{tableInfo.name}Manager;
 import com.yougou.logistics.base.manager.BaseCrudManagerImpl;
