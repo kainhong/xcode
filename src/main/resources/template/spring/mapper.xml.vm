@@ -16,7 +16,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="$!{tableInfo.savePackageName}.dal.database.$!{tableInfo.name}Mapper">
     <!-- auto generate -->
-    <resultMap type="$!{entity}" id="baseResultMap">
+    <resultMap id="baseResultMap" type="$!{entity}">
 #foreach($column in $tableInfo.fullColumn)
         <result column="$!column.obj.name" property="$!column.name" jdbcType="$!column.ext.jdbcType"/>
 #end

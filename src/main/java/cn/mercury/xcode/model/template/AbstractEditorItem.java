@@ -5,7 +5,7 @@ import cn.mercury.xcode.model.AbstractItem;
 /**
  * 抽象的可编辑元素
  *
- * @author makejava
+
  * @version 1.0.0
  * @date 2021/08/11 13:45
  */

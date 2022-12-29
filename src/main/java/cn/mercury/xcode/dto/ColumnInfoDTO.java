@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 /**
  * 列信息传输对象
  *
- * @author makejava
  * @version 1.0.0
  * @date 2021/08/14 17:29
  */

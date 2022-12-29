@@ -10,7 +10,7 @@ import javax.swing.*;
  * 消息弹框工具类
  * 对message dialog弹框进行兼容处理
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2021/02/01 15:36
  */

@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * 时间工具类
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2018/07/19 13:16
  */

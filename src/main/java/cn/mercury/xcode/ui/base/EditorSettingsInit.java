@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.EditorSettings;
 /**
  * 编辑器设置初始化
  *
- * @author makejava
+
  * @version 1.0.0
  * @date 2021/08/13 09:26
  */

@@ -1,0 +1,4418 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wonhigh.retail.fas.dal.database.BillBalanceMapper">
+	<resultMap id="BaseResultMap"
+			   type="cn.wonhigh.retail.fas.common.model.BillBalance">
+		<result column="id" property="id" jdbcType="CHAR" />
+		<result column="bill_no" property="billNo" jdbcType="CHAR" />
+		<result column="bill_name" property="billName" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="extend_status" property="extendStatus"
+				jdbcType="TINYINT" />
+		<result column="balance_type" property="balanceType" jdbcType="TINYINT" />
+		<result column="buyer_no" property="buyerNo" jdbcType="CHAR" />
+		<result column="buyer_name" property="buyerName" jdbcType="VARCHAR" />
+		<result column="saler_no" property="salerNo" jdbcType="CHAR" />
+		<result column="saler_name" property="salerName" jdbcType="VARCHAR" />
+		<result column="pipeline_company_no" property="pipelineCompanyNo" jdbcType="VARCHAR" />
+		<result column="pipeline_company_name" property="pipelineCompanyName" jdbcType="VARCHAR" />
+		<result column="organ_no" property="organNo" jdbcType="VARCHAR" />
+		<result column="organ_name" property="organName" jdbcType="VARCHAR" />
+		<result column="organ_no_from" property="organNoFrom" jdbcType="VARCHAR" />
+		<result column="organ_name_from" property="organNameFrom"
+				jdbcType="VARCHAR" />
+		<result column="brand_no" property="brandNo" jdbcType="CHAR" />
+		<result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+		<result column="brand_unit_no" property="brandUnitNo" jdbcType="CHAR" />
+		<result column="brand_unit_name" property="brandUnitName"
+				jdbcType="VARCHAR" />
+		<result column="category_no" property="categoryNo" jdbcType="CHAR" />
+		<result column="category_name" property="categoryName"
+				jdbcType="VARCHAR" />
+		<result column="balance_date" property="balanceDate" jdbcType="DATE" />
+		<result column="balance_start_date" property="balanceStartDate"
+				jdbcType="DATE" />
+		<result column="balance_end_date" property="balanceEndDate"
+				jdbcType="DATE" />
+		<result column="sbalance_start_date" property="sbalanceStartDate"
+				jdbcType="VARCHAR" />
+		<result column="sbalance_end_date" property="sbalanceEndDate"
+				jdbcType="VARCHAR" />
+		<result column="currency" property="currency" jdbcType="VARCHAR" />
+		<result column="out_amount" property="outAmount" jdbcType="DECIMAL" />
+		<result column="entry_amount" property="entryAmount" jdbcType="DECIMAL" />
+		<result column="tag_price_amount" property="tagPriceAmount" jdbcType="DECIMAL" />
+		<result column="return_amount" property="returnAmount"
+				jdbcType="DECIMAL" />
+		<result column="custom_return_amount" property="customReturnAmount"
+				jdbcType="DECIMAL" />
+		<result column="deduction_amount" property="deductionAmount"
+				jdbcType="DECIMAL" />
+		<result column="balance_amount" property="balanceAmount"
+				jdbcType="DECIMAL" />
+		<result column="invoice_amount" property="invoiceAmount"
+				jdbcType="DECIMAL" />
+		<result column="has_balance_amount" property="hasBalanceAmount"
+				jdbcType="DECIMAL" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="auditor" property="auditor" jdbcType="VARCHAR" />
+		<result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="out_qty" property="outQty" jdbcType="INTEGER" />
+		<result column="entry_qty" property="entryQty" jdbcType="INTEGER" />
+		<result column="return_qty" property="returnQty" jdbcType="INTEGER" />
+		<result column="custom_return_qty" property="customReturnQty"
+				jdbcType="INTEGER" />
+		<result column="deduction_qty" property="deductionQty"
+				jdbcType="INTEGER" />
+		<result column="balance_qty" property="balanceQty" jdbcType="INTEGER" />
+		<result column="ask_payment_no" property="askPaymentNo"
+				jdbcType="VARCHAR" />
+		<result column="invoice_apply_no" property="invoiceApplyNo"
+				jdbcType="VARCHAR" />
+		<result column="extend_category_no" property="extendCategoryNo"
+				jdbcType="VARCHAR" />
+		<result column="extend_category_name" property="extendCategoryName"
+				jdbcType="VARCHAR" />
+		<result column="invoice_no" property="invoiceNo" jdbcType="VARCHAR" />
+		<result column="is_user_defined" property="isUserDefined"
+				jdbcType="INTEGER" />
+		<result column="invoice_rebate_amount" property="invoiceRebateAmount"
+				jdbcType="DECIMAL" />
+		<result column="rebate_amount" property="rebateAmount"
+				jdbcType="DECIMAL" />
+		<result column="supplier_amount" property="supplierAmount"
+				jdbcType="DECIMAL" />
+		<result column="is_apportion_rebate" property="isApportionRebate"
+				jdbcType="INTEGER" />
+		<result column="other_price" property="otherPrice" jdbcType="DECIMAL" />
+		<result column="is_update_otherDeduction" property="isUpdateOtherDeduction"
+				jdbcType="VARCHAR" />
+		<result column="advance_invoice_sign" property="advanceInvoiceSign"
+				jdbcType="INTEGER" />
+		<result column="is_acceptance" property="isAcceptance" jdbcType="INTEGER" />
+		<result column="is_for_pay" property="isForPay" jdbcType="INTEGER" />
+		<result column="is_discount_exc" property="isDiscountExc" jdbcType="TINYINT" />
+		<result column="management_type" property="managementType" jdbcType="INTEGER" />
+		<result column="balance_flag" property="balanceFlag" jdbcType="TINYINT" />
+		<result column="balance_month" property="balanceMonth" jdbcType="TINYINT" />
+		<result column="payment_amount" property="paymentAmount" jdbcType="DECIMAL" />
+	</resultMap>
+
+	<resultMap id="ForNcDataResultMap"
+			   type="cn.wonhigh.retail.fas.common.dto.PushToNcDataDto">
+		<result column="fasMenuNo1" property="fasMenuNo1" jdbcType="VARCHAR" />
+		<result column="balanceNo" property="balanceNo" jdbcType="VARCHAR" />
+		<result column="billNo" property="billNo" jdbcType="VARCHAR" />
+		<result column="ask_payment_no" property="askPaymentNo"
+				jdbcType="VARCHAR" />
+		<result column="invoice_apply_no" property="invoiceApplyNo"
+				jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="extend_status" property="extendStatus"
+				jdbcType="TINYINT" />
+		<result column="as_posting" property="asPosting" jdbcType="TINYINT" />
+		<result column="is_posting" property="isPosting" jdbcType="TINYINT" />
+		<result column="sx_as_posting" property="sxAsPosting" jdbcType="TINYINT" />
+		<result column="sx_is_posting" property="sxIsPosting" jdbcType="TINYINT" />
+		<result column="saler_name" property="salerName" jdbcType="VARCHAR" />
+		<result column="buyer_name" property="buyerName" jdbcType="VARCHAR" />
+		<result column="saler_no" property="salerNo" jdbcType="VARCHAR" />
+		<result column="buyer_no" property="buyerNo" jdbcType="VARCHAR" />
+		<result column="shopNo" property="shopNo" jdbcType="VARCHAR" />
+		<result column="shopName" property="shopName" jdbcType="VARCHAR" />
+		<result column="balanceStartDate" property="balanceStartDate"
+				jdbcType="DATE" />
+		<result column="balanceEndDate" property="balanceEndDate"
+				jdbcType="DATE" />
+		<result column="sbalance_start_date" property="sbalanceStartDate"
+				jdbcType="VARCHAR" />
+		<result column="sbalance_end_date" property="sbalanceEndDate"
+				jdbcType="VARCHAR" />
+		<result column="brand_unit_name" property="brandUnitName"
+				jdbcType="VARCHAR" />
+		<result column="out_qty" property="outQty" jdbcType="INTEGER" />
+		<result column="out_amount" property="outAmount" jdbcType="DECIMAL" />
+		<result column="no_tax_amount" property="noTaxAmount" jdbcType="DECIMAL" />
+		<result column="balance_qty" property="balanceQty" jdbcType="INTEGER" />
+		<result column="balance_amount" property="balanceAmount"
+				jdbcType="DECIMAL" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="auditor" property="auditor" jdbcType="VARCHAR" />
+		<result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+		<result column="fasMenuNo" property="fasMenuNo" jdbcType="VARCHAR" />
+		<result column="pay_back_date" property="payBackDate" jdbcType="DATE" />
+		<result column="balance_month" property="balanceMonth" jdbcType="VARCHAR" />
+
+		<result column="ai_not_account" property="aiNotAccount" jdbcType="VARCHAR" />
+		<result column="invoice_apply_date" property="invoiceApplyDate" jdbcType="DATE"/>
+		<result column="invoice_type" property="invoiceType" jdbcType="INTEGER" />
+
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="trans_id" property="transId" jdbcType="VARCHAR" />
+		<result column="bank_seq_number" property="bankSeqNumber" jdbcType="VARCHAR" />
+		<result column="accounts" property="accounts" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		w.id, w.bill_no, w.bill_name,w.is_update_otherDeduction,w.status,w.extend_status,
+		w.balance_type, w.buyer_no,w.buyer_name, w.saler_no, w.saler_name, w.pipeline_company_no, w.pipeline_company_name, w.organ_no, w.organ_name, w.organ_no_from,
+		w.organ_name_from, w.brand_no, w.brand_name, w.brand_unit_no, w.brand_unit_name, w.category_no,
+		w.category_name, w.balance_date, w.balance_start_date, w.balance_end_date,w.currency, w.out_amount,
+		w.entry_amount,w.tag_price_amount, w.return_amount, w.deduction_amount, w.balance_amount,
+		w.invoice_amount,w.has_balance_amount, w.create_user, w.create_time, w.update_user, w.update_time, w.auditor, w.audit_time, w.remark,
+		w.out_qty, w.entry_qty, w.return_qty, w.deduction_qty, w.balance_qty,w.extend_category_no, w.extend_category_name, w.supplier_amount,
+		w.ask_payment_no, w.invoice_apply_no, w.invoice_no, w.is_user_defined, w.rebate_amount, w.invoice_rebate_amount, w.custom_return_qty, w.custom_return_amount,
+		w.is_apportion_rebate, w.other_price, w.pe_biz_type, w.advance_invoice_sign, w.is_acceptance, w.is_for_pay, w.is_discount_exc, w.management_type,
+		w.is_posting, w.as_posting, w.sx_is_posting, w.sx_as_posting, w.balance_flag, w.balance_month,w.payment_amount,
+		(
+			CASE
+				WHEN w.balance_type != 7 THEN NULL
+				ELSE
+					(
+						SELECT
+							IFNULL(wbd.inner_channel_no,1) inner_channel_no
+						FROM
+							wholesale_balance_date wbd
+						WHERE
+							wbd.buyer_no = w.buyer_no
+							AND wbd.saler_no = w.saler_no
+							AND wbd.balance_start_date = w.balance_start_date
+							AND wbd.balance_end_date = w.balance_end_date
+						LIMIT 1
+					)
+			END
+		) inner_channel_no
+	</sql>
+	<sql id="condition">
+		<if test="null!=params">
+			<choose>
+				<when test="params.notFilterUcPermission != null and 'notFilter'.equals(params.notFilterUcPermission)"></when>
+				<otherwise>
+					<if test="null!=params.balanceType and 7==params.balanceType">
+						-- AND @company_no!saler_no
+					</if>
+					<if test="null!=params.balanceType and (2==params.balanceType or 3==params.balanceType or 5==params.balanceType or 11==params.balanceType)">
+						-- AND @company_no!saler_no
+					</if>
+				</otherwise>
+			</choose>
+			<if test="params.queryCondition != null and !''.equals(params.queryCondition)">
+				${params.queryCondition}
+			</if>
+			<if test="params.balanceType != null and !''.equals(params.balanceType)">
+				AND w.balance_type = #{params.balanceType}
+			</if>
+			<if test="params.multiBalanceType != null and !''.equals(params.multiBalanceType)">
+				AND w.balance_type IN ${params.multiBalanceType}
+			</if>
+			<if test="params.buyerNo != null and !''.equals(params.buyerNo)">
+				AND w.buyer_no = #{params.buyerNo}
+			</if>
+			<if test="params.buyerNoS != null and !''.equals(params.buyerNoS)">
+				AND w.buyer_no in ${params.buyerNoS}
+			</if>
+			<if test="params.salerNo != null and !''.equals(params.salerNo)">
+				AND w.saler_no = #{params.salerNo}
+			</if>
+			<if test="params.brandNo != null and !''.equals(params.brandNo)">
+				AND w.brand_no = #{params.brandNo}
+			</if>
+			<if test="params.brandNos != null and !''.equals(params.brandNos)">
+				AND w.brand_no in ${params.brandNos}
+			</if>
+			<if test="params.categoryNo != null and !''.equals(params.categoryNo)">
+				AND w.category_no = #{params.categoryNo}
+			</if>
+			<if test="params.createUser != null and !''.equals(params.createUser)">
+				AND w.create_user = #{params.createUser}
+			</if>
+			<if test="params.createTimeStart != null and !''.equals(params.createTimeStart)">
+				AND w.create_time &gt;= '${params.createTimeStart} 00:00:00'
+			</if>
+			<if test="params.createTimeEnd != null and !''.equals(params.createTimeEnd)">
+				AND w.create_time &lt;= '${params.createTimeEnd} 23:59:59'
+			</if>
+			<if test="params.auditor != null and !''.equals(params.auditor)">
+				AND w.auditor = #{params.auditor}
+			</if>
+			<if test="params.auditTimeStart != null and !''.equals(params.auditTimeStart)">
+				AND w.audit_time &gt;= '${params.auditTimeStart} 00:00:00'
+			</if>
+			<if test="params.auditTimeEnd != null and !''.equals(params.auditTimeEnd)">
+				AND w.audit_time &lt;= '${params.auditTimeEnd} 23:59:59'
+			</if>
+			<if test="params.askPaymentNo != null and !''.equals(params.askPaymentNo) ">
+				AND w.ask_payment_no = #{params.askPaymentNo}
+			</if>
+			<if test="params.billNo != null and !''.equals(params.billNo) ">
+				AND w.bill_no = #{params.billNo}
+			</if>
+			<if test="params.invoiceApplyNo != null and !''.equals(params.invoiceApplyNo) ">
+				AND w.invoice_apply_no = #{params.invoiceApplyNo}
+			</if>
+			<if test="params.status != null and !''.equals(params.status)">
+				AND w.status = #{params.status}
+			</if>
+			<if test="params.extendStatus != null and !''.equals(params.extendStatus)">
+				AND w.extend_status = #{params.extendStatus}
+			</if>
+			<if test="params.multiBillNo != null and !''.equals(params.multiBillNo)">
+				AND w.bill_no in ${params.multiBillNo}
+			</if>
+			<if test="params.multiNotBillNo != null and !''.equals(params.multiNotBillNo)">
+				AND w.bill_no not in ${params.multiNotBillNo}
+			</if>
+			<if test="params.multiStatus != null and !''.equals(params.multiStatus)">
+				AND w.status in ${params.multiStatus}
+			</if>
+			<if test="params.isNull != null and !''.equals(params.isNull)">
+				AND (${params.isNull} IS NULL OR ${params.isNull} = '')
+			</if>
+			<if
+					test="params.balanceStartDate != null and !''.equals(params.balanceStartDate) ">
+				AND w.balance_start_date &gt;= #{params.balanceStartDate}
+			</if>
+			<if test="params.balanceEndDate != null and !''.equals(params.balanceEndDate) ">
+				AND w.balance_end_date &lt;= #{params.balanceEndDate}
+			</if>
+			<if test="params.buyerNoArray != null and !''.equals(params.buyerNoArray)">
+				AND w.buyer_no in
+				<foreach collection="params.buyerNoArray" item="tempBuyerNo"
+						 open="(" separator="," close=")">
+					#{tempBuyerNo}
+				</foreach>
+			</if>
+			<if test="params.buyerNameCondition != null and !''.equals(params.buyerNameCondition)">
+				AND w.buyer_name LIKE CONCAT('%',#{params.buyerNameCondition},'%')
+			</if>
+			<if test="params.salerNameCondition != null and !''.equals(params.salerNameCondition)">
+				AND w.saler_name LIKE CONCAT('%',#{params.salerNameCondition},'%')
+			</if>
+			<if test="null!=params.multiSalerNo and !''.equals(params.multiSalerNo)" >
+				and w.saler_no in ${params.multiSalerNo}
+			</if>
+			<if
+					test="params.organNoFromCondition != null and !''.equals(params.organNoFromCondition)">
+				<foreach collection="params.organNoFromCondition" item="organNoFromTemp"
+						 separator="OR" open="AND ( 1=2 OR " close=")" index="">
+					w.organ_no_from LIKE CONCAT('%',#{organNoFromTemp},'%')
+				</foreach>
+			</if>
+			<if test="params.balanceNo != null and !''.equals(params.balanceNo)">
+				AND w.bill_no = #{params.balanceNo}
+			</if>
+			<if test="params.balanceNoMaps != null and !''.equals(params.balanceNoMaps)">
+				AND w.bill_no in (${params.balanceNoMaps})
+			</if>
+			<if test="params.q != null and !''.equals(params.q)">
+				AND UPPER(w.bill_no) LIKE UPPER(CONCAT('%',#{params.q},'%'))
+			</if>
+
+			<!-- 一级请款单 -->
+			<if
+					test="params.oneLevelApply != null and !''.equals(params.oneLevelApply) and params.oneLevelApply==1">
+				AND w.balance_type IN (16, 98,115)
+				AND w.STATUS = '1'
+				AND (w.ask_payment_no is null or w.ask_payment_no ='')
+				AND w.balance_start_date &gt; '2018-03-01'
+			</if>
+			<if test="params.billNoList != null and params.billNoList.size() > 0">
+				AND w.bill_no IN (
+				<foreach collection="params.billNoList" item="billNo" separator=",">
+					#{billNo}
+				</foreach>
+				)
+			</if>
+			<if test="params.ltBalanceEndDate != null and !''.equals(params.ltBalanceEndDate)">
+				AND w.balance_start_date &lt;= #{params.ltBalanceEndDate}
+			</if>
+			<if test="params.gtBalanceStartDate != null and !''.equals(params.gtBalanceStartDate)">
+				AND w.balance_end_date &gt;= #{params.gtBalanceStartDate}
+			</if>
+			<if test="params.balanceFlag != null and !''.equals(params.balanceFlag)">
+				AND w.balance_flag = #{params.balanceFlag}
+			</if>
+			<if test="params.pipelineCompanyNo != null and !''.equals(params.pipelineCompanyNo)">
+				AND w.pipeline_company_no = #{params.pipelineCompanyNo}
+			</if>
+			<if test="null!=params.multiPipelineCompanyNo and !''.equals(params.multiPipelineCompanyNo)" >
+				and w.pipeline_company_no in ${params.multiPipelineCompanyNo}
+			</if>
+			<if test="params.noInvoiceApplyNo != null and !''.equals(params.noInvoiceApplyNo)">
+				AND (w.invoice_apply_no IS NULL OR w.invoice_apply_no ='')
+			</if>
+			<if test="null!=params.innerChannelNo and !''.equals(params.innerChannelNo)">
+				AND EXISTS (
+					SELECT
+						1
+					FROM
+					wholesale_balance_date wbd
+					WHERE
+						wbd.saler_no = w.saler_no
+						AND wbd.buyer_no = w.buyer_no
+						AND wbd.balance_start_date = w.balance_start_date
+						AND wbd.balance_end_date = w.balance_end_date
+						AND wbd.inner_channel_no = #{params.innerChannelNo}
+				)
+			</if>
+			<if test="null!=params.generatorWholesaleInvoiceApply and 'true'.equals(params.generatorWholesaleInvoiceApply)">
+				AND EXISTS (
+					SELECT
+						1
+					FROM
+						wholesale_balance_date wbd
+					WHERE
+						wbd.saler_no = w.saler_no
+						AND wbd.buyer_no = w.buyer_no
+						AND wbd.balance_start_date = w.balance_start_date
+						AND wbd.balance_end_date = w.balance_end_date
+						AND (
+							CASE
+								WHEN w.balance_flag = 1 THEN wbd.inner_channel_no = '2'
+								ELSE
+									wbd.inner_channel_no = '1'
+							END
+						)
+				)
+			</if>
+			<if test="params.balanceMonth != null and !''.equals(params.balanceMonth)">
+				AND w.balance_month = #{params.balanceMonth}
+			</if>
+			<if test="params.idList != null and !''.equals(params.idList)">
+				AND id IN
+				<foreach collection="params.idList" item="id" open="(" separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
+			<if test="params.balanceAmountNotEqualZero != null and 'true'.equals(params.balanceAmountNotEqualZero)">
+				AND w.balance_amount != 0
+			</if>
+			<if test="params.balanceAmountEqualZero != null and 'true'.equals(params.balanceAmountEqualZero)">
+				AND w.balance_amount = 0
+			</if>
+		</if>
+	</sql>
+
+
+	<sql id="forNcDataParams">
+		<if test="null!=params">
+			<choose>
+				<when test="params.sxCompanyNoFlag != null and !''.equals(params.sxCompanyNoFlag)">
+					AND (
+					(<if test="params.searchPostingType != null and !''.equals(params.searchPostingType) and params.searchPostingType == 1">
+					b.saler_no IN (${params.postingCompanyNo})
+				</if>
+					<if test="params.searchPostingType != null and !''.equals(params.searchPostingType) and params.searchPostingType == 0">
+						b.buyer_no IN (${params.postingCompanyNo})
+					</if>
+					<if test="params.brandUnitNo != null and !''.equals(params.brandUnitNo)">
+						AND b.brand_unit_no = #{params.brandUnitNo}
+					</if>
+					<if test="params.brandUnitNos != null and !''.equals(params.brandUnitNos)">
+						AND b.brand_unit_no IN (${params.brandUnitNos})
+					</if>
+					)
+					<if test="params.brandUnitNo != null and !''.equals(params.brandUnitNo)">
+						OR b.brand_unit_no = #{params.brandUnitNo}
+					</if>
+					<if test="params.brandUnitNos != null and !''.equals(params.brandUnitNos)">
+						OR b.brand_unit_no IN (${params.brandUnitNos})
+					</if>
+					)
+				</when>
+				<otherwise>
+					<if test="params.searchPostingType != null and !''.equals(params.searchPostingType) and params.searchPostingType == 1">
+						AND b.saler_no IN (${params.postingCompanyNo})
+					</if>
+					<if test="params.searchPostingType != null and !''.equals(params.searchPostingType) and params.searchPostingType == 0">
+						AND b.buyer_no IN (${params.postingCompanyNo})
+					</if>
+					<if test="params.brandUnitNo != null and !''.equals(params.brandUnitNo)">
+						AND b.brand_unit_no = #{params.brandUnitNo}
+					</if>
+					<if test="params.brandUnitNos != null and !''.equals(params.brandUnitNos)">
+						AND b.brand_unit_no IN (${params.brandUnitNos})
+					</if>
+				</otherwise>
+			</choose>
+			AND b.balance_start_date &gt;= #{params.balanceStartDate}
+			AND b.balance_end_date &lt;= #{params.balanceEndDate}
+			AND b.balance_type = #{params.balanceType}
+			<if test="params.interCustomerNo != null and !''.equals(params.interCustomerNo)">
+				<if test="params.searchPostingType != null and !''.equals(params.searchPostingType) and params.searchPostingType == 1">
+					AND b.buyer_no = #{params.interCustomerNo}
+				</if>
+				<if test="params.searchPostingType != null and !''.equals(params.searchPostingType) and params.searchPostingType == 0">
+					AND b.saler_no = #{params.interCustomerNo}
+				</if>
+			</if>
+			<if test="params.extendStatus != null and !''.equals(params.extendStatus)">
+				AND b.extend_status IN (${params.extendStatus})
+			</if>
+
+			<if test="params.status != null and !''.equals(params.status)">
+				AND b.status IN (${params.status})
+			</if>
+
+			<if test="params.isPosting != null and !''.equals(params.isPosting)">
+				<if test="params.searchPostingType != null and !''.equals(params.searchPostingType) and params.searchPostingType == 0">
+					AND b.is_posting IN (${params.isPosting})
+				</if>
+				<if test="params.searchPostingType != null and !''.equals(params.searchPostingType) and params.searchPostingType == 1">
+					AND b.as_posting IN (${params.isPosting})
+				</if>
+			</if>
+
+			<if test="params.salerNo != null and !''.equals(params.salerNo)">
+				AND b.saler_no = #{params.salerNo}
+			</if>
+
+			<if test="params.buyerNo != null and !''.equals(params.buyerNo)">
+				AND b.buyer_no = #{params.buyerNo}
+			</if>
+
+			<if test="params.billNo != null and !''.equals(params.billNo)">
+				AND b.bill_no like CONCAT('%',#{params.billNo},'%')
+			</if>
+
+			<if test="params.createStartTime != null and !''.equals(params.createStartTime)">
+				AND b.create_time &gt;= #{params.createStartTime}
+			</if>
+
+			<if test="params.createEndTime != null and !''.equals(params.createEndTime)">
+				AND b.create_time &lt;= #{params.createEndTime}
+			</if>
+
+			<if test="params.createUser != null and !''.equals(params.createUser)">
+				AND b.create_user like CONCAT('%',#{params.createUser},'%')
+			</if>
+
+			<if test="params.auditor != null and !''.equals(params.auditor)">
+				AND b.auditor like CONCAT('%',#{params.auditor},'%')
+			</if>
+
+			<if test="params.invoiceNo != null and !''.equals(params.invoiceNo)">
+				AND (b.invoice_apply_no like CONCAT('%',#{params.invoiceNo},'%') OR
+				b.ask_payment_no like CONCAT('%',#{params.invoiceNo},'%'))
+			</if>
+
+			<if test="params.invoiceStartTime != null and !''.equals(params.invoiceStartTime)">
+				AND bbia.invoice_apply_date &gt;= #{params.invoiceStartTime}
+			</if>
+			<if test="params.invoiceEndTime != null and !''.equals(params.invoiceEndTime)">
+				AND bbia.invoice_apply_date &lt;= #{params.invoiceEndTime}
+			</if>
+			<if test="params.billStatus != null and !''.equals(params.billStatus)">
+				<if test="params.searchPostingType == 0">
+					AND b.extend_status IN (${params.billStatus})
+				</if>
+				<if test="params.searchPostingType == 1">
+					AND b.status IN (${params.billStatus})
+				</if>
+			</if>
+			<if test="params.menuNo!=null and !''.equals(params.menuNo)">
+				<choose>
+					<when test="'FAS-003'.equals(params.menuNo)">
+						and NOT EXISTS ( select 1 from invoice_path_basis ipb where
+						b.buyer_no = ipb.company_no and b.brand_unit_no = ipb.brand_unit_no
+						and ipb.status=1 and
+							(b.balance_month between ipb.settle_start_month and ipb.settle_end_month)
+						)
+					</when>
+				</choose>
+			</if>
+		</if>
+	</sql>
+
+    <sql id="spf_sql">
+		<if test="params.postingCompanyNo != null and !''.equals(params.postingCompanyNo)">
+			<choose>
+				<when test="params.menuNo!=null and  'FAS-077'.equals(params.menuNo)">
+					AND spf.pipeline_company_no IN (${params.postingCompanyNo})
+				</when>
+				<otherwise>
+					AND (spf.pipeline_company_no IN (${params.postingCompanyNo}) or spf.company_no in (${params.postingCompanyNo}))
+				</otherwise>
+			</choose>
+		</if>
+		<if test="params.balanceStartDate != null and !''.equals(params.balanceStartDate)">
+			AND spf.year_month &gt;= DATE_FORMAT(#{params.balanceStartDate},'%Y%m')
+		</if>
+		<if test="params.balanceEndDate != null and !''.equals(params.balanceEndDate)">
+			AND spf.year_month &lt;= DATE_FORMAT(#{params.balanceEndDate},'%Y%m')
+		</if>
+		<if test="params.isPosting != null and !''.equals(params.isPosting)">
+			AND spf.is_posting IN (${params.isPosting})
+		</if>
+		<if test="params.createStartTime != null and !''.equals(params.createStartTime)">
+			AND DATE_FORMAT(spf.create_time ,'%Y-%m-%d') &gt;= #{params.createStartTime}
+		</if>
+		<if test="params.createEndTime != null and !''.equals(params.createEndTime)">
+			AND DATE_FORMAT(spf.create_time ,'%Y-%m-%d') &lt;= #{params.createEndTime}
+		</if>
+		<if test="params.createUser != null and !''.equals(params.createUser)">
+			AND spf.create_user like CONCAT('%',#{params.createUser},'%')
+		</if>
+		<if test="params.auditor != null and !''.equals(params.auditor)">
+			AND spf.update_user like CONCAT('%',#{params.auditor},'%')
+		</if>
+		<if test="params.mulitShopNo != null and !''.equals(params.mulitShopNo)">
+			AND spf.pipeline_shop_no in ${params.mulitShopNo}
+		</if>
+		<if test="params.billNo != null and !''.equals(params.billNo)">
+			AND spf.bill_no like CONCAT('%',#{params.billNo},'%')
+		</if>
+		<if test="params.billNos != null and !''.equals(params.billNos)">
+			AND spf.bill_no =#{params.billNos}
+		</if>
+		<if test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			AND spf.sharding_flag ='${params.shardingFlagVal}'
+		</if>
+    </sql>
+
+	<select id="selectPushToNcDataCount" resultType="java.lang.Integer"
+			parameterType="map">
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType != 0
+			and params.balanceType != 999 and params.balanceType != 888 and params.balanceType != 777 and params.balanceType != 666
+			and params.balanceType != 222 and params.balanceType != 111 and params.balanceType != 77
+			and params.balanceType != 28 and params.balanceType != 29 ">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			SELECT
+			count(1) as s
+			FROM bill_balance b
+			<if test="(params.invoiceStartTime != null and !''.equals(params.invoiceStartTime)) or (params.invoiceEndTime != null and !''.equals(params.invoiceEndTime))">
+				INNER JOIN bill_balance_invoice_apply bbia ON bbia.bill_no = b.invoice_apply_no
+			</if>
+			WHERE
+			1=1
+			<include refid="forNcDataParams" />
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 0">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)
+				  and params.menuNo != null and !'FAS-079,FAS-081'.contains(params.menuNo)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			SELECT
+			count(1) as s
+			FROM (<include refid="aiInvoiceDataCore"></include>) c
+			<if test="params.menuNo != null and !''.equals(params.menuNo) ">
+				where  1=1
+			  <choose>
+				  <when test="'FAS-010'.equals(params.menuNo)">
+					  <if test="params.attributeDtlNoList != null and !''.equals(params.attributeDtlNoList)" >
+						  <foreach collection="params.attributeDtlNoList" index="index" item="attributeDtlNo" separator="OR"
+								   open="and(" close=")">
+							  INSTR(attribute_detail_no,#{attributeDtlNo})&gt;0
+						  </foreach>
+					  </if>
+				  </when>
+				  <!-- <when test="'FAS-110'.equals(params.menuNo)">
+                           ，店铺在ARS-管道公司店设置能找到生效日<=结算起始日期<=结算终止日期<=停用日期不显示在推送菜单中
+						  AND
+						  NOT  EXISTS (SELECT 1 FROM ars_pipeline_company a
+						  INNER JOIN ars_pipeline_company_dtl pd on a.data_no = pd.data_no
+						  WHERE c.company_no = a.parent_company_no
+						  AND c.shopNo = pd.shop_no
+						  and a.effective_date &lt;= c.balance_start_date
+						  and pd.disable_date &gt;=  c.balance_end_date)
+				  </when>-->
+			  </choose>
+			</if>
+		</if>
+
+		<if test="params.balanceType == null or ''.equals(params.balanceType)">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			SELECT
+			count(1) as s
+			FROM (<include refid="arsReceiptPaymentSplit"></include>) d
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 999">
+			/*ignore_sharding_flag*/
+			SELECT
+			count(1) as s
+			FROM (<include refid="arsAccountFeeSql"></include>) d
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 888">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			SELECT
+			count(1) as s
+			FROM (<include refid="awWholeSaleFeeSql"></include>) d
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 777">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			SELECT
+			count(1) as s
+			FROM (<include refid="cbsPoolFeeSql"></include>) d
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 666">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			SELECT
+			count(1) as s
+			FROM (<include refid="arsReceiptTypeSql"></include>) d
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 222">
+			/*ignore_sharding_flag*/
+			SELECT
+			count(1) as s
+			FROM (<include refid="sxTagPriceSql"></include>) d
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 111">
+			/*ignore_sharding_flag*/
+			SELECT
+			count(1) as s
+			FROM (<include refid="xcxCommissionWidhdrawalSql"></include>) d
+		</if>
+
+		<if test="params.menuNo != null and !''.equals(params.menuNo) and 'FAS-077'.equals(params.menuNo)">
+		    select count(1) as s from small_program_freight spf where 1=1 <include refid="spf_sql"/>
+		</if>
+		
+		<if test="params.menuNo != null and !''.equals(params.menuNo) and 'FAS-124'.equals(params.menuNo)">
+			SELECT
+			count(1) as s
+			FROM (<include refid="chargeBillInvoiceSql"></include>) d
+		</if>
+
+		<if test="params.menuNo != null and !''.equals(params.menuNo) and 'FAS-125'.equals(params.menuNo)">
+			<choose>
+				<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+					/*#mycat:sql=select 1 from bill_inventory_adjustdiff_dtl where sharding_flag= '${params.shardingFlagVal}'*/
+				</when>
+				<otherwise>
+					/*ignore_sharding_flag*/
+				</otherwise>
+			</choose>
+			SELECT
+			count(1) as s
+			FROM (<include refid="adjustdiffBillInvoiceSql"></include>) d
+		</if>
+	</select>
+	
+	<sql id="chargeBillInvoiceSql">
+		SELECT
+		bill_no,
+		company_no,
+		company_name,
+		NULL brand_unit_no,
+		NULL brand_unit_name,
+		collecting_confirm_status status,
+		is_posting,
+		NULL balance_type,
+		#{params.balanceStartDate} balance_start_date,
+		#{params.balanceEndDate} balance_end_date,
+		null invoice_apply_date,
+		null inter_customer_no,
+		null inter_customer,
+		NULL AS out_qty,
+		IFNULL(amount, 0) out_amount,
+		NULL no_tax_amount,
+		store_no shop_no,
+		store_name shop_name,
+		create_user, create_time,
+		auditor, audit_time, update_time,
+		'${params.menuNo}' AS fasMenuNo, '${params.menuNo}' AS fasMenuNo1
+		FROM charge_bill_invoice
+		WHERE 1=1 AND collecting_confirm_status in (1, 2) AND sharding_flag='U010106_Z'
+		AND IFNULL(amount, 0) >= 0
+		<if test="params.postingCompanyNo != null and !''.equals(params.postingCompanyNo)">
+			AND company_no IN (${params.postingCompanyNo})
+		</if>
+		<if test="params.balanceStartDate != null and !''.equals(params.balanceStartDate)">
+			AND DATE_FORMAT(out_date,'%Y%m') &gt;= DATE_FORMAT(#{params.balanceStartDate},'%Y%m')
+		</if>
+		<if test="params.balanceEndDate != null and !''.equals(params.balanceEndDate)">
+			AND DATE_FORMAT(out_date,'%Y%m') &lt;= DATE_FORMAT(#{params.balanceEndDate},'%Y%m')
+		</if>
+		<if test="params.billNo != null and !''.equals(params.billNo)">
+			AND bill_no like CONCAT('%',#{params.billNo},'%')
+		</if>
+		<if test="params.billNos != null and !''.equals(params.billNos)">
+			AND bill_no = #{params.billNos}
+		</if>
+		<if test="params.shopNo != null and !''.equals(params.shopNo)">
+			AND store_no = #{params.shopNo}
+		</if>
+		<if test="params.mulitShopNo != null and !''.equals(params.mulitShopNo)">
+			AND store_no in ${params.mulitShopNo}
+		</if>
+		<if test="params.createStartTime != null and !''.equals(params.createStartTime)">
+			AND create_time &gt;= #{params.createStartTime}
+		</if>
+		<if test="params.createEndTime != null and !''.equals(params.createEndTime)">
+			AND create_time &lt;= #{params.createEndTime}
+		</if>
+		<if test="params.createUser != null and !''.equals(params.createUser)">
+			AND create_user like CONCAT('%',#{params.createUser},'%')
+		</if>
+		<if test="params.auditor != null and !''.equals(params.auditor)">
+			AND auditor like CONCAT('%',#{params.auditor},'%')
+		</if>
+		<if test="params.isPosting != null and !''.equals(params.isPosting)">
+			AND is_posting IN (${params.isPosting})
+		</if>
+		ORDER BY update_time desc
+	</sql>
+
+	<sql id="adjustdiffBillInvoiceSql">
+		SELECT
+		bill_no,
+		0 status,
+		is_posting,
+		company_no,
+		company_name,
+		shop_no,
+		shop_name,
+		bill_date balanceStartDate,
+		bill_date balance_end_date,
+		brand_unit_no,
+		brand_unit_name,
+		qty AS out_qty,
+		ROUND((IFNULL(amount, 0) * 1.13), 2) out_amount,
+		IFNULL(amount, 0) no_tax_amount,
+		create_user,
+		create_time,
+		update_time,
+		'${params.menuNo}' AS fasMenuNo,
+		'${params.menuNo}' AS fasMenuNo1
+		FROM bill_inventory_adjustdiff_dtl
+		WHERE (IFNULL(amount, 0) != 0 OR IFNULL(qty, 0) != 0)
+		<if test="params.postingCompanyNo != null and !''.equals(params.postingCompanyNo)">
+			AND company_no IN (${params.postingCompanyNo})
+		</if>
+		<if test="params.balanceStartDate != null and !''.equals(params.balanceStartDate)">
+			AND DATE_FORMAT(bill_date,'%Y%m%d') &gt;= DATE_FORMAT(#{params.balanceStartDate},'%Y%m%d')
+		</if>
+		<if test="params.balanceEndDate != null and !''.equals(params.balanceEndDate)">
+			AND DATE_FORMAT(bill_date,'%Y%m%d') &lt;= DATE_FORMAT(#{params.balanceEndDate},'%Y%m%d')
+		</if>
+		<if test="params.billNo != null and !''.equals(params.billNo)">
+			AND bill_no like CONCAT('%',#{params.billNo},'%')
+		</if>
+		<if test="params.billNos != null and !''.equals(params.billNos)">
+			AND bill_no = #{params.billNos}
+		</if>
+		<if test="params.shopNo != null and !''.equals(params.shopNo)">
+			AND shop_no = #{params.shopNo}
+		</if>
+		<if test="params.mulitShopNo != null and !''.equals(params.mulitShopNo)">
+			AND shop_no in ${params.mulitShopNo}
+		</if>
+		<if test="params.createStartTime != null and !''.equals(params.createStartTime)">
+			AND create_time &gt;= #{params.createStartTime}
+		</if>
+		<if test="params.createEndTime != null and !''.equals(params.createEndTime)">
+			AND create_time &lt;= #{params.createEndTime}
+		</if>
+		<if test="params.createUser != null and !''.equals(params.createUser)">
+			AND create_user like CONCAT('%',#{params.createUser},'%')
+		</if>
+		<if test="params.isPosting != null and !''.equals(params.isPosting)">
+			AND is_posting IN (${params.isPosting})
+		</if>
+		<if test="params.brandUnitNo != null and !''.equals(params.brandUnitNo)">
+			AND brand_unit_no = #{params.brandUnitNo}
+		</if>
+		ORDER BY update_time desc
+	</sql>
+
+	<sql id="xcxCommissionWidhdrawalSql">
+		SELECT
+		source_code bill_no,
+		company_no,
+		company_name,
+		NULL brand_unit_no,
+		NULL brand_unit_name,
+		invoice_flag status,
+		is_posting,
+		NULL balance_type,
+		STR_TO_DATE(CONCAT(bill_month,'-01'),'%Y-%m-%d') balance_start_date,
+		last_day(STR_TO_DATE(CONCAT(bill_month,'-01'),'%Y-%m-%d')) balance_end_date,
+		invoice_date invoice_apply_date,
+		region_company_no inter_customer_no,
+		region_company_name inter_customer,
+		NULL AS out_qty,
+		IFNULL(invoice_amount, 0) out_amount,
+		no_tax_amount,
+		create_user, create_time,
+		update_user auditor, update_time audit_time, update_time,
+		'${params.menuNo}' AS fasMenuNo, '${params.menuNo}' AS fasMenuNo1
+		FROM commission_summary
+		WHERE 1=1 AND status = 1 AND invoice_flag = '1'
+		AND IFNULL(invoice_amount, 0) >= 0
+		<if test="params.postingCompanyNo != null and !''.equals(params.postingCompanyNo)">
+			AND company_no IN (${params.postingCompanyNo})
+		</if>
+		<if test="params.interCustomerNo != null and !''.equals(params.interCustomerNo)">
+			AND region_company_no = #{params.interCustomerNo}
+		</if>
+		<if test="params.balanceStartDate != null and !''.equals(params.balanceStartDate)">
+			AND bill_month &gt;= DATE_FORMAT(#{params.balanceStartDate},'%Y-%m')
+		</if>
+		<if test="params.balanceEndDate != null and !''.equals(params.balanceEndDate)">
+			AND bill_month &lt;= DATE_FORMAT(#{params.balanceEndDate},'%Y-%m')
+		</if>
+		<if test="params.billNo != null and !''.equals(params.billNo)">
+			AND source_code like CONCAT('%',#{params.billNo},'%')
+		</if>
+		<if test="params.billNos != null and !''.equals(params.billNos)">
+			AND source_code = #{params.billNos}
+		</if>
+		<if test="params.createStartTime != null and !''.equals(params.createStartTime)">
+			AND create_time &gt;= #{params.createStartTime}
+		</if>
+		<if test="params.createEndTime != null and !''.equals(params.createEndTime)">
+			AND create_time &lt;= #{params.createEndTime}
+		</if>
+		<if test="params.createUser != null and !''.equals(params.createUser)">
+			AND create_user like CONCAT('%',#{params.createUser},'%')
+		</if>
+		<if test="params.auditor != null and !''.equals(params.auditor)">
+			AND create_user like CONCAT('%',#{params.auditor},'%')
+		</if>
+		<if test="params.isPosting != null and !''.equals(params.isPosting)">
+			AND is_posting IN (${params.isPosting})
+		</if>
+		<if test="params.billDateStart != null and !''.equals(params.billDateStart)">
+			AND invoice_date &gt;= #{params.billDateStart}
+		</if>
+		<if test="params.billDateEnd != null and !''.equals(params.billDateEnd)">
+			AND invoice_date &lt;= #{params.billDateEnd}
+		</if>
+		ORDER BY update_time
+	</sql>
+
+	<sql id="arsReceiptPaymentSplit">
+		SELECT
+		pfp.id,
+		pe.nc_account_no as company_no,
+		pe.nc_account_name as company_name,
+		IF(pe.source_trans_id is null or pe.source_trans_id = '', pfp.trans_id, pe.source_trans_id) as bill_no,
+		pfp.bank_seq_number as bank_seq_number,
+		pfp.accounts,
+		pfp.opposite_accounts,
+		pfp.opposite_accounts_name as pay_back_name,
+		pe.status,
+		pe.pay_back_date,
+		pfp.accounts_name,
+		dtl.shop_no shopNo,
+		dtl.shop_name shopName,
+		<choose>
+			<when test="params.menuNo!= null and 'FAS-012'.equals(params.menuNo)">
+				pfp.trans_datetime as balance_start_date,
+				pfp.trans_datetime as balance_end_date,
+			</when>
+		    <otherwise>
+				dtl.balance_start_date  as balance_start_date,
+				dtl.balance_end_date as balance_end_date,
+			</otherwise>
+		</choose>
+		IF(pe.source_trans_id is null or pe.source_trans_id = '', '0' , '1') isDelay,
+		CONCAT(REPLACE (dtl.balance_start_date,'-',''),'-',REPLACE (dtl.balance_end_date,'-','')) balance_month,
+		dtl.current_payment_amount as out_amount,
+		dtl.balance_no,
+		<if test="params.crt2pyt != null and !''.equals(params.crt2pyt)">
+			pe.pay_back_date as create_time,
+		</if>
+		<if test="params.crt2pyt == null or ''.equals(params.crt2pyt)">
+			pfp.create_time,
+		</if>
+		pfp.create_user,
+		pe.update_time audit_time,
+		pe.update_user auditor,
+		dtl.is_posting,
+		'${params.menuNo}' AS fasMenuNo1,
+		'${params.menuNo}' AS fasMenuNo
+		FROM
+		cbs_pool pfp
+		INNER JOIN t_cbs_pool_ext pe ON pe.trans_id = pfp.trans_id
+		INNER JOIN ars_receipt_payment_split_dtl dtl ON pfp.trans_id=dtl.trans_id
+		WHERE 1 = 1 AND  EXISTS (SELECT 1 FROM ars_payer_information p_info
+		WHERE p_info.status = 1 AND p_info.payer_type IN (1, 2, 9)
+		AND p_info.company_no = pe.company_no
+		AND p_info.account_no = pfp.accounts
+		AND p_info.payback_account_name = pfp.opposite_accounts_name
+		AND pe.pay_back_date BETWEEN p_info.start_date AND p_info.end_date)
+		AND (pe.nc_account_no is not null and pe.nc_account_no !='')
+		AND dtl.split_type in (1, 2, 10)
+		<if test="params.postingCompanyNo != null and !''.equals(params.postingCompanyNo)">
+			AND pe.nc_account_no IN (${params.postingCompanyNo})
+		</if>
+		<if test="params.balanceStartDate != null and !''.equals(params.balanceStartDate)">
+			<choose>
+				<when test="params.menuNo!= null and 'FAS-012'.equals(params.menuNo)">
+					AND pfp.trans_datetime  &gt;= #{params.balanceStartDate}
+				</when>
+				<otherwise>
+					AND dtl.balance_start_date &gt;= #{params.balanceStartDate}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="params.balanceEndDate != null and !''.equals(params.balanceEndDate)">
+			<choose>
+				<when test="params.menuNo!= null and 'FAS-012'.equals(params.menuNo)">
+					AND DATE_FORMAT(pfp.trans_datetime,'%Y-%m-%d')  &lt;= #{params.balanceEndDate}
+				</when>
+				<otherwise>
+					AND DATE_FORMAT(dtl.balance_end_date,'%Y-%m-%d') &lt;= #{params.balanceEndDate}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="params.isDelay != null and!''.equals(params.isDelay) and 0 == params.isDelay">
+			AND (pe.source_trans_id is null or pe.source_trans_id = '')
+		</if>
+		<if test="params.isDelay != null and!''.equals(params.isDelay) and 1 == params.isDelay">
+			AND (pe.source_trans_id is not null and pe.source_trans_id != '')
+		</if>
+		<if test="params.billNo != null and !''.equals(params.billNo)">
+			AND pfp.trans_id like CONCAT('%',#{params.billNo},'%')
+		</if>
+		<if test="params.billNos != null and !''.equals(params.billNos)">
+			AND pfp.trans_id =#{params.billNos}
+		</if>
+		<if test="params.bankSeqNumber != null and !''.equals(params.bankSeqNumber)">
+			AND pfp.bank_seq_number like CONCAT('%',#{params.bankSeqNumber},'%')
+		</if>
+		<if test="params.bankSeqNumbers != null and !''.equals(params.bankSeqNumbers)">
+			AND pfp.bank_seq_number =#{params.bankSeqNumbers}
+		</if>
+		<if test="params.accounts != null and !''.equals(params.accounts)">
+			AND pfp.accounts like CONCAT('%',#{params.accounts},'%')
+		</if>
+		<if test="params.isPosting != null and !''.equals(params.isPosting)">
+			AND dtl.is_posting IN (${params.isPosting})
+		</if>
+		<if test="params.createStartTime != null and !''.equals(params.createStartTime)">
+			AND pe.pay_back_date &gt;= #{params.createStartTime}
+		</if>
+		<if test="params.createEndTime != null and !''.equals(params.createEndTime)">
+			AND pe.pay_back_date &lt;= #{params.createEndTime}
+		</if>
+		<if test="params.createUser != null and !''.equals(params.createUser)">
+			AND pfp.create_user like CONCAT('%',#{params.createUser},'%')
+		</if>
+		<if test="params.auditor != null and !''.equals(params.auditor)">
+			AND pe.update_user like CONCAT('%',#{params.auditor},'%')
+		</if>
+		<if test="params.shopNo != null and !''.equals(params.shopNo)">
+			AND dtl.shop_no = #{params.shopNo}
+		</if>
+		<if test="params.mulitShopNo != null and !''.equals(params.mulitShopNo)">
+			AND dtl.shop_no in ${params.mulitShopNo}
+		</if>
+		<if test="(params.status != null and !''.equals(params.status)) and (params.billStatus == null or ''.equals(params.billStatus))">
+			AND pe.status IN (${params.status})
+		</if>
+		<if test="params.billStatus != null and !''.equals(params.billStatus)">
+			AND pe.status IN (${params.billStatus})
+		</if>
+	</sql>
+
+	<sql id="aiInvoiceDataCore">
+		SELECT
+		t.bill_no, t.invoice_type,
+		<if test="params.menuNo != null and !''.equals(params.menuNo) and 'FAS-010'.equals(params.menuNo)">
+			(SELECT GROUP_CONCAT(DISTINCT bsb.attribute_detail_no SEPARATOR ",")attribute_detail_no FROM bill_shop_balance bsb
+			WHERE bsb.balance_flag=2 AND bsb.STATUS=4 AND bsb.invoice_apply_no=t.bill_no GROUP BY bsb.invoice_apply_no) attribute_detail_no,
+		</if>
+
+		<if test="params.menuNo != null and !''.equals(params.menuNo)">
+		    <choose>
+				<when test="'FAS-013,FAS-014,FAS-079,FAS-081'.contains(params.menuNo)">
+					t.buyer_no company_no,
+					t.buyer_name company_name,
+					t.saler_no inter_customer_no,
+					t.saler_name inter_customer,
+				</when>
+		       <otherwise>
+				   t.saler_no company_no,
+				   t.saler_name company_name,
+				   t.buyer_no inter_customer_no,
+				   t.buyer_name inter_customer,
+			   </otherwise>
+			</choose>
+		</if>
+		t.status,
+		t.create_time,
+		t.create_user,
+		t.audit_time,
+		t.auditor,
+		<if test="params.menuNo != null and !''.equals(params.menuNo)">
+			<choose>
+				<when test="'FAS-013'.contains(params.menuNo)">
+					t.is_posting_cost is_posting,
+				</when>
+		       <when test="'FAS-014,FAS-079,FAS-081'.contains(params.menuNo)">
+				   t.is_posting_income is_posting,
+			   </when>
+				<when test="'FAS-109,FAS-110'.contains(params.menuNo)">
+					t.is_posting_unitcost as  is_posting,
+				</when>
+				<otherwise>
+				   t.is_posting,
+			   </otherwise>
+			</choose>
+		    <choose>
+				<when test="'FAS-109,FAS-110'.contains(params.menuNo)">
+					SUM(IFNULL(d.cost, 0)) out_amount,
+					SUM(IFNULL(d.not_tax_cost, 0)) not_tax_amount,
+				</when>
+		        <otherwise>
+					SUM(IFNULL(d.send_amount, 0)) out_amount,
+					SUM(IFNULL(d.no_tax_amount, 0)) not_tax_amount,
+				</otherwise>
+			</choose>
+		</if>
+		t.invoice_apply_date,
+		'${params.menuNo}' AS fas_menu_no,
+		'${params.menuNo}' AS fasMenuNo1,
+		d.balance_start_date balance_start_date,
+		d.balance_end_date balance_end_date,
+		GROUP_CONCAT(s.balance_no) balance_no,
+		s.balance_type,
+		SUM(IFNULL(d.qty, 0)) out_qty,
+		case when s.balance_type = 8 and d.shop_no = ''
+		then '9999' else '8888' end ai_not_account,
+		case when d.shop_no is null or d.shop_no = '' then t.buyer_no else d.shop_no end shopNo,
+		case when d.shop_no is null or d.shop_no = '' then t.buyer_name else d.short_name end shopName
+		FROM bill_balance_invoice_apply t
+		INNER JOIN bill_balance_invoice_dtl d
+		on t.bill_no = d.bill_no
+		LEFT JOIN (SELECT bill_no,balance_type,GROUP_CONCAT(balance_no) balance_no
+		FROM bill_balance_invoice_source
+		where 1=1
+		<if test="params.aiBalanceType != null and !''.equals(params.aiBalanceType)">
+			AND balance_type IS NOT NULL
+			AND balance_type IN (${params.aiBalanceType})
+		</if>
+		<if test="params.billNo != null and !''.equals(params.billNo)">
+			AND bill_no like CONCAT('%',#{params.billNo},'%')
+		</if>
+		<if test="params.billNos != null and !''.equals(params.billNos)">
+			AND bill_no =#{params.billNos}
+		</if>
+		GROUP BY bill_no) s ON t.bill_no = s.bill_no
+		WHERE  left(d.brand_no, 2) in (
+		select sys_no from brand where 1=1
+		-- AND @brand_no
+		)
+		<if test="params.balanceStartDate != null and  !''.equals(params.balanceStartDate)">
+			AND d.balance_start_date &gt;= #{params.balanceStartDate}
+		</if>
+		<if test="params.balanceEndDate != null and !''.equals(params.balanceEndDate)">
+			AND d.balance_end_date &lt;=  #{params.balanceEndDate}
+		</if>
+		<if test="params.invoiceType != null and !''.equals(params.invoiceType)">
+			AND t.invoice_type = #{params.invoiceType}
+		</if>
+		<if test="params.billStatus == null or ''.equals(params.billStatus)">
+			AND t.`status` in (2, 3, 4)
+		</if>
+		<if test="params.sourceCode != null and !''.equals(params.sourceCode)">
+			AND s.balance_type IN (${params.sourceCode})
+		</if>
+		<if test="params.aiBalanceType != null and !''.equals(params.aiBalanceType)">
+			AND balance_type IS NOT NULL
+			AND balance_type IN (${params.aiBalanceType})
+		</if>
+		<if test="params.billNo != null and !''.equals(params.billNo)">
+			AND t.bill_no like CONCAT('%',#{params.billNo},'%')
+		</if>
+		<if test="params.billNos != null and !''.equals(params.billNos)">
+			AND t.bill_no =#{params.billNos}
+		</if>
+		<if test="params.postingCompanyNo != null and !''.equals(params.postingCompanyNo)">
+			<choose>
+				<when test="params.menuNo != null and 'FAS-014,FAS-013,FAS-079,FAS-081'.contains(params.menuNo)">
+					AND t.buyer_no IN (${params.postingCompanyNo})
+				</when>
+				<otherwise>
+					AND t.saler_no IN (${params.postingCompanyNo})
+				</otherwise>
+			</choose>
+		</if>
+		<if test="params.interCustomerNo != null and !''.equals(params.interCustomerNo)">
+			<choose>
+				<when test="params.menuNo != null and 'FAS-014,FAS-013,FAS-079,FAS-081'.contains(params.menuNo)">
+					AND t.saler_no IN (${params.interCustomerNo})
+				</when>
+				<otherwise>
+					AND t.buyer_no IN (${params.interCustomerNo})
+				</otherwise>
+			</choose>
+		</if>
+		<if test="params.createStartTime != null and !''.equals(params.createStartTime)">
+			AND t.create_time &gt;=CONCAT(#{params.createStartTime},' 00:00:00')
+		</if>
+		<if test="params.createEndTime != null and !''.equals(params.createEndTime)">
+			AND t.create_time &lt;= CONCAT(#{params.createEndTime},' 23:59:59')
+		</if>
+		<if test="params.createUser != null and !''.equals(params.createUser)">
+			AND t.create_user like CONCAT('%',#{params.createUser},'%')
+		</if>
+		<if test="params.auditor != null and !''.equals(params.auditor)">
+			AND t.auditor like CONCAT('%',#{params.auditor},'%')
+		</if>
+		<if test="params.isPosting != null and !''.equals(params.isPosting)">
+			<if test="params.menuNo != null and !''.equals(params.menuNo)">
+				<choose>
+					<when test="'FAS-013'.contains(params.menuNo)">
+						AND t.is_posting_cost IN (${params.isPosting})
+					</when>
+					<when test="'FAS-014,FAS-079,FAS-081'.contains(params.menuNo)">
+						AND t.is_posting_income IN (${params.isPosting})
+					</when>
+					<when test="'FAS-109,FAS-110'.contains(params.menuNo)">
+						AND t.is_posting_unitcost IN (${params.isPosting})
+					</when>
+					<otherwise>
+						AND t.is_posting IN (${params.isPosting})
+					</otherwise>
+				</choose>
+			</if>
+		</if>
+		<if test="params.mulitShopNo != null and !''.equals(params.mulitShopNo)">
+			AND d.shop_no in ${params.mulitShopNo}
+		</if>
+		<if test="params.billDateStart != null and !''.equals(params.billDateStart)">
+			AND t.invoice_apply_date &gt;= #{params.billDateStart}
+		</if>
+		<if test="params.billDateEnd != null and !''.equals(params.billDateEnd)">
+			AND t.invoice_apply_date &lt;= #{params.billDateEnd}
+		</if>
+		<if test="params.billStatus != null and !''.equals(params.billStatus)">
+			AND t.status IN (${params.billStatus})
+		</if>
+		<if test="params.menuNo != null and !''.equals(params.menuNo)">
+			<choose>
+				<when test="'FAS-109,FAS-110'.contains(params.menuNo)">
+					AND (IFNULL(d.cost,0) != 0 or IFNULL(d.qty, 0)!=0)
+					<if test="'FAS-110'.equals(params.menuNo)">
+						AND EXISTS(SELECT 1 FROM company a WHERE t.saler_no = a.company_no)
+					</if>
+				</when>
+				<when test="'FAS-013'.equals(params.menuNo) or 'FAS-014'.equals(params.menuNo)">
+					AND EXISTS(SELECT 1 FROM ars_pipeline_company a WHERE t.buyer_no = a.pipeline_company_no)
+				</when>
+			</choose>
+		</if>
+		group by t.bill_no,shopNo
+	</sql>
+
+	<select id="selectPushToNcDataByPage" resultMap="ForNcDataResultMap"
+			parameterType="map">
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType != 0
+			and params.balanceType != 999 and params.balanceType != 888 and params.balanceType != 777
+			and params.balanceType != 666 and params.balanceType != 222 and params.balanceType != 111 
+			and params.balanceType != 77 and params.balanceType != 28 and params.balanceType != 29" >
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			SELECT
+			b.bill_no, b.buyer_name, b.saler_name, b.brand_unit_no, b.balance_start_date,
+			b.balance_end_date, b.update_time,b.buyer_no,b.saler_no,
+			b.out_qty,
+			<choose>
+			<when test="params.menuNo != null and !''.equals(params.menuNo) and ('FAS-018'.equals(params.menuNo) or 'FAS-019'.equals(params.menuNo))">
+			b.tag_price_amount out_amount,
+			ROUND((IFNULL(b.tag_price_amount, 0)/(1+IFNULL(
+			(SELECT tax_rate FROM tax_rate tr1 WHERE
+			tr1.type=1
+			<if test="null != params.menuType and (params.menuType == 2 or params.menuType == 4 or params.menuType == 6)">
+				AND tr1.company_no=b.buyer_no
+			</if>
+			<if test="null != params.menuType and (params.menuType == 1 or params.menuType == 3 or params.menuType == 5)">
+				AND tr1.company_no=b.saler_no
+			</if>
+			AND FIND_IN_SET(tr1.brand_no, b.brand_unit_no)
+			AND tr1.effective_date&lt;=b.balance_start_date
+			ORDER BY effective_date DESC LIMIT 1)
+			,IFNULL(
+			(SELECT tax_rate FROM
+			tax_rate tr2 WHERE tr2.type=1
+			<if test="null != params.menuType and (params.menuType == 2 or params.menuType == 4 or params.menuType == 6)">
+				AND tr2.company_no=bs.buyer_no
+			</if>
+			<if test="null != params.menuType and (params.menuType == 1 or params.menuType == 3 or params.menuType == 5)">
+				AND tr2.company_no=bs.saler_no
+			</if>
+			AND (tr2.brand_no IS NULL OR tr2.brand_no='')
+			AND tr2.effective_date&lt;=b.balance_start_date ORDER BY effective_date DESC
+			LIMIT 1)
+			,0.13)))),2) no_tax_amount,
+			</when>
+			<otherwise>
+			b.balance_amount out_amount,
+			ROUND((IFNULL(b.balance_amount, 0)/(1+IFNULL(
+			(SELECT tax_rate FROM tax_rate tr1 WHERE
+			tr1.type=1
+			<if test="null != params.menuType and (params.menuType == 2 or params.menuType == 4 or params.menuType == 6)">
+				AND tr1.company_no=b.buyer_no
+			</if>
+			<if test="null != params.menuType and (params.menuType == 1 or params.menuType == 3 or params.menuType == 5)">
+				AND tr1.company_no=b.saler_no
+			</if>
+			AND FIND_IN_SET(tr1.brand_no, b.brand_unit_no)
+			AND tr1.effective_date&lt;=b.balance_start_date
+			ORDER BY effective_date DESC LIMIT 1)
+			,IFNULL(
+			(SELECT tax_rate FROM
+			tax_rate tr2 WHERE tr2.type=1
+			<if test="null != params.menuType and (params.menuType == 2 or params.menuType == 4 or params.menuType == 6)">
+				AND tr2.company_no=bs.buyer_no
+			</if>
+			<if test="null != params.menuType and (params.menuType == 1 or params.menuType == 3 or params.menuType == 5)">
+				AND tr2.company_no=bs.saler_no
+			</if>
+			AND (tr2.brand_no IS NULL OR tr2.brand_no='')
+			AND tr2.effective_date&lt;=b.balance_start_date ORDER BY effective_date DESC
+			LIMIT 1)
+			,0.13)))),2) no_tax_amount,
+			</otherwise>
+			</choose>
+			<if test="params.searchPostingType!=null">
+				<choose>
+					<when test="params.searchPostingType == 1">
+						case when b.saler_no IN (${params.postingCompanyNo}) then null else '${params.sxCompanyNoFlag}' END as sxCompanyNoFlag,
+						b.as_posting as is_posting,
+						b.sx_as_posting,
+					</when>
+					<when test="params.searchPostingType == 0">
+						case when b.buyer_no IN (${params.postingCompanyNo}) then null else '${params.sxCompanyNoFlag}' END as sxCompanyNoFlag,
+						b.is_posting as is_posting,
+						b.sx_is_posting,
+					</when>
+				</choose>
+			</if>
+			b.balance_amount,
+			b.balance_qty, b.ask_payment_no,
+			b.invoice_apply_no, b.brand_unit_name,b.extend_status,b.status,
+			b.create_user, b.create_time, b.auditor, b.audit_time,
+			'${params.menuNo}' AS fasMenuNo,
+			'${params.menuNo}' AS fasMenuNo1,
+			bbia.invoice_apply_date
+
+
+			FROM bill_balance b
+			LEFT JOIN bill_balance_invoice_apply bbia ON bbia.bill_no = b.invoice_apply_no
+			WHERE
+			1=1
+			<include refid="forNcDataParams" />
+			ORDER BY b.update_time DESC
+			LIMIT #{page.startRowNum} ,#{page.pageSize}
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 0">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)
+			and params.menuNo != null and !'FAS-079,FAS-081'.contains(params.menuNo)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			select a.*,
+			case when 1 = (
+			select tax_eligibility from ars_pipeline_company b INNER JOIN ars_pipeline_company_dtl d
+			on b.data_no = d.data_no
+			where b.pipeline_company_no = a.company_no and d.shop_no = a.shopNo
+			and a.invoice_apply_date BETWEEN b.effective_date and d.disable_date
+			group by b.pipeline_company_no, d.shop_no limit 1
+			) then a.out_amount else a.not_tax_amount end as no_tax_amount
+			from (
+			<include refid="aiInvoiceDataCore"></include>
+			ORDER BY t.update_time DESC
+			) a
+			<if test="params.menuNo != null and !''.equals(params.menuNo) ">
+				where  1=1
+				<choose>
+					<when test="'FAS-010'.equals(params.menuNo)">
+				<if test="params.attributeDtlNoList != null and !''.equals(params.attributeDtlNoList)" >
+				<foreach collection="params.attributeDtlNoList" index="index" item="attributeDtlNo" separator="OR"
+						 open="and(" close=")">
+					INSTR(attribute_detail_no,#{attributeDtlNo})&gt;0
+				</foreach>
+			</if>
+					</when>
+				</choose>
+			</if>
+			LIMIT #{page.startRowNum} ,#{page.pageSize}
+		</if>
+
+		<if test="params.balanceType == null or ''.equals(params.balanceType)">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			<include refid="arsReceiptPaymentSplit"></include>
+			ORDER BY pe.update_time DESC
+			LIMIT #{page.startRowNum} ,#{page.pageSize}
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 999">
+			/*ignore_sharding_flag*/
+			<include refid="arsAccountFeeSql"></include>
+			LIMIT #{page.startRowNum} ,#{page.pageSize}
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 888">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			<include refid="awWholeSaleFeeSql"></include>
+			LIMIT #{page.startRowNum} ,#{page.pageSize}
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 777">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			<include refid="cbsPoolFeeSql"></include>
+			LIMIT #{page.startRowNum} ,#{page.pageSize}
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 666">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			<include refid="arsReceiptTypeSql"></include>
+			LIMIT #{page.startRowNum} ,#{page.pageSize}
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 222">
+			/*ignore_sharding_flag*/
+			<include refid="sxTagPriceSql"></include>
+			LIMIT #{page.startRowNum} ,#{page.pageSize}
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 111">
+			/*ignore_sharding_flag*/
+			<include refid="xcxCommissionWidhdrawalSql"></include>
+			LIMIT #{page.startRowNum} ,#{page.pageSize}
+		</if>
+
+		<if test="params.menuNo != null and !''.equals(params.menuNo) and 'FAS-077'.equals(params.menuNo)">
+			<include refid="querySmallProgramFreightList"/> LIMIT #{page.startRowNum} ,#{page.pageSize}
+		</if>
+		
+		<if test="params.menuNo != null and !''.equals(params.menuNo) and 'FAS-124'.equals(params.menuNo)">
+		    /*ignore_sharding_flag*/
+			<include refid="chargeBillInvoiceSql"></include>
+			LIMIT #{page.startRowNum} ,#{page.pageSize}
+		</if>
+
+		<if test="params.menuNo != null and !''.equals(params.menuNo) and 'FAS-125'.equals(params.menuNo)">
+			<choose>
+				<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+					/*#mycat:sql=select 1 from bill_inventory_adjustdiff_dtl where sharding_flag= '${params.shardingFlagVal}'*/
+				</when>
+				<otherwise>
+					/*ignore_sharding_flag*/
+				</otherwise>
+			</choose>
+			<include refid="adjustdiffBillInvoiceSql"></include>
+			LIMIT #{page.startRowNum} ,#{page.pageSize}
+		</if>
+	</select>
+
+	<sql id="querySmallProgramFreightList">
+		select spf.id,spf.bill_no,spf.pipeline_company_no as company_no,spf.pipeline_company_name as company_name,spf.is_posting,
+		       spf.pipeline_shop_no as shopNo,spf.pipeline_shop_name as shopName,
+		       spf.year_month as sbalance_start_date,spf.year_month as sbalance_end_date,spf.amount as out_amount,
+		       	case spf.attribute when 0 then '自收银' when 1 then '非自收银' else '' end balance_type_name,
+		       spf.create_time,spf.create_user,spf.update_time as audit_time,spf.update_user as auditor,
+		       '${params.menuNo}' AS fasMenuNo1,'${params.menuNo}' AS fasMenuNo
+		from  small_program_freight spf where 1=1 <include refid="spf_sql"/>
+	</sql>
+
+	<sql id="cbsPoolFeeSql">
+		SELECT
+		p.trans_id bill_no,
+		pe.nc_account_no company_no,
+		pe.nc_account_name company_name,
+		NULL brand_unit_no,
+		NULL brand_unit_name,
+		pe.status,
+		p.is_posting,
+		NULL balance_type,
+		p.bank_seq_number,
+		p.accounts,
+		p.trans_datetime balance_start_date,
+		p.trans_datetime balance_end_date,
+		<choose>
+			<when test="params.menuNo != null and 'FAS-089'.equals(params.menuNo)">
+				NULL inter_customer_no,
+				NULL inter_customer,
+			</when>
+			<otherwise>
+				pe.opposite_nc_account_no inter_customer_no,
+				pe.opposite_nc_account_name inter_customer,
+			</otherwise>
+		</choose>
+		NULL AS out_qty,
+		IFNULL(p.amount, 0) out_amount,
+		<choose>
+			<when test="params.menuNo != null and 'FAS-056'.equals(params.menuNo)">
+				ROUND(IFNULL(p.amount,0)/1.06,2) no_tax_amount,
+			</when>
+			<otherwise>
+				ROUND((IFNULL(p.amount,0)/(1+IFNULL(
+				(SELECT tax_rate
+				FROM tax_rate tr2
+				WHERE tr2.type=1
+				AND tr2.company_no = pe.company_no
+				AND (tr2.brand_no IS NULL
+				OR tr2.brand_no='')
+				AND tr2.effective_date &lt;= p.trans_datetime
+				ORDER BY  effective_date DESC LIMIT 1) ,0.13))),2) no_tax_amount,
+			</otherwise>
+		</choose>
+		pe.create_user, pe.create_time,
+		scp.merchant_no,
+		IF(pe.source_trans_id is null or pe.source_trans_id = '', '0' , '1') isDelay,
+		pe.update_user auditor, pe.update_time audit_time, pe.update_time,
+		'${params.menuNo}' AS fasMenuNo, '${params.menuNo}' AS fasMenuNo1
+		FROM cbs_pool p LEFT JOIN t_cbs_pool_ext pe ON pe.trans_id = p.trans_id
+		LEFT JOIN t_sync_cbs_pool scp ON scp.trans_id = p.trans_id
+		WHERE 1=1
+		AND IFNULL(p.amount, 0) != 0
+	    AND (pe.source_trans_id is null or pe.source_trans_id = '')
+	    AND (pe.nc_account_no is not null and pe.nc_account_no !='')
+		<if test="params.menuNo != null and !''.equals(params.menuNo) and
+			('FAS-034'.equals(params.menuNo) or 'FAS-068'.equals(params.menuNo))">
+			AND not exists (
+			select 1 from cbs_pool ip INNER JOIN t_cbs_pool_ext ipe on ipe.source_trans_id = ip.trans_id
+			where ip.trans_id = p.trans_id and ip.is_posting = 9
+			)
+		</if>
+		<if test="params.isDelay != null and !''.equals(params.isDelay) and 0 == params.isDelay">
+			AND (pe.source_trans_id is null or pe.source_trans_id = '')
+		</if>
+		<if test="params.isDelay != null and !''.equals(params.isDelay) and 1 == params.isDelay">
+			AND (pe.source_trans_id is not null and pe.source_trans_id != '')
+		</if>
+		<if test="params.debitCreditFlag != null and !''.equals(params.debitCreditFlag)">
+			AND p.debit_credit_flag = #{params.debitCreditFlag}
+		</if>
+		<if test="params.postingCompanyNo != null and !''.equals(params.postingCompanyNo)">
+			AND pe.nc_account_no IN (${params.postingCompanyNo})
+		</if>
+		<if test="params.interCustomerNo != null and !''.equals(params.interCustomerNo)">
+			AND pe.opposite_nc_account_no = #{params.interCustomerNo}
+		</if>
+		<if test="params.balanceStartDate != null and !''.equals(params.balanceStartDate)">
+			AND DATE_FORMAT(p.trans_datetime,'%Y-%m-%d') &gt;= #{params.balanceStartDate}
+		</if>
+		<if test="params.balanceEndDate != null and !''.equals(params.balanceEndDate)">
+			AND DATE_FORMAT(p.trans_datetime,'%Y-%m-%d') &lt;= #{params.balanceEndDate}
+		</if>
+		<if test="params.status != null and !''.equals(params.status)">
+			AND pe.final_classify_no IN (${params.status})
+		</if>
+		<if test="params.billNo != null and !''.equals(params.billNo)">
+			AND p.trans_id like CONCAT('%',#{params.billNo},'%')
+		</if>
+		<if test="params.billNos != null and !''.equals(params.billNos)">
+			AND p.trans_id =#{params.billNos}
+		</if>
+		<if test="params.createStartTime != null and !''.equals(params.createStartTime)">
+			AND pe.create_time &gt;= STR_TO_DATE(CONCAT(#{params.createStartTime},' 00:00:00') ,'%Y-%m-%d %T')
+		</if>
+		<if test="params.createEndTime != null and !''.equals(params.createEndTime)">
+			AND pe.create_time &lt;= STR_TO_DATE(CONCAT(#{params.createEndTime},' 23:59:59') ,'%Y-%m-%d %T')
+		</if>
+		<if test="params.createUser != null and !''.equals(params.createUser)">
+			AND pe.create_user like CONCAT('%',#{params.createUser},'%')
+		</if>
+		<if test="params.auditor != null and !''.equals(params.auditor)">
+			AND pe.update_user like CONCAT('%',#{params.auditor},'%')
+		</if>
+		<if test="params.isPosting != null and !''.equals(params.isPosting)">
+			AND p.is_posting IN (${params.isPosting})
+		</if>
+		<if test="params.bankSeqNumber != null and !''.equals(params.bankSeqNumber)">
+			AND p.bank_seq_number like CONCAT('%',#{params.bankSeqNumber},'%')
+		</if>
+		<if test="params.accounts != null and !''.equals(params.accounts)">
+			AND p.accounts like CONCAT('%',#{params.accounts},'%')
+		</if>
+		ORDER BY pe.update_time
+	</sql>
+
+	<sql id="awWholeSaleFeeSql">
+		SELECT
+		b.company_no AS companyNo,
+		b.company_name AS companyName,
+		b.customer_no as shopNo,
+		b.customer_name as shopName,
+		b.brand_unit_no,
+		b.brand_unit_name,
+		b.audit_status status,
+		b.is_posting,
+		b.paid_type balance_type,
+		b.bank_seq_number,
+		b.accounts,
+		b.trans_id as bill_no,
+		b.paid_date balance_start_date,
+		b.paid_date balance_end_date,
+		b.customer_no shop_no,
+		b.customer_name shop_name,
+		null as out_qty,
+		sum(IFNULL(b.paid_amount,0)) out_amount,
+		sum(ROUND((IFNULL(b.paid_amount,
+		0)/(1+IFNULL(
+		(SELECT tax_rate
+		FROM tax_rate tr2
+		WHERE tr2.type=1
+		AND tr2.company_no = b.company_no
+		AND (tr2.brand_no IS NULL OR tr2.brand_no='')
+		AND tr2.effective_date &lt;= paid_date
+		ORDER BY effective_date DESC LIMIT 1) ,0.13))),2)) no_tax_amount,
+		IF(pe.source_trans_id is null or pe.source_trans_id = '', '0' , '1') isDelay,
+		b.create_user, b.create_time, b.auditor, b.audit_time, b.update_time,
+		'${params.menuNo}' AS fasMenuNo, '${params.menuNo}' AS fasMenuNo1
+		FROM bill_pre_payment_nt b
+		INNER JOIN t_cbs_pool_ext pe ON pe.trans_id = b.trans_id
+		<!--PaidTypeEnums 保证金收款,客户收款,客户信贷还款-->
+		WHERE b.paid_type in (1, 2, 4)
+		AND b.balance_type = '7'
+		AND IFNULL(b.paid_amount, 0) != 0
+		AND (pe.nc_account_no is not null and pe.nc_account_no !='')
+		<if test="params.postingCompanyNo != null and !''.equals(params.postingCompanyNo)">
+			AND pe.nc_account_no IN (${params.postingCompanyNo})
+		</if>
+		<if test="params.interCustomerNo != null and !''.equals(params.interCustomerNo)">
+			AND pe.nc_account_name = #{params.interCustomerNo}
+		</if>
+		<if test="params.isDelay != null and !''.equals(params.isDelay) and 0 == params.isDelay">
+			AND (pe.source_trans_id is null or pe.source_trans_id = '')
+		</if>
+		<if test="params.isDelay != null and !''.equals(params.isDelay) and 1 == params.isDelay">
+			AND (pe.source_trans_id is not null and pe.source_trans_id != '')
+		</if>
+		<if test="params.brandUnitNo != null and !''.equals(params.brandUnitNo)">
+			AND LEFT(b.brand_unit_no,2) = #{params.brandUnitNo}
+		</if>
+		<if test="params.balanceStartDate != null and !''.equals(params.balanceStartDate)">
+			AND b.paid_date &gt;= #{params.balanceStartDate}
+		</if>
+		<if test="params.balanceEndDate != null and !''.equals(params.balanceEndDate)">
+			AND b.paid_date &lt;= #{params.balanceEndDate}
+		</if>
+		<if test="params.status != null and !''.equals(params.status)">
+			AND b.audit_status = #{params.status}
+		</if>
+		<if test="params.billNo != null and !''.equals(params.billNo)">
+			AND b.trans_id = #{params.billNo}
+		</if>
+		<if test="params.createStartTime != null and !''.equals(params.createStartTime)">
+			AND b.create_time &gt;= #{params.createStartTime}
+		</if>
+		<if test="params.createEndTime != null and !''.equals(params.createEndTime)">
+			AND b.create_time &lt;= #{params.createEndTime}
+		</if>
+		<if test="params.createUser != null and !''.equals(params.createUser)">
+			AND b.create_user like CONCAT('%',#{params.createUser},'%')
+		</if>
+		<if test="params.auditor != null and !''.equals(params.auditor)">
+			AND b.auditor like CONCAT('%',#{params.auditor},'%')
+		</if>
+		<if test="params.isPosting != null and !''.equals(params.isPosting)">
+			AND b.is_posting IN (${params.isPosting})
+		</if>
+		<if test="params.mulitShopNo != null and !''.equals(params.mulitShopNo)">
+			AND b.customer_no in ${params.mulitShopNo}
+		</if>
+		<if test="params.bankSeqNumber != null and !''.equals(params.bankSeqNumber)">
+			AND b.bank_seq_number like CONCAT('%',#{params.bankSeqNumber},'%')
+		</if>
+		<if test="params.accounts != null and !''.equals(params.accounts)">
+			AND b.accounts like CONCAT('%',#{params.accounts},'%')
+		</if>
+		<if test="params.mulitShopNo != null and !''.equals(params.mulitShopNo)">
+			AND b.customer_no IN ${params.mulitShopNo}
+		</if>
+		group by b.trans_id,b.customer_no,b.paid_type
+		ORDER BY b.update_time
+	</sql>
+
+
+	<sql id="arsReceiptTypeSql">
+		SELECT b.trans_id as bill_no,
+		apply.invoice_apply_date,
+		pe.nc_account_no as company_no,
+		pe.nc_account_name as company_name,
+		b.status,
+		b.is_posting,
+		b.bank_seq_number,
+		b.accounts,
+		b.trans_datetime balance_start_date,
+		b.trans_datetime balance_end_date,
+		b.shop_no,
+		b.shop_name,
+		null as out_qty,
+		b.invoice_type,
+		sum(b.amount) as out_amount,
+		sum(ROUND((IFNULL(b.amount,0)/(1+IFNULL(
+		(SELECT tax_rate FROM tax_rate tr2
+		WHERE tr2.type=1 AND
+		tr2.company_no = b.company_no
+		AND tr2.effective_date &lt;= b.paid_date
+		ORDER BY tr2.effective_date DESC LIMIT 1) ,0.13))),2))as no_tax_amount,
+		b.create_user, b.create_time,b.update_user as auditor , b.update_time as audit_time,
+		IF(pe.source_trans_id is null or pe.source_trans_id = '', '0' , '1') isDelay,
+		'${params.menuNo}' AS fasMenuNo, '${params.menuNo}' AS fasMenuNo1
+		FROM ars_receipt_type b
+		LEFT JOIN t_cbs_pool_ext pe ON pe.trans_id = b.trans_id
+		LEFT JOIN bill_balance_invoice_apply apply ON apply.bill_no = b.invoice_apply_no
+		WHERE 1=1
+		AND b.trans_id IS NOT NULL AND b.trans_id != ''
+		AND (pe.nc_account_no is not null and pe.nc_account_no !='')
+		<if test="params.postingCompanyNo != null and !''.equals(params.postingCompanyNo)">
+			AND pe.nc_account_no IN (${params.postingCompanyNo})
+		</if>
+		<if test="params.interCustomerNo != null and !''.equals(params.interCustomerNo)">
+			AND pe.nc_account_name = #{params.interCustomerNo}
+		</if>
+		<if test="params.isDelay != null and !''.equals(params.isDelay) and 0 == params.isDelay">
+			AND (pe.source_trans_id is null or pe.source_trans_id = '')
+		</if>
+		<if test="params.isDelay != null and !''.equals(params.isDelay) and 1 == params.isDelay">
+			AND (pe.source_trans_id is not null and pe.source_trans_id != '')
+		</if>
+		<if test="params.balanceStartDate != null and !''.equals(params.balanceStartDate)">
+			AND DATE_FORMAT(b.trans_datetime,'%Y-%m-%d') &gt;= #{params.balanceStartDate}
+		</if>
+		<if test="params.balanceEndDate != null and !''.equals(params.balanceEndDate)">
+			AND DATE_FORMAT(b.trans_datetime,'%Y-%m-%d') &lt;= #{params.balanceEndDate}
+		</if>
+		<choose>
+			<when test="params.billStatus != null and !''.equals(params.billStatus)">
+				AND b.status IN (${params.billStatus})
+			</when>
+			<otherwise>
+				AND b.status IN ('2','3')
+			</otherwise>
+		</choose>
+		<if test="params.billNo != null and !''.equals(params.billNo)">
+			AND b.trans_id = #{params.billNo}
+		</if>
+		<if test="params.createStartTime != null and !''.equals(params.createStartTime)">
+			AND b.create_time &gt;= #{params.createStartTime}
+		</if>
+		<if test="params.createEndTime != null and !''.equals(params.createEndTime)">
+			AND b.create_time &lt;= #{params.createEndTime}
+		</if>
+		<if test="params.billDateStart != null and !''.equals(params.billDateStart)">
+			AND apply.invoice_apply_date &gt;= #{params.billDateStart}
+		</if>
+		<if test="params.billDateEnd != null and !''.equals(params.billDateEnd)">
+			AND apply.invoice_apply_date &lt;= #{params.billDateEnd}
+		</if>
+		<if test="params.createUser != null and !''.equals(params.createUser)">
+			AND b.create_user like CONCAT('%',#{params.createUser},'%')
+		</if>
+		<if test="params.auditor != null and !''.equals(params.auditor)">
+			AND b.update_user like CONCAT('%',#{params.auditor},'%')
+		</if>
+		<if test="params.isPosting != null and !''.equals(params.isPosting)">
+			AND b.is_posting IN (${params.isPosting})
+		</if>
+		<if test="params.mulitShopNo != null and !''.equals(params.mulitShopNo)">
+			AND b.shop_no in ${params.mulitShopNo}
+		</if>
+		<if test="params.bankSeqNumber != null and !''.equals(params.bankSeqNumber)">
+			AND b.bank_seq_number like CONCAT('%',#{params.bankSeqNumber},'%')
+		</if>
+		<if test="params.accounts != null and !''.equals(params.accounts)">
+			AND b.accounts like CONCAT('%',#{params.accounts},'%')
+		</if>
+		<if test="params.invoiceType != null and !''.equals(params.invoiceType)">
+			AND b.invoice_type = #{params.invoiceType}
+		</if>
+		group by b.trans_id,b.shop_no ORDER BY b.update_time
+	</sql>
+
+
+    <sql id="sxTagPriceSql">
+		SELECT
+			b.bill_no,
+            <if test="null != params.menuType and params.menuType == 3">
+            	 b.is_posting,
+				'Z9001' AS company_no,
+				'滔搏投资（上海）有限公司-体育' AS company_name,
+				 b.company_no AS inter_customer_no,
+				 b.company_name AS inter_customer,
+			</if>
+			<if test="null != params.menuType and params.menuType == 4">
+			     b.as_posting as is_posting,
+				'Z9001' AS inter_customer_no,
+				'滔搏投资（上海）有限公司-体育' AS inter_customer,
+				b.company_no,
+				b.company_name,
+			</if>
+			b.status,
+			CONCAT(b.year,'-', LPAD(b.month,2,0)) AS sbalance_start_date,
+			CONCAT(b.year,'-', LPAD(b.month,2,0)) AS sbalance_end_date,
+			b.opening_qty - b.closing_qty AS out_qty,
+		    case  b.bill_type when 21 then
+			b.closing_balance - b.opening_balance
+		    else b.opening_balance - b.closing_balance end   AS out_amount,
+			ROUND(
+				IFNULL((case  b.bill_type when 21 then
+		b.closing_balance - b.opening_balance
+		else b.opening_balance - b.closing_balance end) , 0) / 1.13 , 2
+			 ) no_tax_amount,
+			 b.create_user,
+			 b.create_time,
+			 b.update_user AS auditor,
+			 b.update_time AS audit_time,
+			'${params.menuNo}' AS fasMenuNo,
+			'${params.menuNo}' AS fasMenuNo1
+			FROM
+				sx_tagprice_change b
+			WHERE
+			1 = 1
+		<if test="params.postingCompanyNo != null and !''.equals(params.postingCompanyNo)">
+			AND b.company_no IN (${params.postingCompanyNo})
+		</if>
+		<if test="params.interCustomerNo != null and !''.equals(params.interCustomerNo)">
+			AND b.company_no = #{params.interCustomerNo}
+		</if>
+		<if test="params.balanceStartDate != null and !''.equals(params.balanceStartDate)">
+			AND CONCAT(b.year, LPAD(b.month,2,0)) &gt;= DATE_FORMAT(#{params.balanceStartDate},'%Y%m')
+		</if>
+		<if test="params.balanceEndDate != null and !''.equals(params.balanceEndDate)">
+			AND CONCAT(b.year, LPAD(b.month,2,0)) &lt;= DATE_FORMAT(#{params.balanceEndDate},'%Y%m')
+		</if>
+		<if test="params.billStatus == null or ''.equals(params.billStatus)">
+			AND b.status IN ('2')
+		</if>
+		<if test="params.billNo != null and !''.equals(params.billNo)">
+			AND b.bill_no like CONCAT('%',#{params.billNo},'%')
+		</if>
+		<if test="params.billNos != null and !''.equals(params.billNos)">
+			AND b.bill_no =#{params.billNos}
+		</if>
+		<if test="params.createStartTime != null and !''.equals(params.createStartTime)">
+			AND b.create_time &gt;= #{params.createStartTime}
+		</if>
+		<if test="params.createEndTime != null and !''.equals(params.createEndTime)">
+			AND b.create_time &lt;= #{params.createEndTime}
+		</if>
+		<if test="params.createUser != null and !''.equals(params.createUser)">
+			AND b.create_user like CONCAT('%',#{params.createUser},'%')
+		</if>
+		<if test="params.auditor != null and !''.equals(params.auditor)">
+			AND b.update_user like CONCAT('%',#{params.auditor},'%')
+		</if>
+		<if test="params.isPosting != null and !''.equals(params.isPosting)">
+			AND b.is_posting IN (${params.isPosting})
+		</if>
+		<if test="params.asPosting != null and !''.equals(params.asPosting)">
+			AND b.as_posting IN (${params.asPosting})
+		</if>
+		group by b.bill_no ORDER BY b.update_time
+	</sql>
+
+	<sql id="arsAccountFeeSql">
+		SELECT b.bill_no,
+		b.company_no,
+		b.company_name,
+		b.audit_status status,
+		b.status is_posting,
+		STR_TO_DATE(CONCAT(b.month,'01'),'%Y%m%d') balance_start_date,
+		last_day(STR_TO_DATE(CONCAT(b.month,'01'),'%Y%m%d')) balance_end_date,
+		d.shop_no, d.shop_name,
+		null as out_qty,
+		sum(IFNULL(d.actua_amount,0)) out_amount,
+		ROUND(sum((IFNULL(d.actua_amount,
+		0)/(1+IFNULL(
+		(SELECT tax_rate
+		FROM tax_rate tr2
+		WHERE tr2.type=1
+		AND tr2.company_no = IFNULL(select DISTINCT c.company_no from company c where c.company_no = d.company_no,
+		select DISTINCT company_no from ars_receiver_information p where p.pipeline_company_no = d.company_no)
+		AND (tr2.brand_no IS NULL OR tr2.brand_no='')
+		AND tr2.effective_date &lt;= d.balance_start_date
+		ORDER BY effective_date DESC LIMIT 1) ,0.13)))),2) no_tax_amount,
+		b.create_user, b.create_time, b.audit_user auditor, b.audit_time, b.update_time,
+		'${params.menuNo}' AS fasMenuNo, '${params.menuNo}' AS fasMenuNo1
+		FROM t_other_receivables b
+		INNER JOIN t_other_receivables_dtl d
+		ON b.bill_no = d.bill_no
+		WHERE 1=1
+		<if test="params.postingCompanyNo != null and !''.equals(params.postingCompanyNo)">
+			AND b.company_no IN (${params.postingCompanyNo})
+		</if>
+		<if test="params.interCustomerNo != null and !''.equals(params.interCustomerNo)">
+			AND b.company_no = #{params.interCustomerNo}
+		</if>
+		<if test="params.balanceStartDate != null and !''.equals(params.balanceStartDate)">
+			AND b.month &gt;= DATE_FORMAT(#{params.balanceStartDate},'%Y%m')
+		</if>
+		<if test="params.balanceEndDate != null and !''.equals(params.balanceEndDate)">
+			AND b.month &lt;=  DATE_FORMAT(#{params.balanceEndDate},'%Y%m')
+		</if>
+		<if test="params.billStatus == null or ''.equals(params.billStatus)">
+			AND b.audit_status IN ('1')
+		</if>
+		<if test="params.status != null and !''.equals(params.status)">
+			AND b.audit_status IN (${params.status})
+		</if>
+		<if test="params.billNo != null and !''.equals(params.billNo)">
+			AND b.bill_no like CONCAT('%',#{params.billNo},'%')
+		</if>
+		<if test="params.billNos != null and !''.equals(params.billNos)">
+			AND b.bill_no =#{params.billNos}
+		</if>
+		<if test="params.createStartTime != null and !''.equals(params.createStartTime)">
+			AND b.create_time &gt;= #{params.createStartTime}
+		</if>
+		<if test="params.createEndTime != null and !''.equals(params.createEndTime)">
+			AND b.create_time &lt;= #{params.createEndTime}
+		</if>
+		<if test="params.createUser != null and !''.equals(params.createUser)">
+			AND b.create_user like CONCAT('%',#{params.createUser},'%')
+		</if>
+		<if test="params.auditor != null and !''.equals(params.auditor)">
+			AND b.audit_user like CONCAT('%',#{params.auditor},'%')
+		</if>
+		<if test="params.isPosting != null and !''.equals(params.isPosting)">
+			AND b.status IN (${params.isPosting})
+		</if>
+		<if test="params.mulitShopNo != null and !''.equals(params.mulitShopNo)">
+			AND d.shop_no in ${params.mulitShopNo}
+		</if>
+		group by b.bill_no
+		ORDER BY b.update_time
+	</sql>
+
+	<!-- 查询结算单合计行 -->
+	<select id="selectPushToNcDataTotalRow" resultMap="ForNcDataResultMap"
+			parameterType="map">
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType != 0
+			and params.balanceType != 999 and params.balanceType != 888 and params.balanceType != 777 and params.balanceType != 666
+			and params.balanceType != 222 and params.balanceType != 111 and params.balanceType != 77
+			and params.balanceType != 28">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			SELECT
+			IFNULL(SUM(B.OUT_QTY), 0) OUT_QTY,
+			IFNULL(SUM(B.BALANCE_AMOUNT), 0) OUT_AMOUNT,
+			sum(ROUND((IFNULL(b.balance_amount, 0)/(1+IFNULL(
+			(SELECT tax_rate FROM tax_rate tr1 WHERE
+			tr1.type=1
+			<if test="null != params.menuType and (params.menuType == 2 or params.menuType == 4 or params.menuType == 6)">
+				AND tr1.company_no=b.buyer_no
+			</if>
+			<if test="null != params.menuType and (params.menuType == 1 or params.menuType == 3 or params.menuType == 5)">
+				AND tr1.company_no=b.saler_no
+			</if>
+			AND FIND_IN_SET(tr1.brand_no, b.brand_unit_no)
+			AND tr1.effective_date&lt;=b.balance_start_date
+			ORDER BY effective_date DESC LIMIT 1)
+			,IFNULL(
+			(SELECT tax_rate FROM
+			tax_rate tr2 WHERE tr2.type=1
+			<if test="null != params.menuType and (params.menuType == 2 or params.menuType == 4 or params.menuType == 6)">
+				AND tr2.company_no=bs.buyer_no
+			</if>
+			<if test="null != params.menuType and (params.menuType == 1 or params.menuType == 3 or params.menuType == 5)">
+				AND tr2.company_no=bs.saler_no
+			</if>
+			AND (tr2.brand_no IS NULL OR tr2.brand_no='')
+			AND tr2.effective_date&lt;=b.balance_start_date ORDER BY effective_date DESC
+			LIMIT 1)
+			,0.13)))),2)) no_tax_amount,
+			IFNULL(SUM(B.balance_qty),0) balance_qty,
+			IFNULL(SUM(B.BALANCE_AMOUNT),0) BALANCE_AMOUNT
+			FROM
+			BILL_BALANCE B
+			LEFT JOIN
+			bill_balance_invoice_apply bbia ON bbia.bill_no = B.invoice_apply_no
+			WHERE 1 = 1
+			<include refid="forNcDataParams" />
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 0">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)
+						and params.menuNo != null and !'FAS-079,FAS-081'.contains(params.menuNo)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			SELECT
+			sum(t.out_qty) OUT_QTY,
+			sum(out_amount) OUT_AMOUNT,
+			       <!--纳税资格为小规模-->
+			sum(case when 1 = (
+			select tax_eligibility from ars_pipeline_company b INNER JOIN ars_pipeline_company_dtl d
+			on b.data_no = d.data_no
+			where b.pipeline_company_no = t.company_no and d.shop_no = t.shopNo
+			and t.invoice_apply_date BETWEEN b.effective_date and d.disable_date
+			group by b.pipeline_company_no, d.shop_no limit 1
+			) then t.out_amount else t.not_tax_amount end) as no_tax_amount
+
+			FROM (
+			<include refid="aiInvoiceDataCore"/>
+			) t
+			<if test="params.menuNo != null and !''.equals(params.menuNo) ">
+				where  1=1
+				<choose>
+					<when test="'FAS-010'.equals(params.menuNo)">
+						<if test="params.attributeDtlNoList != null and !''.equals(params.attributeDtlNoList)" >
+							<foreach collection="params.attributeDtlNoList" index="index" item="attributeDtlNo" separator="OR"
+									 open="and(" close=")">
+								INSTR(attribute_detail_no,#{attributeDtlNo})&gt;0
+							</foreach>
+						</if>
+					</when>
+				</choose>
+			</if>
+		</if>
+
+		<if test="params.balanceType == null or ''.equals(params.balanceType)">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			SELECT
+			sum(IFNULL(out_amount, 0)) out_amount
+			FROM (
+			<include refid="arsReceiptPaymentSplit"></include>
+			) t
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 999">
+			/*ignore_sharding_flag*/
+			SELECT
+			sum(IFNULL(out_amount, 0)) OUT_AMOUNT,
+			sum(IFNULL(no_tax_amount, 0)) no_tax_amount
+			FROM (
+			<include refid="arsAccountFeeSql"></include>
+			) t
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 888">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			SELECT
+			sum(IFNULL(out_amount, 0)) OUT_AMOUNT,
+			sum(IFNULL(no_tax_amount, 0)) no_tax_amount
+			FROM (
+			<include refid="awWholeSaleFeeSql"></include>
+			) t
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 777">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			SELECT
+			sum(IFNULL(out_amount, 0)) OUT_AMOUNT,
+			sum(IFNULL(no_tax_amount, 0)) no_tax_amount
+			FROM (
+			<include refid="cbsPoolFeeSql"></include>
+			) t
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 666">
+			<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+			</choose>
+			SELECT
+			sum(IFNULL(out_amount, 0)) OUT_AMOUNT,
+			sum(IFNULL(no_tax_amount, 0)) no_tax_amount
+			FROM (
+			<include refid="arsReceiptTypeSql"></include>
+			) t
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 222">
+			/*ignore_sharding_flag*/
+			SELECT
+			sum(IFNULL(out_qty, 0)) out_qty,
+			sum(IFNULL(out_amount, 0)) OUT_AMOUNT,
+			sum(IFNULL(no_tax_amount, 0)) no_tax_amount
+			FROM (
+			<include refid="sxTagPriceSql"></include>
+			) t
+		</if>
+
+		<if test="params.balanceType != null and !''.equals(params.balanceType) and params.balanceType == 111">
+			/*ignore_sharding_flag*/
+			SELECT
+			sum(IFNULL(out_amount, 0)) OUT_AMOUNT,
+			sum(IFNULL(no_tax_amount, 0)) no_tax_amount
+			FROM (
+			<include refid="xcxCommissionWidhdrawalSql"></include>
+			) t
+		</if>
+
+		<if test="params.menuNo != null and !''.equals(params.menuNo) and 'FAS-077'.equals(params.menuNo)">
+		    select sum(IFNULL(spf.amount,0)) OUT_AMOUNT from small_program_freight spf where 1=1 <include refid="spf_sql"/>
+		</if>
+		
+		<if test="params.menuNo != null and !''.equals(params.menuNo) and 'FAS-124'.equals(params.menuNo)">
+		    /*ignore_sharding_flag*/
+			SELECT
+			sum(IFNULL(out_amount, 0)) OUT_AMOUNT,
+			FROM (
+			<include refid="chargeBillInvoiceSql"></include>
+			) t
+		</if>
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+			parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM bill_balance w
+		WHERE id = #{id,jdbcType=CHAR}
+	</select>
+	<select id="findByBillNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM bill_balance w
+		WHERE bill_no = #{billNo,jdbcType=CHAR}
+	</select>
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT COUNT(1) as s FROM bill_balance w WHERE 1=1
+		<include refid="condition" />
+	</select>
+	<select id="selectByPage" resultMap="BaseResultMap"
+			parameterType="map">
+		SELECT
+		IF((select short_name from customer where customer_no= w.buyer_no) is
+		null,w.buyer_name,
+		(select short_name from customer where customer_no= w.buyer_no)) buyer_name,
+		<include refid="Base_Column_List" />
+		FROM bill_balance w WHERE 1=1
+		<include refid="condition" />
+		<if test="orderByField != null and !''.equals(orderByField)">
+			ORDER BY ${orderByField}
+			<if test="orderByField">
+				${orderBy}
+			</if>
+		</if>
+		LIMIT #{page.startRowNum} ,#{page.pageSize}
+	</select>
+	<select id="selectFooter" resultMap="BaseResultMap"  parameterType="map" >
+		SELECT
+		'合计' buyer_no,
+		sum(IFNULL(out_amount, 0)) out_amount,
+		sum(IFNULL(out_qty, 0)) out_qty,
+		sum(IFNULL(deduction_amount, 0)) deduction_amount,
+		sum(IFNULL(rebate_amount, 0)) rebate_amount,
+		sum(IFNULL(balance_amount, 0)) balance_amount
+		FROM bill_balance w WHERE 1=1
+		<include refid="condition" />
+	</select>
+
+	<select id="selectJdBillBalanceCount" resultType="java.lang.Integer">
+		SELECT COUNT(1) as s FROM bill_balance w
+		inner join jd_bill_account_dtl j on w.bill_no = j.bill_no
+		and w.buyer_no = j.company_no
+		and w.saler_no = j.supplier_no
+		WHERE 1=1
+		<if test="null != params.shopNo and !''.equals(params.shopNo)">
+			AND j.shop_no = #{params.shopNo}
+		</if>
+
+		<if test="null != params.shopNos and !''.equals(params.shopNos)">
+			AND j.shop_no in ${params.shopNos}
+		</if>
+		<include refid="condition" />
+	</select>
+
+	<select id="queryJdBillBalanceByWhereAll" resultMap="BaseResultMap" parameterType="map">
+		SELECT
+		IF((select short_name from customer where customer_no= w.buyer_no) is
+		null,w.buyer_name,
+		(select short_name from customer where customer_no= w.buyer_no)) buyer_name,
+		<include refid="Base_Column_List" />
+		FROM bill_balance w
+		WHERE 1=1
+		<include refid="condition" />
+		<if test="orderByField != null and !''.equals(orderByField)">
+			ORDER BY ${orderByField}
+			<if test="orderByField">
+				${orderBy}
+			</if>
+		</if>
+	</select>
+
+	<select id="queryJdBillBalanceByPage" resultMap="BaseResultMap" parameterType="map">
+		SELECT
+		IF((select short_name from customer where customer_no= w.buyer_no) is
+		null,w.buyer_name,
+		(select short_name from customer where customer_no= w.buyer_no)) buyer_name,
+		 j.shop_no, j.shop_name,
+		<include refid="Base_Column_List" />
+		FROM bill_balance w inner join jd_bill_account_dtl j on w.bill_no = j.bill_no
+		and w.buyer_no = j.company_no
+		and w.saler_no = j.supplier_no
+		WHERE 1=1
+		<if test="null != params.shopNo and !''.equals(params.shopNo)">
+			AND j.shop_no = #{params.shopNo}
+		</if>
+
+		<if test="null != params.shopNos and !''.equals(params.shopNos)">
+			AND j.shop_no in ${params.shopNos}
+		</if>
+		<include refid="condition" />
+		<if test="orderByField != null and !''.equals(orderByField)">
+			ORDER BY ${orderByField}
+			<if test="orderByField">
+				${orderBy}
+			</if>
+		</if>
+		LIMIT #{page.startRowNum} ,#{page.pageSize}
+	</select>
+	<select id="selectByParams" resultMap="BaseResultMap"
+			parameterType="map">
+		<if test="params.ignoreShardingFlag != null and !''.equals(params.ignoreShardingFlag)">
+			/*ignore_sharding_flag*/
+		</if>
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM bill_balance w WHERE 1=1
+		<include refid="condition" />
+		<if test="null!=params and params.sortFieldBalanceEndDate != null and !''.equals(params.sortFieldBalanceEndDate)">
+			ORDER BY balance_end_date DESC
+			<if test="params.limitOne != null and !''.equals(params.limitOne)">
+				LIMIT 1
+			</if>
+		</if>
+	</select>
+	<select id="selectInvoiceApplyNo" resultMap="BaseResultMap" parameterType="map">
+		/*ignore_sharding_flag*/
+		<if test="params.menuType != 3 and params.menuType != 4">
+			SELECT apply.bill_no AS invoice_apply_no,IFNULL(apply.invoice_type,0) AS invoice_type,apply.pre_invoice,bb.bill_no,bb.buyer_no,bb.saler_no
+			FROM bill_balance bb
+			<choose>
+				<when test="params.unionApply != null and !''.equals(params.unionApply)">
+					INNER JOIN bill_balance_invoice_apply apply ON apply.bill_no = bb.invoice_apply_no
+				</when>
+				<otherwise>
+					LEFT JOIN bill_balance_invoice_apply apply ON apply.bill_no = bb.invoice_apply_no
+				</otherwise>
+			</choose>
+			WHERE bb.bill_no in
+			<foreach collection="params.billNoList" item="balanceNo" open="(" separator="," close=")">
+				#{balanceNo}
+			</foreach>
+		</if>
+		<if test="params.menuType == 3 or params.menuType == 4">
+
+			SELECT bb.bill_no,bb.buyer_no,bb.saler_no
+			FROM bill_balance bb
+			WHERE bb.bill_no in
+			<foreach collection="params.billNoList" item="balanceNo" open="(" separator="," close=")">
+				#{balanceNo}
+			</foreach>
+
+		</if>
+
+	</select>
+
+	<select id="selectBillInfo" resultMap="BaseResultMap" parameterType="map">
+
+		SELECT
+		bill_no
+		FROM bill_balance
+		WHERE invoice_apply_no IN
+		<foreach collection="params.billInvoiceApplyNo" item="invoiceApplyNo" open="(" separator="," close=")">
+			'${invoiceApplyNo}'
+		</foreach>
+
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		DELETE FROM bill_balance
+		WHERE id = #{id,jdbcType=CHAR}
+	</delete>
+	<delete id="deleteByPrimarayKeyForModel" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		DELETE FROM bill_balance
+		WHERE id = #{id,jdbcType=CHAR}
+	</delete>
+	<insert id="insert" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		INSERT INTO bill_balance (id, bill_no, bill_name,
+		status,extend_status, balance_type, buyer_no,
+		buyer_name, saler_no, saler_name, pipeline_company_no,pipeline_company_name,organ_no, organ_name, organ_no_from,
+		organ_name_from,
+		brand_no, brand_name, brand_unit_no, brand_unit_name, category_no,
+		category_name, balance_date, balance_start_date,
+		balance_flag,balance_month,
+		balance_end_date, currency, out_amount,
+		entry_amount,tag_price_amount, return_amount, deduction_amount,
+		balance_amount, invoice_amount, rebate_amount, invoice_rebate_amount,
+		has_balance_amount,
+		create_user, create_time, update_user,
+		update_time, auditor, audit_time,
+		remark, out_qty, entry_qty,
+		return_qty, deduction_qty, balance_qty, ask_payment_no, invoice_apply_no,
+		invoice_no, is_user_defined,other_price,advance_invoice_sign,management_type,payment_amount)
+		VALUES (#{id,jdbcType=CHAR}, #{billNo,jdbcType=CHAR},
+		#{billName,jdbcType=VARCHAR},
+		#{status,jdbcType=TINYINT}, #{extendStatus,jdbcType=TINYINT}, #{balanceType,jdbcType=TINYINT},
+		#{buyerNo,jdbcType=CHAR},
+		#{buyerName,jdbcType=VARCHAR}, #{salerNo,jdbcType=CHAR}, #{salerName,jdbcType=VARCHAR},
+		#{pipelineCompanyNo,jdbcType=VARCHAR},#{pipelineCompanyName,jdbcType=VARCHAR},#{organNo,jdbcType=VARCHAR},
+		#{organName,jdbcType=VARCHAR},#{organNoFrom,jdbcType=VARCHAR},
+		#{organNameFrom,jdbcType=VARCHAR},
+		#{brandNo,jdbcType=CHAR}, #{brandName,jdbcType=VARCHAR}, #{brandUnitNo,jdbcType=CHAR},
+		#{brandUnitName,jdbcType=VARCHAR},
+		#{categoryNo,jdbcType=CHAR}, #{categoryName,jdbcType=VARCHAR}, #{balanceDate,jdbcType=DATE},
+		#{balanceStartDate,jdbcType=DATE},
+		#{balanceFlag,jdbcType=TINYINT}, #{balanceMonth,jdbcType=CHAR},
+		#{balanceEndDate,jdbcType=DATE}, #{currency,jdbcType=VARCHAR}, #{outAmount,jdbcType=DECIMAL},
+		#{entryAmount,jdbcType=DECIMAL}, #{tagPriceAmount,jdbcType=DECIMAL},#{returnAmount,jdbcType=DECIMAL},
+		#{deductionAmount,jdbcType=DECIMAL},
+		#{balanceAmount,jdbcType=DECIMAL},
+		#{invoiceAmount,jdbcType=DECIMAL},#{rebateAmount,jdbcType=DECIMAL},#{invoiceRebateAmount,jdbcType=DECIMAL},
+		#{hasBalanceAmount,jdbcType=DECIMAL},
+		#{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=TIMESTAMP}, #{auditor,jdbcType=VARCHAR},
+		#{auditTime,jdbcType=TIMESTAMP},
+		#{remark,jdbcType=VARCHAR}, #{outQty,jdbcType=INTEGER}, #{entryQty,jdbcType=INTEGER},
+		#{returnQty,jdbcType=INTEGER}, #{deductionQty,jdbcType=INTEGER},
+		#{balanceQty,jdbcType=INTEGER},
+		#{askPaymentNo,jdbcType=VARCHAR}, #{invoiceApplyNo,jdbcType=VARCHAR},
+		#{invoiceNo,jdbcType=VARCHAR},#{isUserDefined,jdbcType=INTEGER},
+		#{otherPrice,jdbcType=DECIMAL},#{advanceInvoiceSign,jdbcType=INTEGER},#{managementType,jdbcType=INTEGER},
+		#{paymentAmount,jdbcType=DECIMAL})
+	</insert>
+	<insert id="insertSelective" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		INSERT INTO bill_balance
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="billNo != null">
+				bill_no,
+			</if>
+			<if test="billName != null">
+				bill_name,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="extendStatus != null">
+				extend_status,
+			</if>
+			<if test="balanceType != null">
+				balance_type,
+			</if>
+			<if test="buyerNo != null">
+				buyer_no,
+			</if>
+			<if test="buyerName != null">
+				buyer_name,
+			</if>
+			<if test="salerNo != null">
+				saler_no,
+			</if>
+			<if test="salerName != null">
+				saler_name,
+			</if>
+			<if test="pipelineCompanyNo != null">
+				pipeline_company_no,
+			</if>
+			<if test="pipelineCompanyName != null">
+				pipeline_company_name,
+			</if>
+			<if test="organNo != null">
+				organ_no,
+			</if>
+			<if test="organName != null">
+				organ_name,
+			</if>
+			<if test="organNoFrom != null">
+				organ_no_from,
+			</if>
+			<if test="organNameFrom != null">
+				organ_name_from,
+			</if>
+			<if test="brandNo != null">
+				brand_no,
+			</if>
+			<if test="brandName != null">
+				brand_name,
+			</if>
+			<if test="brandUnitNo != null">
+				brand_unit_no,
+			</if>
+			<if test="brandUnitName != null">
+				brand_unit_name,
+			</if>
+			<if test="categoryNo != null">
+				category_no,
+			</if>
+			<if test="categoryName != null">
+				category_name,
+			</if>
+			<if test="extendCategoryNo != null">
+				extend_category_no,
+			</if>
+			<if test="extendCategoryName != null">
+				extend_category_name,
+			</if>
+			<if test="balanceDate != null">
+				balance_date,
+			</if>
+			<if test="balanceStartDate != null">
+				balance_start_date,
+			</if>
+			<if test="balanceFlag != null">
+				balance_flag,
+			</if>
+			<if test="balanceMonth != null">
+				balance_month,
+			</if>
+			<if test="balanceEndDate != null">
+				balance_end_date,
+			</if>
+			<if test="currency != null">
+				currency,
+			</if>
+			<if test="outAmount != null">
+				out_amount,
+			</if>
+			<if test="entryAmount != null">
+				entry_amount,
+			</if>
+			<if test="tagPriceAmount != null">
+				tag_price_amount,
+			</if>
+			<if test="returnAmount != null">
+				return_amount,
+			</if>
+			<if test="deductionAmount != null">
+				deduction_amount,
+			</if>
+			<if test="balanceAmount != null">
+				balance_amount,
+			</if>
+			<if test="invoiceAmount != null">
+				invoice_amount,
+			</if>
+			<if test="rebateAmount != null">
+				rebate_amount,
+			</if>
+			<if test="invoiceRebateAmount != null">
+				invoice_rebate_amount,
+			</if>
+			<if test="hasBalanceAmount != null">
+				has_balance_amount,
+			</if>
+			<if test="createUser != null">
+				create_user,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateUser != null">
+				update_user,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="auditor != null">
+				auditor,
+			</if>
+			<if test="auditTime != null">
+				audit_time,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="outQty != null">
+				out_qty,
+			</if>
+			<if test="entryQty != null">
+				entry_qty,
+			</if>
+			<if test="returnQty != null">
+				return_qty,
+			</if>
+			<if test="deductionQty != null">
+				deduction_qty,
+			</if>
+			<if test="balanceQty != null">
+				balance_qty,
+			</if>
+			<if test="askPaymentNo != null">
+				ask_payment_no,
+			</if>
+			<if test="invoiceApplyNo != null">
+				invoice_apply_no,
+			</if>
+			<if test="invoiceNo != null">
+				invoice_no,
+			</if>
+			<if test="isUserDefined != null">
+				is_user_defined,
+			</if>
+			<if test="isApportionRebate != null">
+				is_apportion_rebate,
+			</if>
+			<if test="customReturnQty != null">
+				custom_return_qty,
+			</if>
+			<if test="customReturnAmount != null">
+				custom_return_amount,
+			</if>
+			<if test="supplierAmount != null">
+				supplier_amount,
+			</if>
+			<if test="otherPrice != null">
+				other_price,
+			</if>
+			<if test="peBizType != null">
+				pe_biz_type,
+			</if>
+			<if test="advanceInvoiceSign != null">
+				advance_invoice_sign,
+			</if>
+			<if test="isAcceptance != null">
+				is_acceptance,
+			</if>
+			<if test="isForPay != null">
+				is_for_pay,
+			</if>
+			<if test="isDiscountExc != null">
+				is_discount_exc,
+			</if>
+			<if test="managementType != null">
+				management_type,
+			</if>
+			<if test="paymentAmount != null">
+				payment_amount,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=CHAR},
+			</if>
+			<if test="billNo != null">
+				#{billNo,jdbcType=CHAR},
+			</if>
+			<if test="billName != null">
+				#{billName,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=TINYINT},
+			</if>
+			<if test="extendStatus != null">
+				#{extendStatus,jdbcType=TINYINT},
+			</if>
+			<if test="balanceType != null">
+				#{balanceType,jdbcType=TINYINT},
+			</if>
+			<if test="buyerNo != null">
+				#{buyerNo,jdbcType=CHAR},
+			</if>
+			<if test="buyerName != null">
+				#{buyerName,jdbcType=VARCHAR},
+			</if>
+			<if test="salerNo != null">
+				#{salerNo,jdbcType=CHAR},
+			</if>
+			<if test="salerName != null">
+				#{salerName,jdbcType=VARCHAR},
+			</if>
+			<if test="pipelineCompanyNo != null">
+				#{pipelineCompanyNo,jdbcType=VARCHAR},
+			</if>
+			<if test="pipelineCompanyName != null">
+				#{pipelineCompanyName,jdbcType=VARCHAR},
+			</if>
+			<if test="organNo != null">
+				#{organNo,jdbcType=VARCHAR},
+			</if>
+			<if test="organName != null">
+				#{organName,jdbcType=VARCHAR},
+			</if>
+			<if test="organNoFrom != null">
+				#{organNoFrom,jdbcType=VARCHAR},
+			</if>
+			<if test="organNameFrom != null">
+				#{organNameFrom,jdbcType=VARCHAR},
+			</if>
+			<if test="brandNo != null">
+				#{brandNo,jdbcType=CHAR},
+			</if>
+			<if test="brandName != null">
+				#{brandName,jdbcType=VARCHAR},
+			</if>
+			<if test="brandUnitNo != null">
+				#{brandUnitNo,jdbcType=VARCHAR},
+			</if>
+			<if test="brandUnitName != null">
+				#{brandUnitName,jdbcType=VARCHAR},
+			</if>
+			<if test="categoryNo != null">
+				#{categoryNo,jdbcType=CHAR},
+			</if>
+			<if test="categoryName != null">
+				#{categoryName,jdbcType=VARCHAR},
+			</if>
+			<if test="extendCategoryNo != null">
+				#{extendCategoryNo,jdbcType=VARCHAR},
+			</if>
+			<if test="extendCategoryName != null">
+				#{extendCategoryName,jdbcType=VARCHAR},
+			</if>
+			<if test="balanceDate != null">
+				#{balanceDate,jdbcType=DATE},
+			</if>
+			<if test="balanceStartDate != null">
+				#{balanceStartDate,jdbcType=DATE},
+			</if>
+			<if test="balanceFlag != null">
+				#{balanceFlag,jdbcType=TINYINT},
+			</if>
+			<if test="balanceMonth != null">
+				#{balanceMonth,jdbcType=CHAR},
+			</if>
+			<if test="balanceEndDate != null">
+				#{balanceEndDate,jdbcType=DATE},
+			</if>
+			<if test="currency != null">
+				#{currency,jdbcType=VARCHAR},
+			</if>
+			<if test="outAmount != null">
+				#{outAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="entryAmount != null">
+				#{entryAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="tagPriceAmount != null">
+				#{tagPriceAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="returnAmount != null">
+				#{returnAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="deductionAmount != null">
+				#{deductionAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="balanceAmount != null">
+				#{balanceAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="invoiceAmount != null">
+				#{invoiceAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="rebateAmount != null">
+				#{rebateAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="invoiceRebateAmount != null">
+				#{invoiceRebateAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="hasBalanceAmount != null">
+				#{hasBalanceAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="createUser != null">
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null">
+				#{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="auditor != null">
+				#{auditor,jdbcType=VARCHAR},
+			</if>
+			<if test="auditTime != null">
+				#{auditTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="outQty != null">
+				#{outQty,jdbcType=INTEGER},
+			</if>
+			<if test="entryQty != null">
+				#{entryQty,jdbcType=INTEGER},
+			</if>
+			<if test="returnQty != null">
+				#{returnQty,jdbcType=INTEGER},
+			</if>
+			<if test="deductionQty != null">
+				#{deductionQty,jdbcType=INTEGER},
+			</if>
+			<if test="balanceQty != null">
+				#{balanceQty,jdbcType=INTEGER},
+			</if>
+			<if test="askPaymentNo != null">
+				#{askPaymentNo,jdbcType=VARCHAR},
+			</if>
+			<if test="invoiceApplyNo != null">
+				#{invoiceApplyNo,jdbcType=VARCHAR},
+			</if>
+			<if test="invoiceNo != null">
+				#{invoiceNo,jdbcType=VARCHAR},
+			</if>
+			<if test="isUserDefined != null">
+				#{isUserDefined,jdbcType=INTEGER},
+			</if>
+			<if test="isApportionRebate != null">
+				#{isApportionRebate,jdbcType=INTEGER},
+			</if>
+			<if test="customReturnQty != null">
+				#{customReturnQty,jdbcType=INTEGER},
+			</if>
+			<if test="customReturnAmount != null">
+				#{customReturnAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="supplierAmount != null">
+				#{supplierAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="otherPrice != null">
+				#{otherPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="peBizType != null">
+				#{peBizType,jdbcType=TINYINT},
+			</if>
+			<if test="advanceInvoiceSign != null">
+				#{advanceInvoiceSign,jdbcType=INTEGER},
+			</if>
+			<if test="isAcceptance != null">
+				#{isAcceptance,jdbcType=INTEGER},
+			</if>
+			<if test="isForPay != null">
+				#{isForPay,jdbcType=INTEGER},
+			</if>
+			<if test="isDiscountExc != null">
+				#{isDiscountExc,jdbcType=TINYINT},
+			</if>
+			<if test="managementType != null">
+				#{managementType,jdbcType=INTEGER},
+			</if>
+			<if test="paymentAmount != null">
+				#{paymentAmount,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE bill_balance
+		<set>
+			<if test="billNo != null">
+				bill_no = #{billNo,jdbcType=CHAR},
+			</if>
+			<if test="isUpdateOtherDeduction != null">
+				is_update_otherDeduction =
+				#{isUpdateOtherDeduction,jdbcType=VARCHAR},
+			</if>
+			<if test="billName != null">
+				bill_name = #{billName,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="extendStatus != null">
+				extend_status = #{extendStatus,jdbcType=TINYINT},
+			</if>
+			<if test="balanceType != null">
+				balance_type = #{balanceType,jdbcType=TINYINT},
+			</if>
+			<if test="buyerNo != null">
+				buyer_no = #{buyerNo,jdbcType=CHAR},
+			</if>
+			<if test="buyerName != null">
+				buyer_name = #{buyerName,jdbcType=CHAR},
+			</if>
+			<if test="salerNo != null">
+				saler_no = #{salerNo,jdbcType=CHAR},
+			</if>
+			<if test="salerName != null">
+				saler_name = #{salerName,jdbcType=CHAR},
+			</if>
+			<if test="pipelineCompanyNo != null">
+				pipeline_company_no = #{pipelineCompanyNo,jdbcType=CHAR},
+			</if>
+			<if test="pipelineCompanyName != null">
+				pipeline_company_name = #{pipelineCompanyName,jdbcType=CHAR},
+			</if>
+			<if test="organNo != null">
+				organ_no = #{organNo,jdbcType=VARCHAR},
+			</if>
+			<if test="organName != null">
+				organ_name = #{organName,jdbcType=VARCHAR},
+			</if>
+			<if test="organNoFrom != null">
+				organ_no_from = #{organNoFrom,jdbcType=VARCHAR},
+			</if>
+			<if test="organName != null">
+				organ_name_from = #{organNameFrom,jdbcType=VARCHAR},
+			</if>
+			<if test="brandNo != null">
+				brand_no = #{brandNo,jdbcType=CHAR},
+			</if>
+			<if test="brandName != null">
+				brand_name = #{brandName,jdbcType=CHAR},
+			</if>
+			<if test="brandUnitNo != null">
+				brand_unit_no = #{brandUnitNo,jdbcType=CHAR},
+			</if>
+			<if test="brandUnitName != null">
+				brand_unit_name = #{brandUnitName,jdbcType=CHAR},
+			</if>
+			<if test="categoryNo != null">
+				category_no = #{categoryNo,jdbcType=CHAR},
+			</if>
+			<if test="categoryName != null">
+				category_name = #{categoryName,jdbcType=CHAR},
+			</if>
+			<if test="extendCategoryNo != null">
+				extend_category_no = #{extendCategoryNo,jdbcType=VARCHAR},
+			</if>
+			<if test="extendCategoryName != null">
+				extend_category_name = #{extendCategoryName,jdbcType=VARCHAR},
+			</if>
+			<if test="balanceDate != null">
+				balance_date = #{balanceDate,jdbcType=DATE},
+			</if>
+			<if test="balanceStartDate != null">
+				balance_start_date = #{balanceStartDate,jdbcType=DATE},
+			</if>
+			<if test="balanceFlag != null">
+				balance_flag = #{balanceFlag,jdbcType=TINYINT},
+			</if>
+			<if test="balanceMonth != null">
+				balance_month = #{balanceMonth,jdbcType=CHAR},
+			</if>
+			<if test="balanceEndDate != null">
+				balance_end_date = #{balanceEndDate,jdbcType=DATE},
+			</if>
+			<if test="currency != null">
+				currency = #{currency,jdbcType=VARCHAR},
+			</if>
+			<if test="outAmount != null">
+				out_amount = #{outAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="entryAmount != null">
+				entry_amount = #{entryAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="tagPriceAmount != null">
+				tag_price_amount = #{tagPriceAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="returnAmount != null">
+				return_amount = #{returnAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="deductionAmount != null">
+				deduction_amount = #{deductionAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="balanceAmount != null">
+				balance_amount = #{balanceAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="invoiceAmount != null">
+				invoice_amount = #{invoiceAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="rebateAmount != null">
+				rebate_amount = #{rebateAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="invoiceRebateAmount != null">
+				invoice_rebate_amount = #{invoiceRebateAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="hasBalanceAmount != null">
+				has_balance_amount = #{hasBalanceAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null">
+				update_user = #{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="auditor != null">
+				auditor = #{auditor,jdbcType=VARCHAR},
+			</if>
+			<if test="auditTime != null">
+				audit_time = #{auditTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="outQty != null">
+				out_qty = #{outQty,jdbcType=INTEGER},
+			</if>
+			<if test="entryQty != null">
+				entry_qty = #{entryQty,jdbcType=INTEGER},
+			</if>
+			<if test="returnQty != null">
+				return_qty = #{returnQty,jdbcType=INTEGER},
+			</if>
+			<if test="deductionQty != null">
+				deduction_qty = #{deductionQty,jdbcType=INTEGER},
+			</if>
+			<if test="balanceQty != null">
+				balance_qty = #{balanceQty,jdbcType=INTEGER},
+			</if>
+			<if test="askPaymentNo != null">
+				ask_payment_no =#{askPaymentNo,jdbcType=VARCHAR},
+			</if>
+			<if test="invoiceApplyNo != null">
+				invoice_apply_no =#{invoiceApplyNo,jdbcType=VARCHAR},
+			</if>
+			<if test="invoiceNo != null">
+				invoice_no =#{invoiceNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customReturnQty != null">
+				custom_return_qty = #{customReturnQty,jdbcType=INTEGER},
+			</if>
+			<if test="customReturnAmount != null">
+				custom_return_amount = #{customReturnAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="isUserDefined != null">
+				is_user_defined =#{isUserDefined,jdbcType=INTEGER},
+			</if>
+			<if test="isApportionRebate != null">
+				is_apportion_rebate =#{isApportionRebate,jdbcType=INTEGER},
+			</if>
+			<if test="supplierAmount != null">
+				supplier_amount =#{supplierAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="otherPrice != null">
+				other_price =#{otherPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="advanceInvoiceSign != null">
+				advance_invoice_sign =#{advanceInvoiceSign,jdbcType=INTEGER},
+			</if>
+			<if test="peBizType != null">
+				pe_biz_type =#{peBizType,jdbcType=VARCHAR},
+			</if>
+			<if test="managementType != null">
+				management_type =#{managementType,jdbcType=INTEGER},
+			</if>
+			<if test="paymentAmount != null">
+				payment_amount = #{paymentAmount,jdbcType=DECIMAL},
+			</if>
+		</set>
+		WHERE id = #{id,jdbcType=CHAR}
+	</update>
+
+	<select id="selectInvoiceBillNo" resultType="java.lang.String"
+			parameterType="map">
+
+		SELECT
+		invoice_apply_no
+		FROM bill_balance
+		WHERE
+		bill_no = #{params.billNo}
+
+	</select>
+
+	<select id="getTransId" resultType="java.lang.String">
+		<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+				/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+				/*ignore_sharding_flag*/
+			</otherwise>
+		</choose>
+		<if test="params.menuNo != null and !''.equals(params.menuNo)">
+
+		</if>
+	</select>
+
+	<update id="updateByPrimaryKey" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE bill_balance
+		SET
+		bill_no = #{billNo,jdbcType=CHAR},
+		bill_name = #{billName,jdbcType=VARCHAR},
+		status = #{status,jdbcType=TINYINT},
+		extend_status = #{extendStatus,jdbcType=TINYINT},
+		balance_type = #{balanceType,jdbcType=TINYINT},
+		buyer_no = #{buyerNo,jdbcType=CHAR},
+		buyer_name = #{buyerName,jdbcType=CHAR},
+		saler_no = #{salerNo,jdbcType=CHAR},
+		saler_name = #{salerName,jdbcType=CHAR},
+		pipeline_company_no = #{pipelineCompanyNo,jdbcType=CHAR},
+		pipeline_company_name = #{pipelineCompanyName,jdbcType=CHAR},
+		organ_no = #{organNo,jdbcType=VARCHAR},
+		organ_name = #{organName,jdbcType=VARCHAR},
+		organ_no_from = #{organNoFrom,jdbcType=VARCHAR},
+		organ_name_from = #{organNameFrom,jdbcType=VARCHAR},
+		brand_no = #{brandNo,jdbcType=CHAR},
+		brand_name = #{brandName,jdbcType=CHAR},
+		brand_unit_no = #{brandUnitNo,jdbcType=CHAR},
+		brand_unit_name = #{brandUnitName,jdbcType=CHAR},
+		category_no = #{categoryNo,jdbcType=CHAR},
+		category_name = #{categoryName,jdbcType=CHAR},
+		balance_date = #{balanceDate,jdbcType=DATE},
+		balance_start_date = #{balanceStartDate,jdbcType=DATE},
+		balance_flag = #{balanceFlag,jdbcType=TINYINT},
+		balance_month = #{balanceMonth,jdbcType=CHAR},
+		balance_end_date = #{balanceEndDate,jdbcType=DATE},
+		currency = #{currency,jdbcType=VARCHAR},
+		out_amount = #{outAmount,jdbcType=DECIMAL},
+		entry_amount = #{entryAmount,jdbcType=DECIMAL},
+		tag_price_amount = #{tagPriceAmount,jdbcType=DECIMAL},
+		return_amount = #{returnAmount,jdbcType=DECIMAL},
+		deduction_amount = #{deductionAmount,jdbcType=DECIMAL},
+		balance_amount = #{balanceAmount,jdbcType=DECIMAL},
+		invoice_amount = #{invoiceAmount,jdbcType=DECIMAL},
+		rebate_amount = #{rebateAmount,jdbcType=DECIMAL},
+		other_price = #{otherPrice,jdbcType=DECIMAL},
+		has_balance_amount = #{hasBalanceAmount,jdbcType=DECIMAL},
+		create_user = #{createUser,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		update_user = #{updateUser,jdbcType=VARCHAR},
+		update_time = #{updateTime,jdbcType=TIMESTAMP},
+		auditor = #{auditor,jdbcType=VARCHAR},
+		audit_time = #{auditTime,jdbcType=TIMESTAMP},
+		remark = #{remark,jdbcType=VARCHAR},
+		out_qty= #{outQty,jdbcType=INTEGER},
+		entry_qty=#{entryQty,jdbcType=INTEGER},
+		return_qty= #{returnQty,jdbcType=INTEGER},
+		deduction_qty= #{deductionQty,jdbcType=INTEGER},
+		balance_qty= #{balanceQty,jdbcType=INTEGER},
+		ask_payment_no= #{askPaymentNo,jdbcType=VARCHAR},
+		invoice_apply_no= #{invoiceApplyNo,jdbcType=VARCHAR},
+		invoice_no= #{invoiceNo,jdbcType=VARCHAR},
+		is_user_defined =#{isUserDefined,jdbcType=INTEGER},
+		is_apportion_rebate =#{isApportionRebate,jdbcType=INTEGER},
+		advance_invoice_sign =#{advanceInvoiceSign,jdbcType=INTEGER},
+		management_type =#{managementType,jdbcType=INTEGER},
+		payment_amount = #{paymentAmount,jdbcType=DECIMAL}
+		WHERE id = #{id,jdbcType=CHAR}
+	</update>
+
+	<sql id="updateBalanceCondition">
+		<if test="queryCondition != null and !''.equals(queryCondition)">
+			${queryCondition}
+		</if>
+		<if
+				test="extendCategoryCondition != null and !''.equals(extendCategoryCondition)">
+			${extendCategoryCondition}
+		</if>
+		<if test="multiCategoryNo != null and !''.equals(multiCategoryNo)">
+			AND C1.category_no in ${multiCategoryNo}
+		</if>
+		<if test="brandUnitNo != null and !''.equals(brandUnitNo)">
+			AND T.brand_unit_no = #{brandUnitNo}
+		</if>
+		<if test="brandMultiNo != null and !''.equals(brandMultiNo)">
+			AND T.brand_unit_no IN ${brandMultiNo}
+		</if>
+		<if test="brandNo != null and !''.equals(brandNo)">
+			AND T.brand_no = #{brandNo}
+		</if>
+		<if test="multiBrandNo != null and !''.equals(multiBrandNo)">
+			AND T.brand_no in ${multiBrandNo}
+		</if>
+		<if test="categoryNo != null and !''.equals(categoryNo)">
+			AND C1.category_no = #{categoryNo}
+		</if>
+		<if test="billType != null and !''.equals(billType)">
+			AND bill_type = #{billType}
+		</if>
+		<choose>
+			<when test="bizMultiType != null and !''.equals(bizMultiType)">
+				AND biz_type IN ${bizMultiType}
+			</when>
+			<otherwise>
+				<if test="bizType != null and !''.equals(bizType)">
+					AND biz_type = #{bizType}
+				</if>
+			</otherwise>
+		</choose>
+		<if test="multiBrandUnitNo != null and !''.equals(multiBrandUnitNo)">
+			AND T.brand_unit_no IN ${multiBrandUnitNo}
+		</if>
+		<if test="twoLevelCategoryNo != null and !''.equals(twoLevelCategoryNo)">
+			AND C2.`category_no` IN ${twoLevelCategoryNo}
+		</if>
+		<if test="years != null and !''.equals(years)">
+			AND years IN ${years}
+		</if>
+		<if test="gender != null and !''.equals(gender)">
+			AND gender IN ${gender}
+		</if>
+		<if test="organNoFrom != null and !''.equals(organNoFrom)">
+			AND #{organNoFrom} like CONCAT('%',organ_no_from,'%')
+		</if>
+	</sql>
+
+	<update id="updateBuyPurchasePrice" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE
+		bill_buy_balance T
+		SET
+		T.purchase_price =
+		(SELECT
+		purchase_price
+		FROM
+		purchase_price PP
+		WHERE T.item_no = PP.item_no
+		AND T.supplier_no = PP.supplier_no
+		AND PP.effective_date &lt;= #{balanceEndDate}
+		ORDER BY PP.STATUS DESC,
+		PP.effective_date DESC,
+		PP.create_time DESC
+		LIMIT 1),
+		T.material_price =
+		(SELECT
+		material_price
+		FROM
+		purchase_price PP
+		WHERE T.item_no = PP.item_no
+		AND T.supplier_no = PP.supplier_no
+		AND PP.effective_date &lt;= #{balanceEndDate}
+		ORDER BY STATUS DESC,
+		effective_date DESC,
+		create_time DESC
+		LIMIT 1),
+		T.factory_price =
+		(SELECT
+		factory_price
+		FROM
+		purchase_price PP
+		WHERE T.item_no = PP.item_no
+		AND T.supplier_no = PP.supplier_no
+		AND PP.effective_date &lt;= #{balanceEndDate}
+		ORDER BY STATUS DESC,
+		effective_date DESC,
+		create_time DESC
+		LIMIT 1)
+		WHERE 1 = 1
+		AND balance_no = #{billNo}
+	</update>
+
+
+	<update id="updateBuyBalanceNo" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE bill_buy_balance T LEFT JOIN category C1
+		ON LEFT(T.`category_no`, 2) = C1.`category_no`
+		LEFT JOIN category C2
+		ON LEFT(T.`category_no`, 4) = C2.`category_no`
+		<choose>
+			<when test="(null!=isAcceptance and 1 == isAcceptance)  and !'HS-JSDYS'.equals(billBalancetypeName) ">
+				LEFT JOIN (
+				SELECT
+				MIN(c.send_date) AS send_date,
+				c.original_bill_no,
+				c.ref_bill_no,
+				(
+				CASE
+				WHEN ref_bill_type = 1323 THEN
+				c.bill_no
+				ELSE
+				c.ref_bill_no
+				END
+				) AS searchLable
+				FROM
+				bill_sale_balance c
+				WHERE
+				c.BILL_TYPE = '1371'
+				AND c.saler_no = #{salerNo}
+				AND c.buyer_no = #{buyerNo}
+				GROUP BY
+				c.ref_bill_no
+				) bsb ON bsb.searchLable = T.original_bill_no
+			</when>
+			<otherwise>
+
+			</otherwise>
+		</choose>
+		SET balance_no = #{billNo}
+		WHERE 1 = 1
+		AND T.balance_no IS NULL
+		AND T.saler_no = #{salerNo}
+		AND T.buyer_no = #{buyerNo}
+		<if test="balanceStartDate != null and !''.equals(balanceStartDate)">
+			<choose>
+				<when test="null != isAcceptance and 1 == isAcceptance">
+					AND T.receive_date &gt;= #{balanceStartDate}
+				</when>
+				<otherwise>
+					AND T.send_date &gt;= #{balanceStartDate}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="balanceEndDate != null and !''.equals(balanceEndDate)">
+			<choose>
+				<when test="null != isAcceptance and 1 == isAcceptance">
+					AND T.receive_date &lt;= #{balanceEndDate}
+				</when>
+				<otherwise>
+					AND T.send_date &lt;= #{balanceEndDate}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="(sendStartDate != null and !''.equals(sendStartDate))">
+			AND T.send_date &gt;= #{sendStartDate}
+		</if>
+		<if test="(sendEndDate != null and !''.equals(sendEndDate))">
+			AND T.send_date &lt;= #{sendEndDate}
+		</if>
+		<!--
+        <if test="(null!=isAcceptance and 1 == isAcceptance) and (sendStartDate != null and !''.equals(sendStartDate))">
+                 AND send_date &gt;= #{sendStartDate}
+           </if>
+           <if test="(null!=isAcceptance and 1 == isAcceptance) and (sendEndDate != null and !''.equals(sendEndDate))">
+                 AND send_date &lt;= #{sendEndDate}
+           </if>
+           -->
+		<if test="(null!=isAcceptance and 1 == isAcceptance) and !'HS-JSDYS'.equals(billBalancetypeName)  and (sendStartDate != null and !''.equals(sendStartDate)) and (sendEndDate != null and !''.equals(sendEndDate))">
+			AND (
+			( T.send_date BETWEEN #{sendStartDate} AND #{sendEndDate} )
+			OR ( bsb.send_date BETWEEN #{sendStartDate}  AND  #{sendEndDate})
+			)
+		</if>
+		<if test="supplierGroupNo != null and !''.equals(supplierGroupNo)">
+			AND EXISTS (SELECT 1 FROM supplier_group_rel sgr WHERE T.supplier_no
+			= sgr.supplier_no AND sgr.group_no IN ${supplierGroupNo})
+		</if>
+		<if test="priceRangeCondition != null and !''.equals(priceRangeCondition)">
+			AND NOT EXISTS
+			(SELECT
+			1
+			FROM
+			item
+			INNER JOIN brand
+			ON brand.brand_no = item.brand_no
+			INNER JOIN brand_unit
+			ON brand_unit.brand_unit_no = brand.sys_no
+			INNER JOIN supplier_group_rel
+			ON supplier_group_rel.supplier_no = item.supplier_no
+			WHERE 1 = 1
+			${priceRangeCondition}
+			AND item.item_no = T.item_no
+			AND (
+			NOT EXISTS
+			(SELECT
+			1
+			FROM
+			official_item OI
+			WHERE OI.item_code = item.code
+			AND OI.supplier_no = item.supplier_no
+			AND OI.brand_no = item.brand_no
+			AND OI.year_no = item.years
+			AND OI.season_no = item.purchase_season)
+			OR EXISTS
+			(SELECT
+			1
+			FROM
+			official_item OI
+			WHERE OI.item_code = item.code
+			AND OI.supplier_no = item.supplier_no
+			AND OI.brand_no = item.brand_no
+			AND OI.year_no = item.years
+			AND OI.season_no = item.purchase_season
+			AND OI.excess_status = '1')
+			)
+			)
+		</if>
+		<include refid="updateBalanceCondition" />
+	</update>
+
+	<update id="updateSaleBalanceNo" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE bill_sale_balance T LEFT JOIN category C1
+		ON LEFT(T.`category_no`, 2) = C1.`category_no`
+		LEFT JOIN category C2
+		ON LEFT(T.`category_no`, 4) = C2.`category_no`
+		SET T.balance_no = #{billNo}
+		WHERE 1 = 1
+		AND T.balance_no IS NULL
+		AND T.saler_no = #{salerNo}
+		AND T.buyer_no = #{buyerNo}
+		<choose>
+			<when
+					test="(null!=balanceType and null!=balanceStartDate) and ('18'.toString() ==balanceType or '19'.toString() ==balanceType)">
+				AND ((receive_date &gt;= #{balanceStartDate} AND bill_type = 1304) or
+				(send_date &gt;= #{balanceStartDate} AND bill_type = 1333))
+			</when>
+			<otherwise>
+				<choose>
+					<when test="null != isAcceptance and 1 == isAcceptance">
+						AND receive_date &gt;= #{balanceStartDate}
+					</when>
+					<otherwise>
+						AND send_date &gt;= #{balanceStartDate}
+					</otherwise>
+				</choose>
+			</otherwise>
+		</choose>
+		<choose>
+			<when
+					test="(null!=balanceType and null!=balanceEndDate) and  ('18'.toString() ==balanceType or '19'.toString() ==balanceType)">
+				AND ((receive_date &lt;= #{balanceEndDate} AND bill_type = 1304) or
+				(send_date &lt;= #{balanceEndDate} AND bill_type = 1333))
+			</when>
+			<otherwise>
+				<choose>
+					<when test="null != isAcceptance and 1 == isAcceptance">
+						AND receive_date &lt;= #{balanceEndDate}
+					</when>
+					<otherwise>
+						AND send_date &lt;= #{balanceEndDate}
+					</otherwise>
+				</choose>
+			</otherwise>
+		</choose>
+		<if test="(null!=isAcceptance and 1 == isAcceptance) and (sendStartDate != null and !''.equals(sendStartDate))">
+			AND send_date &gt;= #{sendStartDate}
+		</if>
+		<if test="(null!=isAcceptance and 1 == isAcceptance) and (sendEndDate != null and !''.equals(sendEndDate))">
+			AND send_date &lt;= #{sendEndDate}
+		</if>
+		<if test="supplierGroupNo != null and !''.equals(supplierGroupNo)">
+			AND EXISTS (SELECT 1 FROM supplier_group_rel sgr WHERE T.supplier_no
+			= sgr.supplier_no AND sgr.group_no IN ${supplierGroupNo})
+		</if>
+		<if test="supplierNo != null and !''.equals(supplierNo)">
+			AND supplier_no IN ${supplierNo}
+		</if>
+		<if test="multiBrandNo != null and !''.equals(multiBrandNo)">
+			AND T.brand_no in ${multiBrandNo}
+		</if>
+		<if
+				test="bizQueryCondition != null and !''.equals(bizQueryCondition) and 'U010102'==organTypeNo">
+			${bizQueryCondition}
+		</if>
+		<if test="bizTypeCondition != null and !''.equals(bizTypeCondition)">
+			AND EXISTS (
+			SELECT
+			1
+			FROM
+			pay_relationship pr
+			WHERE
+			pr.business_bill_no = T.original_bill_no
+			<choose>
+				<when test=" 1== bizTypeCondition">
+					AND T.biz_type =60 AND pr.business_purchase_type in (0,1)
+				</when>
+				<otherwise>
+					AND T.biz_type =60 AND pr.business_purchase_type = 2
+				</otherwise>
+			</choose>
+			)
+		</if>
+		<include refid="updateBalanceCondition" />
+	</update>
+
+	<update id="updateImperfectBalanceNo" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE
+		custom_imperfect T LEFT JOIN category C1
+		ON LEFT(T.`category_no`, 2) = C1.`category_no`
+		LEFT JOIN category C2
+		ON LEFT(T.`category_no`, 4) = C2.`category_no`
+		SET
+		balance_no = #{billNo}
+		WHERE 1 = 1
+		AND (balance_no IS NULL OR balance_no = '')
+		AND saler_no = #{salerNo}
+		AND buyer_no = #{buyerNo}
+		AND return_date &gt;= #{balanceStartDate}
+		AND return_date &lt;= #{balanceEndDate}
+		<if test="supplierGroupNo != null and !''.equals(supplierGroupNo)">
+			AND EXISTS (SELECT 1 FROM supplier_group_rel sgr WHERE T.saler_no =
+			sgr.supplier_no AND sgr.group_no IN ${supplierGroupNo})
+		</if>
+		<include refid="updateBalanceCondition" />
+	</update>
+
+	<update id="updateDeductionBalanceNo" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE
+		other_deduction LEFT JOIN brand
+		ON other_deduction.brand_no = brand.brand_no
+		SET
+		balance_no = #{billNo}
+		WHERE 1 = 1
+		AND (balance_no IS NULL OR balance_no = '')
+		AND saler_no = #{salerNo}
+		AND buyer_no = #{buyerNo}
+		AND deduction_date &gt;= #{balanceStartDate,jdbcType=DATE}
+		AND deduction_date &lt;= #{balanceEndDate,jdbcType=DATE}
+		AND (build_type IS NULL OR build_type=0 OR build_type='')
+		<if test="balanceType != null and !''.equals(balanceType)">
+			AND
+			balance_type = #{balanceType}
+		</if>
+		<if test="balanceType != null and balanceType == 16">
+			AND audit_status = 1
+        </if>
+		<if test="gender != null and !''.equals(gender)">
+			AND deduction_category IN ${gender}
+		</if>
+		<if test="multiCategoryNo != null and !''.equals(multiCategoryNo)">
+			AND category_no in ${multiCategoryNo}
+		</if>
+		<if test="categoryNo != null and !''.equals(categoryNo)">
+			AND category_no = #{categoryNo}
+		</if>
+		<if test="multiBrandNo != null and !''.equals(multiBrandNo)">
+			AND other_deduction.brand_no in ${multiBrandNo}
+		</if>
+		<if test="brandNo != null and !''.equals(brandNo)">
+			AND other_deduction.brand_no = #{brandNo}
+		</if>
+		<choose>
+			<when test="multiBrandUnitNo != null and !''.equals(multiBrandUnitNo) ">
+				AND brand.sys_no in ${multiBrandUnitNo}
+			</when>
+			<otherwise>
+				<if test="brandUnitNo != null and !''.equals(brandUnitNo)">
+					AND brand.sys_no = #{brandUnitNo}
+				</if>
+			</otherwise>
+		</choose>
+	</update>
+
+	<!-- 回写结算单号到其他扣项 多品牌 -->
+	<update id="updateDeductionWithMultiBrandNo" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE
+		other_deduction LEFT JOIN brand
+		ON other_deduction.brand_no = brand.brand_no
+		SET
+		balance_no = #{billNo}
+		WHERE 1 = 1
+		AND (balance_no IS NULL OR balance_no = '')
+		AND saler_no = #{salerNo}
+		AND buyer_no = #{buyerNo}
+		AND deduction_date &gt;= #{balanceStartDate}
+		AND deduction_date &lt;= #{balanceEndDate}
+		<if test="balanceType != null and !''.equals(balanceType)">
+			AND
+			balance_type = #{balanceType}
+		</if>
+		<if test="categoryNo != null and !''.equals(categoryNo)">
+			AND category_no = #{categoryNo}
+		</if>
+		<if test="brandNo != null and !''.equals(brandNo)">
+			AND other_deduction.brand_no in (${brandNo})
+		</if>
+		<if test="brandUnitNo != null and !''.equals(brandUnitNo)">
+			AND other_deduction.brand_no in (SELECT brand_no FROM brand WHERE sys_no
+			IN ${brandUnitNo})
+		</if>
+	</update>
+
+	<update id="updateApportionRebate" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE bill_sale_balance SET
+		actual_cost=cost,cost=IFNULL(cost-((((send_qty*cost)/${outAmount})*${rebateAmount})/send_qty),0)
+		WHERE balance_no = #{billNo}
+	</update>
+
+	<update id="updateApportionRebateAgain" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE bill_sale_balance SET
+		cost=IFNULL(actual_cost-((((send_qty*actual_cost)/${outAmount})*${rebateAmount})/send_qty),0)
+		WHERE balance_no = #{billNo}
+	</update>
+
+	<update id="clearBuyBalanceNo" parameterType="java.lang.String">
+		UPDATE bill_buy_balance
+		SET balance_no = NULL, balance_status = NULL
+		WHERE 1 = 1
+		AND balance_no = #{balanceNo}
+	</update>
+
+	<update id="clearBuyBalanceNoByType" parameterType="map">
+		UPDATE bill_buy_balance
+		SET balance_no = NULL, balance_status = NULL
+		WHERE 1 = 1
+		AND balance_no = #{balanceNo}
+		AND bill_type = #{billType}
+	</update>
+
+	<update id="clearSaleBalanceNo" parameterType="java.lang.String">
+		UPDATE bill_sale_balance
+		SET balance_no = NULL, balance_status = NULL
+		WHERE 1 = 1
+		AND balance_no = #{balanceNo}
+	</update>
+
+	<update id="clearPayRelationShip" parameterType="java.lang.String">
+		UPDATE pay_relationship
+		SET balance_no = NULL
+		WHERE 1 = 1
+		AND balance_no = #{balanceNo}
+	</update>
+
+	<update id="clearImperfectBalanceNo" parameterType="java.lang.String">
+		UPDATE custom_imperfect
+		SET balance_no = NULL, balance_status = NULL
+		WHERE 1 = 1
+		AND balance_no = #{balanceNo}
+	</update>
+
+	<update id="clearDeductionBalanceNo" parameterType="java.lang.String">
+		UPDATE other_deduction
+		SET balance_no = NULL, balance_status = NULL
+		WHERE 1 = 1
+		AND balance_no = #{balanceNo}
+	</update>
+
+	<update id="clearBuyAdjustBalanceNo" parameterType="java.lang.String">
+		UPDATE bill_purchase_adjust_dtl
+		SET balance_no = NULL
+		WHERE 1 = 1
+		AND balance_no = #{balanceNo}
+	</update>
+
+
+	<update id="resetSaleBalanceActualCost" parameterType="java.lang.String">
+		UPDATE bill_sale_balance
+		SET cost = actual_cost
+		WHERE 1 = 1
+		AND balance_no = #{balanceNo}
+	</update>
+
+	<update id="updateBuyBalanceStatus" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE
+		bill_buy_balance
+		SET
+		balance_status = #{status}
+		WHERE balance_no = #{billNo}
+	</update>
+
+	<update id="updateSaleBalanceStatus" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE
+		bill_sale_balance
+		SET
+		balance_status = #{status}
+		WHERE balance_no = #{billNo}
+	</update>
+
+	<update id="batchUpdateSaleBalanceStatus" parameterType="list">
+		UPDATE bill_sale_balance
+		<trim prefix="SET" suffixOverrides=",">
+			<trim prefix="balance_status =case" suffix="end,">
+				<foreach collection="updateList" item="item" index="index">
+					when (balance_no=#{item.billNo}) then #{item.status}
+				</foreach>
+			</trim>
+		</trim>
+		where balance_no IN
+		<foreach collection="updateList" item="item" index="index" open="(" separator="," close=")" >
+			#{item.billNo}
+		</foreach>
+	</update>
+
+	<update id="updateDeductionBalanceStatus" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE
+		other_deduction
+		SET
+		balance_status = #{status}
+		WHERE balance_no = #{billNo}
+	</update>
+
+	<update id="updateImperfectBalanceStatus" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE
+		custom_imperfect
+		SET
+		balance_status = #{status}
+		WHERE balance_no = #{billNo}
+	</update>
+
+	<update id="updateStatus" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE
+		bill_balance
+		SET
+		status = #{status}
+		,extend_status = #{status}
+		WHERE 1 = 1
+		AND bill_no = #{billNo}
+	</update>
+
+	<update id="verify" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE
+		bill_balance
+		SET
+		status = #{status}
+		,extend_status = #{status}
+		<if test="remark != null and !''.equals(remark)">
+			,remark = #{remark}
+		</if>
+		<if test="status != 0 and status != 99">
+			,auditor = #{auditor}
+			,audit_time = #{auditTime}
+		</if>
+		<if test="status == 0 or status == 99 ">
+			,auditor = NULL
+			,audit_time = NULL
+		</if>
+		WHERE 1 = 1
+		AND bill_no = #{billNo}
+	</update>
+
+	<!-- 回写结算单号到其他扣项 多品牌部 -->
+	<update id="updateBalanceNoForMultiBrand" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE
+		other_deduction LEFT JOIN brand
+			ON other_deduction.brand_no = brand.brand_no
+		SET
+			balance_no = #{billNo}
+		WHERE 1 = 1
+			AND (balance_no IS NULL OR balance_no = '')
+			AND saler_no = #{salerNo}
+			AND buyer_no = #{buyerNo}
+			AND deduction_date &gt;= #{balanceStartDate,jdbcType=DATE}
+			AND deduction_date &lt;= #{balanceEndDate,jdbcType=DATE}
+			<if test="balanceType != null and !''.equals(balanceType)">
+				AND	balance_type = #{balanceType}
+			</if>
+			<if test="categoryNo != null and !''.equals(categoryNo)">
+				AND other_deduction.category_no in (${categoryNo})
+			</if>
+			<if test="brandNo != null and !''.equals(brandNo)">
+				AND other_deduction.brand_no in (${brandNo})
+			</if>
+	</update>
+
+	<!--选单结算回写结算单号到其他扣项 多品牌 -->
+	<update id="updateChoiceDeductionWithMultiBrandNo"
+			parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE
+		other_deduction LEFT JOIN brand
+		ON other_deduction.brand_no = brand.brand_no
+		SET
+		balance_no = #{billNo}
+		WHERE 1 = 1 and type=0
+		AND (balance_no IS NULL OR balance_no = '')
+		AND saler_no = #{salerNo}
+		AND buyer_no = #{buyerNo}
+		AND deduction_date &gt;= #{balanceStartDate}
+		AND deduction_date &lt;= #{balanceEndDate}
+		<if test="balanceType != null and !''.equals(balanceType)">
+			AND
+			balance_type = #{balanceType}
+		</if>
+		<if test="categoryNo != null and !''.equals(categoryNo)">
+			AND category_no = #{categoryNo}
+		</if>
+		<if test="brandNo != null and !''.equals(brandNo)">
+			AND other_deduction.brand_no in (${brandNo})
+		</if>
+		<if test="brandUnitNo != null and !''.equals(brandUnitNo)">
+			AND other_deduction.brand_no in (SELECT brand_no FROM brand WHERE sys_no
+			IN ${brandUnitNo})
+		</if>
+	</update>
+
+	<!-- 更新结算单号到采购入库调整单 -->
+	<update id="updateSaleAdjustBalanceNo" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE
+		Bill_Purchase_Adjust_Dtl DTL INNER JOIN Bill_Purchase_Adjust T ON T.bill_no = DTL.bill_no
+		SET
+		DTL.area_balance_no = #{billNo}
+		WHERE 1 = 1
+		AND (DTL.area_balance_no IS NULL OR DTL.area_balance_no = '')
+		AND T.status = 3
+		AND T.saler_no = #{salerNo}
+		AND T.buyer_no = #{buyerNo}
+		AND T.purchase_date &gt;= #{balanceStartDate}
+		AND T.purchase_date &lt;= #{balanceEndDate}
+		<if test="supplierNo != null and !''.equals(supplierNo)">
+			AND
+			T.supplier_no IN ${supplierNo}
+		</if>
+		<if test="multiBrandUnitNo != null and !''.equals(multiBrandUnitNo)">
+			AND DTL.brand_no IN (SELECT brand_no FROM brand WHERE brand.`sys_no`
+			IN ${multiBrandUnitNo})
+		</if>
+		<if test="multiBrandNo != null and !''.equals(multiBrandNo)">
+			AND DTL.brand_no IN ${multiBrandNo}
+		</if>
+		<if test="brandUnitNo != null and !''.equals(brandUnitNo)">
+			AND DTL.brand_no IN (SELECT brand_no FROM brand WHERE brand.`sys_no` =
+			#{brandUnitNo})
+		</if>
+		<if test="categoryNo != null and !''.equals(categoryNo)">
+			AND LEFT(DTL.category_no,2) = #{categoryNo}
+		</if>
+	</update>
+
+	<update id="clearSaleAdjustBalanceNo" parameterType="java.lang.String">
+		UPDATE bill_purchase_adjust_dtl
+		SET area_balance_no = NULL
+		WHERE 1 = 1
+		AND area_balance_no = #{balanceNo}
+	</update>
+	<delete id="deleteRebateData" parameterType="java.lang.String">
+		DELETE FROM brand_order_statistics
+		WHERE balance_no = #{balanceNo,jdbcType=CHAR}
+	</delete>
+
+	<update id="updateGySaleBalanceNo" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE bill_sale_balance T LEFT JOIN category C1
+		ON LEFT(T.`category_no`, 2) = C1.`category_no`
+		LEFT JOIN category C2
+		ON LEFT(T.`category_no`, 4) = C2.`category_no`
+		SET balance_no = #{billNo}
+		WHERE 1 = 1
+		AND balance_no IS NULL
+		AND saler_no = #{salerNo}
+		AND buyer_no = #{buyerNo}
+		<choose>
+			<when
+					test="(null!=balanceType and null!=balanceStartDate) and ('18'.toString() ==balanceType or '19'.toString() ==balanceType)">
+				AND ((receive_date &gt;= #{balanceStartDate} AND bill_type = 1304) or
+				(send_date &gt;= #{balanceStartDate} AND bill_type = 1333)
+				or (send_date &gt;= #{balanceStartDate} AND bill_type = 1371))
+			</when>
+			<otherwise>
+				AND send_date &gt;= #{balanceStartDate}
+			</otherwise>
+		</choose>
+		<choose>
+			<when
+					test="(null!=balanceType and null!=balanceEndDate) and  ('18'.toString() ==balanceType or '19'.toString() ==balanceType)">
+				AND ((receive_date &lt;= #{balanceEndDate} AND bill_type = 1304) or
+				(send_date &lt;= #{balanceEndDate} AND bill_type = 1333)
+				or (send_date &lt;= #{balanceEndDate} AND bill_type = 1371))
+			</when>
+			<otherwise>
+				AND send_date &lt;= #{balanceEndDate}
+			</otherwise>
+		</choose>
+		<if test="supplierGroupNo != null and !''.equals(supplierGroupNo)">
+			AND EXISTS (SELECT 1 FROM supplier_group_rel sgr WHERE T.supplier_no
+			= sgr.supplier_no AND sgr.group_no IN ${supplierGroupNo})
+		</if>
+		<if test="supplierNo != null and !''.equals(supplierNo)">
+			AND supplier_no IN ${supplierNo}
+		</if>
+		<if test="multiBrandNo != null and !''.equals(multiBrandNo)">
+			AND T.brand_no in ${multiBrandNo}
+		</if>
+		<if
+				test="bizQueryCondition != null and !''.equals(bizQueryCondition) and 'U010102'==organTypeNo">
+			${bizQueryCondition}
+		</if>
+		<include refid="updateBalanceCondition" />
+	</update>
+
+	<select id="findArsPipelineCompany" resultType="java.lang.Integer" parameterType="map">
+		<choose>
+			<when test="params.shardingFlagVal != null and !''.equals(params.shardingFlagVal)">
+			/*#mycat:sql=select 1 from bill_shop_balance where sharding_flag= '${params.shardingFlagVal}'*/
+			</when>
+			<otherwise>
+			/*ignore_sharding_flag*/
+			</otherwise>
+		</choose>
+		SELECT
+		count(1) as s
+		FROM
+		ars_pipeline_company apc
+		left join
+		ars_pipeline_company_dtl apcd on apcd.data_no = apc.data_no
+		WHERE
+		1=1
+		<if test="null!=params" >
+			<if test="params.shopNo != null and !''.equals(params.shopNo)" >
+				AND apcd.shop_no = #{params.shopNo}
+			</if>
+			<if test="params.parentCompanyNo != null and !''.equals(params.parentCompanyNo)" >
+				AND apc.parent_company_no = #{params.parentCompanyNo}
+			</if>
+			<if test="params.orgCode != null and !''.equals(params.orgCode)" >
+				AND apc.nc_account_no = #{params.orgCode}
+			</if>
+			<if test="params.balanceStartDate != null and !''.equals(params.balanceStartDate)" >
+				AND apc.effective_date &lt;= #{params.balanceStartDate}
+				and apcd.disable_date &gt;= #{params.balanceStartDate}
+			</if>
+			<if test="params.balanceEndDate != null and !''.equals(params.balanceEndDate)" >
+				AND apc.effective_date &lt;= #{params.balanceEndDate}
+				and apcd.disable_date &gt;= #{params.balanceEndDate}
+			</if>
+		</if>
+	</select>
+
+	<select id="getFindTransId" resultMap="ForNcDataResultMap" parameterType="map">
+		SELECT
+		GROUP_CONCAT(DISTINCT trans_id SEPARATOR ",") as bill_no
+	FROM
+		cbs_pool
+	WHERE bank_seq_number = #{params.billNo}
+	</select>
+
+	<select id="findArsDate" resultMap="ForNcDataResultMap"
+			parameterType="map">
+		SELECT
+		pe.company_no,
+		pfp.trans_id as bill_no,
+		pfp.bank_seq_number ,
+		pfp.opposite_accounts,
+		pe.pay_back_date,
+		pfp.accounts_name
+		FROM
+		cbs_pool pfp
+		INNER JOIN t_cbs_pool_ext pe ON pe.trans_id = pfp.trans_id
+		WHERE 1 = 1 AND  EXISTS (SELECT 1 FROM ars_payer_information p_info
+		WHERE p_info.status = 1 AND p_info.payer_type IN (1, 2, 9)
+		AND p_info.company_no = pe.company_no
+		AND p_info.account_no = pfp.accounts
+		AND p_info.payback_account_name = pfp.opposite_accounts_name
+		AND pe.pay_back_date BETWEEN p_info.start_date AND p_info.end_date)
+		<if test="params.billNo != null and !''.equals(params.billNo)">
+			AND pfp.trans_id like CONCAT('%',#{params.billNo},'%')
+		</if>
+		<if test="params.billNos != null and !''.equals(params.billNos)">
+			AND pfp.trans_id in ${params.billNos}
+		</if>
+		<if test="params.status != null and !''.equals(params.status)">
+			AND pe.status IN (${params.status})
+		</if>
+	</select>
+
+	<update id="updateBuyReceivePurchasePrice" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE
+		bill_buy_balance T
+		SET
+		T.purchase_price =
+		(SELECT
+		purchase_price
+		FROM
+		purchase_price PP
+		WHERE T.item_no = PP.item_no
+		AND T.supplier_no = PP.supplier_no
+		AND PP.effective_date &lt;= T.send_date
+		ORDER BY PP.STATUS DESC,
+		PP.effective_date DESC,
+		PP.create_time DESC
+		LIMIT 1),
+		T.material_price =
+		(SELECT
+		material_price
+		FROM
+		purchase_price PP
+		WHERE T.item_no = PP.item_no
+		AND T.supplier_no = PP.supplier_no
+		AND PP.effective_date &lt;= T.send_date
+		ORDER BY STATUS DESC,
+		effective_date DESC,
+		create_time DESC
+		LIMIT 1),
+		T.factory_price =
+		(SELECT
+		factory_price
+		FROM
+		purchase_price PP
+		WHERE T.item_no = PP.item_no
+		AND T.supplier_no = PP.supplier_no
+		AND PP.effective_date &lt;= T.send_date
+		ORDER BY STATUS DESC,
+		effective_date DESC,
+		create_time DESC
+		LIMIT 1)
+		WHERE 1 = 1
+		AND balance_no = #{billNo}
+	</update>
+
+	<delete id="deleteSaleDeductionBill" parameterType="java.lang.String">
+	DELETE
+	FROM
+	  bill_sale_balance
+	WHERE 1 = 1
+	  AND bill_type = '1335'
+      AND biz_type = '21'
+      and balance_type = '7'
+	  AND balance_no = #{balanceNo}
+	  AND original_bill_no = #{originalBillNo}
+	</delete>
+
+	<select id="isSaleProxyBalanceNo" resultType="java.lang.Integer" parameterType="map">
+		SELECT
+			count(1)
+		FROM
+			bill_balance
+		WHERE
+		1 = 1
+		AND balance_type = '98'
+		<if test="params.isCompanyNo != null and !''.equals(params.isCompanyNo)">
+			and buyer_no  = #{params.isCompanyNo}
+		</if>
+		<if test="params.companyNo != null and !''.equals(params.companyNo)">
+			and buyer_no  = #{params.companyNo}
+		</if>
+		<if test="params.brandNo != null and !''.equals(params.brandNo)">
+			and brand_no  = #{params.brandNo}
+		</if>
+		<if test=" params.multiBrandNo != null and !''.equals(params.multiBrandNo)">
+			AND brand_no IN ${params.multiBrandNo}
+		</if>
+		<if test="params.startDate != null and !''.equals(params.startDate) and params.endDate != null and !''.equals(params.endDate)">
+			and ((#{params.startDate &gt;= balance_start_date AND #{params.startDate} &lt;= balance_end_date) OR
+			(#{params.startDate} &lt;= balance_start_date AND #{params.endDate} &gt;= balance_end_date) OR
+			(#{params.endDate} &gt;= balance_start_date AND #{params.endDate} &lt;= balance_end_date))
+		</if>
+		<if test="params.isSalerNo != null and !''.equals(params.isSalerNo)">
+			AND saler_no = #{params.isSalerNo}
+		</if>
+		<if test="params.isMultiSalerNo != null and !''.equals(params.isMultiSalerNo)">
+			AND saler_no IN ${params.isMultiSalerNo}
+		</if>
+
+	</select>
+
+	<select id="selectSaleProxyBalanceNo" resultMap="BaseResultMap" parameterType="map">
+		SELECT
+		*
+		FROM
+		bill_balance
+		WHERE
+		1 = 1
+		AND balance_type = '98'
+		<if test="params.isCompanyNo != null and !''.equals(params.isCompanyNo)">
+			and buyer_no  = #{params.isCompanyNo}
+		</if>
+		<if test="params.companyNo != null and !''.equals(params.companyNo)">
+			and buyer_no  = #{params.companyNo}
+		</if>
+		<if test="params.brandNo != null and !''.equals(params.brandNo)">
+			and brand_no  = #{params.brandNo}
+		</if>
+		<if test=" params.multiBrandNo != null and !''.equals(params.multiBrandNo)">
+			AND brand_no IN ${params.multiBrandNo}
+		</if>
+
+		<if test=" params.supplierNo != null and !''.equals(params.supplierNo)">
+			AND pipeline_company_no IN ${params.supplierNo}
+		</if>
+		<if test="params.startDate != null and !''.equals(params.startDate) and params.endDate != null and !''.equals(params.endDate)">
+			and ((#{params.startDate &gt;= balance_start_date AND #{params.startDate} &lt;= balance_end_date) OR
+			(#{params.startDate} &lt;= balance_start_date AND #{params.endDate} &gt;= balance_end_date) OR
+			(#{params.endDate} &gt;= balance_start_date AND #{params.endDate} &lt;= balance_end_date))
+		</if>
+		<if test="params.isSalerNo != null and !''.equals(params.isSalerNo)">
+			AND saler_no = #{params.isSalerNo}
+		</if>
+		<if test="params.isMultiSalerNo != null and !''.equals(params.isMultiSalerNo)">
+			AND saler_no IN ${params.isMultiSalerNo}
+		</if>
+	</select>
+	<update id="updateStatusRef">
+		update bill_balance set status = #{status} where 1=2
+		<if test="refBillNo != null and !''.equals(refBillNo)">
+			or bill_no = #{refBillNo}
+		</if>
+	</update>
+
+	<select id="selectWaitRebateCalcList" parameterType="map" resultType="cn.wonhigh.retail.fas.common.dto.wholesale.SimpleBillBalanceDto">
+		SELECT
+			bb.bill_no AS billNo,
+			bb.buyer_no AS buyerNo,
+			bb.saler_no AS salerNo,
+			bb.balance_start_date AS balanceStartDate,
+			bb.balance_end_date AS balanceEndDate,
+			bb.invoice_apply_no AS invoiceApplyNo,
+			c.zone_no AS zoneNo
+		FROM
+			bill_balance bb
+		INNER JOIN company c ON bb.saler_no = c.company_no
+		WHERE
+			bb.balance_type = 7
+			AND NOT EXISTS (
+				SELECT 1 FROM wholesale_rebate_statis_info rsi WHERE rsi.bill_no = bb.bill_no AND rsi.status != -1
+			)
+			<if test="params != null">
+		  		<choose>
+					<when test="params.filterInvoiceApply != null and 'true'.equals(params.filterInvoiceApply)"></when>
+		  			<otherwise>
+						AND EXISTS (
+							SELECT 1 FROM bill_balance_invoice_apply bia WHERE bia.bill_no = bb.invoice_apply_no AND bia.`status` IN (2,3,4)
+						)
+					</otherwise>
+				</choose>
+				<if test="params.billNos != null and params.billNos.size()>0">
+					AND bb.bill_no IN
+					<foreach collection="params.billNos" item="billNo" separator="," open="(" close=")">
+						#{billNo}
+					</foreach>
+				</if>
+				<if test="params.billNo != null and !''.equals(params.billNo)">
+					AND bb.bill_no = #{params.billNo}
+				</if>
+				<if test="params.buyerNo != null and !''.equals(params.buyerNo)">
+					AND bb.buyer_no = #{params.buyerNo}
+				</if>
+				<if test="params.salerNo != null and !''.equals(params.salerNo)">
+					AND bb.saler_no = #{params.salerNo}
+				</if>
+				<if test="params.balanceStartDate != null and !''.equals(params.balanceStartDate)">
+					AND bb.balance_start_date &gt;= #{params.balanceStartDate,jdbcType=DATE}
+				</if>
+				<if test="params.balanceEndDate != null and !''.equals(params.balanceEndDate)">
+					AND bb.balance_end_date &lt;= #{params.balanceEndDate,jdbcType=DATE}
+				</if>
+			</if>
+			ORDER BY bb.buyer_no,bb.balance_start_date
+	</select>
+	<select id="selectListByBillNos" parameterType="list" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM bill_balance w
+		WHERE bill_no IN (
+			<foreach collection="billNos" item="billNo" separator=",">
+				#{billNo}
+			</foreach>
+		)
+	</select>
+	<update id="updateAskPaymentNoByBillNo" parameterType="map">
+		UPDATE bill_balance
+		SET
+			update_user = #{params.updateUser,jdbcType=VARCHAR},
+			update_time = #{params.updateTime,jdbcType=TIMESTAMP},
+			ask_payment_no= #{params.askPaymentNo,jdbcType=VARCHAR}
+		WHERE
+			bill_no IN (
+				<foreach collection="params.billNoList" item="billNo" separator=",">
+					#{billNo,jdbcType=VARCHAR}
+				</foreach>
+			)
+	</update>
+	<update id="clearBalanceAskPaymentNoByBillNo" parameterType="cn.wonhigh.retail.fas.common.model.BillAskPayment" >
+		UPDATE bill_balance
+		SET ask_payment_no = NULL
+		<if test="balanceType != null and balanceType!=5 and balanceType!=2 and balanceType!=11 and balanceType!=14">
+			, status = 2
+		</if>
+		<if test="balanceType != null and (balanceType==16 or balanceType==17 or balanceType==98)" >
+			, status = 1
+		</if>
+		<if test="isFlag != null and isFlag==66" >
+			, status = 7
+		</if>
+		<if test="balanceType != null and balanceType==5" >
+			, extend_status = 4
+		</if>
+		<if test="balanceType != null and balanceType==2" >
+			, extend_status = 4
+		</if>
+		<if test="balanceType != null and balanceType==11" >
+			, extend_status = 4
+		</if>
+		<if test="balanceType != null and balanceType==14" >
+			, extend_status = 4
+		</if>
+		<if test="updateUser != null and !''.equals(updateUser)" >
+			, update_user = #{updateUser}
+		</if>
+		<if test="updateTime != null and !''.equals(updateTime)" >
+			, update_time = #{updateTime}
+		</if>
+		WHERE bill_no = #{balanceNo}
+	</update>
+	<update id="updateBalanceAskPaymentNo" parameterType="cn.wonhigh.retail.fas.common.model.BillAskPayment" >
+		UPDATE bill_balance
+		SET ask_payment_no = #{billNo}
+		<if test="balanceType != null and balanceType!=5 and balanceType!=2 and balanceType!=11 and balanceType!=14" >
+			, status = 5
+		</if>
+		<if test="balanceType != null and balanceType==5" >
+			, extend_status = 5
+		</if>
+		<if test="balanceType != null and balanceType==2" >
+			, extend_status = 5
+		</if>
+		<if test="balanceType != null and balanceType==11" >
+			, extend_status = 5
+		</if>
+		<if test="balanceType != null and balanceType==14" >
+			, extend_status = 5
+		</if>
+		<if test="updateUser != null and !''.equals(updateUser)" >
+			, update_user = #{updateUser}
+		</if>
+		<if test="updateTime != null and !''.equals(updateTime)" >
+			, update_time = #{updateTime}
+		</if>
+		WHERE 1 = 1
+		AND bill_no = #{balanceNo}
+	</update>
+	<update id="updateShopBalanceAskPaymentNo" parameterType="cn.wonhigh.retail.fas.common.model.BillAskPayment" >
+		UPDATE bill_shop_balance
+		SET ask_payment_no = #{billNo}
+		WHERE
+			 balance_no = #{balanceNo}
+	</update>
+
+	<update id="updateAskPaymentNoToBalanceBills"  parameterType="map" >
+		UPDATE bill_balance
+		SET ask_payment_no = #{billAskPayment.billNo}
+		<if test="billAskPayment.balanceType != null and billAskPayment.balanceType!=5 and billAskPayment.balanceType!=2 and billAskPayment.balanceType!=11 and billAskPayment.balanceType!=14" >
+			, status = 5
+		</if>
+		<if test="billAskPayment.balanceType != null and billAskPayment.balanceType==5" >
+			, extend_status = 5
+		</if>
+		<if test="billAskPayment.balanceType != null and billAskPayment.balanceType==2" >
+			, extend_status = 5
+		</if>
+		<if test="billAskPayment.balanceType != null and billAskPayment.balanceType==11" >
+			, extend_status = 5
+		</if>
+		<if test="billAskPayment.balanceType != null and billAskPayment.balanceType==14" >
+			, extend_status = 5
+		</if>
+		WHERE 1 = 1
+		AND bill_no in ${params.multiBillNo}
+	</update>
+
+	<update id="clearBalanceAskPaymentNo" parameterType="java.lang.String" >
+		UPDATE bill_balance
+		SET ask_payment_no = NULL
+		<if test="balanceType != null and balanceType!=5 and balanceType!=2 and balanceType!=11 and balanceType!=14">
+			, status = 2
+		</if>
+		<if test="balanceType != null and (balanceType==16 or balanceType==17 or balanceType==98)" >
+			, status = 1
+		</if>
+		<if test="isFlag != null and isFlag==66" >
+			, status = 7
+		</if>
+		<if test="balanceType != null and balanceType==5" >
+			, extend_status = 4
+		</if>
+		<if test="balanceType != null and balanceType==2" >
+			, extend_status = 4
+		</if>
+		<if test="balanceType != null and balanceType==11" >
+			, extend_status = 4
+		</if>
+		<if test="balanceType != null and balanceType==14" >
+			, extend_status = 4
+		</if>
+		WHERE 1 = 1
+		AND ask_payment_no = #{askPaymentNo}
+	</update>
+
+
+	<select id="selectSaleBalanceList" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance"
+			resultType="cn.wonhigh.retail.fas.common.model.BillSaleBalance">
+		select
+		T.id
+		from bill_sale_balance T LEFT JOIN category C1
+		ON LEFT(T.`category_no`, 2) = C1.`category_no`
+		LEFT JOIN category C2
+		ON LEFT(T.`category_no`, 4) = C2.`category_no`
+		WHERE 1 = 1
+		AND T.balance_no IS NULL
+		AND T.saler_no = #{salerNo}
+		AND T.buyer_no = #{buyerNo}
+		<choose>
+			<when
+					test="(null!=balanceType and null!=balanceStartDate) and ('18'.toString() ==balanceType or '19'.toString() ==balanceType)">
+				AND ((receive_date &gt;= #{balanceStartDate} AND bill_type = 1304) or
+				(send_date &gt;= #{balanceStartDate} AND bill_type = 1333))
+			</when>
+			<otherwise>
+				<choose>
+					<when test="null != isAcceptance and 1 == isAcceptance">
+						AND receive_date &gt;= #{balanceStartDate}
+					</when>
+					<otherwise>
+						AND send_date &gt;= #{balanceStartDate}
+					</otherwise>
+				</choose>
+			</otherwise>
+		</choose>
+		<choose>
+			<when
+					test="(null!=balanceType and null!=balanceEndDate) and  ('18'.toString() ==balanceType or '19'.toString() ==balanceType)">
+				AND ((receive_date &lt;= #{balanceEndDate} AND bill_type = 1304) or
+				(send_date &lt;= #{balanceEndDate} AND bill_type = 1333))
+			</when>
+			<otherwise>
+				<choose>
+					<when test="null != isAcceptance and 1 == isAcceptance">
+						AND receive_date &lt;= #{balanceEndDate}
+					</when>
+					<otherwise>
+						AND send_date &lt;= #{balanceEndDate}
+					</otherwise>
+				</choose>
+			</otherwise>
+		</choose>
+		<if test="(null!=isAcceptance and 1 == isAcceptance) and (sendStartDate != null and !''.equals(sendStartDate))">
+			AND send_date &gt;= #{sendStartDate}
+		</if>
+		<if test="(null!=isAcceptance and 1 == isAcceptance) and (sendEndDate != null and !''.equals(sendEndDate))">
+			AND send_date &lt;= #{sendEndDate}
+		</if>
+		<if test="supplierGroupNo != null and !''.equals(supplierGroupNo)">
+			AND EXISTS (SELECT 1 FROM supplier_group_rel sgr WHERE T.supplier_no
+			= sgr.supplier_no AND sgr.group_no IN ${supplierGroupNo})
+		</if>
+		<if test="supplierNo != null and !''.equals(supplierNo)">
+			AND supplier_no IN ${supplierNo}
+		</if>
+		<if test="multiBrandNo != null and !''.equals(multiBrandNo)">
+			AND T.brand_no in ${multiBrandNo}
+		</if>
+		<if
+				test="bizQueryCondition != null and !''.equals(bizQueryCondition) and 'U010102'==organTypeNo">
+			${bizQueryCondition}
+		</if>
+		<if test="bizTypeCondition != null and !''.equals(bizTypeCondition)">
+			AND EXISTS (
+			SELECT
+			1
+			FROM
+			pay_relationship pr
+			WHERE
+			pr.business_bill_no = T.original_bill_no
+			<choose>
+				<when test=" 1== bizTypeCondition">
+					AND T.biz_type =60 AND pr.business_purchase_type in (0,1)
+				</when>
+				<otherwise>
+					AND T.biz_type =60 AND pr.business_purchase_type = 2
+				</otherwise>
+			</choose>
+			)
+		</if>
+		<include refid="updateBalanceCondition" />
+	</select>
+
+	<!--根据结算（公司及其月份）查询结算单-->
+	<select id="selectBillBalanceByCompanyAndMonth" parameterType="java.util.List" resultType="cn.wonhigh.retail.fas.common.skq.SaleproxyCompanyMonthDto">
+		SELECT
+		s.buyer_no AS companyNo,
+		s.balance_month AS MONTH,
+		s.bill_no AS billNo
+		FROM
+		bill_balance s
+		WHERE
+		<foreach collection="list" item="item" index="index"
+				 separator="or" open="(" close=")">
+			s.balance_month = #{item.month} and
+			s.buyer_no=#{item.companyNo} and
+			s.pipeline_company_no=#{item.supplierNo} and
+		    s.balance_type='98'
+		</foreach>
+		group by s.bill_no
+	</select>
+    <select id="checkBalanceCreated" resultType="java.lang.Integer">
+		select 1 from bill_balance
+        <where>
+			<if test="params.balanceType != null">
+				and balance_type  = #{params.balanceType}
+			</if>
+			<if test="params.buyerNo != null and !''.equals(params.buyerNo)">
+				and buyer_no  = #{params.buyerNo}
+			</if>
+			<if test="params.salerNo != null and !''.equals(params.salerNo)">
+				AND saler_no = #{params.salerNo}
+			</if>
+			<if test="params.supplierNo != null and !''.equals(params.supplierNo)">
+				AND buyer_no = #{params.supplierNo}
+			</if>
+			<if test="params.brandNo != null and !''.equals(params.brandNo)">
+				and brand_no  = #{params.brandNo}
+			</if>
+			<if test="params.multiBrandNo!=null and params.multiBrandNo!=''">
+				and brand_no  in ${params.multiBrandNo}
+			</if>
+			<if test="params.startDate != null and !''.equals(params.startDate) and params.endDate != null and !''.equals(params.endDate)">
+				and ((#{params.startDate} &gt;= balance_start_date AND #{params.startDate} &lt;= balance_end_date) OR
+				(#{params.startDate} &lt;= balance_start_date AND #{params.endDate} &gt;= balance_end_date) OR
+				(#{params.endDate} &gt;= balance_start_date AND #{params.endDate} &lt;= balance_end_date))
+			</if>
+		</where>
+		LIMIT 1
+	</select>
+	<!--根据结算（公司及其月份）查询结算单-->
+	<select id="selectSupplierBillBalanceByCompanyAndMonth"
+			resultType="cn.wonhigh.retail.fas.common.skq.SaleproxyCompanyMonthDto">
+			SELECT
+			s.buyer_no AS companyNo,
+			s.balance_month AS MONTH,
+			s.bill_no AS billNo
+			FROM
+			bill_balance s
+			WHERE
+			<foreach collection="list" item="item" index="index"
+					 separator="or" open="(" close=")">
+				s.balance_month = #{item.month} and
+				s.buyer_no=#{item.companyNo} and
+				s.balance_type=116
+			</foreach>
+			group by s.bill_no
+	</select>
+
+	<update id="batchAuditStatus" parameterType="map">
+		UPDATE bill_balance
+		SET status = #{status},
+		 auditor = #{auditor},
+		 audit_time = NOW()
+		WHERE id IN
+		<foreach collection="idList" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+
+	<select id="selectEcBalanceCount" parameterType="map" resultType="java.lang.Integer">
+		SELECT
+			count(1) c
+		FROM
+			bill_balance
+		WHERE 1 = 1
+		<if test="null!=params">
+			<if test="params.balanceType != null and !''.equals(params.balanceType)">
+				AND balance_type = #{params.balanceType}
+			</if>
+			<if test="params.salerNo != null and !''.equals(params.salerNo)">
+				AND saler_no = #{params.salerNo}
+			</if>
+			<if test="params.buyerNo != null and !''.equals(params.buyerNo)">
+				AND buyer_no = #{params.buyerNo}
+			</if>
+			<if test="(params.balanceStartDate != null and !''.equals(params.balanceStartDate)) and (params.balanceEndDate != null and !''.equals(params.balanceEndDate))">
+				AND (
+					(
+						balance_start_date &gt;= #{params.balanceStartDate}
+						AND balance_start_date &lt;= #{params.balanceEndDate}
+					)
+					OR (
+						balance_start_date &lt;= #{params.balanceStartDate}
+						AND balance_end_date &gt;= #{params.balanceEndDate}
+					)
+					OR (
+						balance_end_date &gt;= #{params.balanceStartDate}
+						AND balance_end_date &lt;= #{params.balanceEndDate}
+					)
+				)
+			</if>
+		</if>
+	</select>
+
+    <select id="queryCustomerInvoiceAmount" resultType="java.math.BigDecimal" parameterType="Map">
+		 select sum(balance_amount) invoice_amount from bill_balance
+		 where 1 = 1
+		   and balance_month = #{params.balanceMonth}
+		   and bill_no = #{params.balanceNo}
+		   and buyer_no = #{params.customerNo}
+		 group by balance_month
+	</select>
+
+	<update id="updateBalance" parameterType="cn.wonhigh.retail.fas.common.model.BillBalance">
+		UPDATE bill_balance
+		SET invoice_amount = #{invoiceAmount},
+		update_user = #{updateUser},
+		update_time = NOW()
+		WHERE bill_no = #{billNo}
+	</update>
+	<!--获取代销结算单的最大结算月-->
+	<select id="selectMaxBalanceMonth" resultType="string">
+		select max(balance_month) from bill_balance where balance_type = 98
+	</select>
+</mapper>

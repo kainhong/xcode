@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 全局配置分组
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2018/07/27 13:10
  */

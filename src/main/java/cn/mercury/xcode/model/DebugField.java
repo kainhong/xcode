@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 调试字段实体类
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2018/09/03 11:09
  */

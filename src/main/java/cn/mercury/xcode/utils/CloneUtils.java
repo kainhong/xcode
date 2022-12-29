@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * 克隆工具类，实现原理通过JSON序列化反序列化实现
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2018/07/17 13:10
  */

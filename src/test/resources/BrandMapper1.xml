@@ -6,7 +6,7 @@
         
         <id column="id" property="id" jdbcType="INTEGER" />
         
-        <result column="brand_no" property="brandNo" jdbcType="CHAR" />
+        <result column="brand_no" property="brandNo" jdbcType="CHAR" />+
         
         <result column="name" property="name" jdbcType="VARCHAR" />
         
@@ -40,14 +40,10 @@
         
         <result column="remark" property="remark" jdbcType="VARCHAR" />
         
-        <result column="time_seq" property="timeSeq" jdbcType="BIGINT" />
-        
-        <result column="organ_type_no" property="organTypeNo" jdbcType="VARCHAR" />
-        
     </resultMap>
 
     <sql id="column_list">
-        `id`,`brand_no`,`name`,`en_name`,`en_short_name`,`opcode`,`category`,`belonger`,`status`,`sys_no`,`search_code`,`parent_brand_id`,`logo_url`,`create_user`,`create_time`,`update_user`,`update_time`,`remark`,`time_seq`,`organ_type_no`
+        `id`,`brand_no`,`name`,`en_name`,`en_short_name`,`opcode`,`category`,`belonger`,`status`,`sys_no`,`search_code`,`parent_brand_id`,`logo_url`,`create_user`,`create_time`,`update_user`,`update_time`,`remark`
     </sql>
 
     <sql id="condition">
@@ -63,9 +59,7 @@
             </if>
             
             <if test="null!=params.brandNo  and ''!=params.brandNo ">
-                
                 AND `brand_no`=#{params.brandNo}
-                
             </if>
             
             <if test="null!=params.name  and ''!=params.name ">
@@ -161,18 +155,6 @@
             <if test="null!=params.remark  and ''!=params.remark ">
                 
                 AND `remark`=#{params.remark}
-                
-            </if>
-            
-            <if test="null!=params.timeSeq ">
-                
-                AND `time_seq`=#{params.timeSeq}
-                
-            </if>
-            
-            <if test="null!=params.organTypeNo  and ''!=params.organTypeNo ">
-                
-                AND `organ_type_no`=#{params.organTypeNo}
                 
             </if>
             
@@ -345,14 +327,6 @@
                 `remark`,
             </if>
             
-            <if test="timeSeq != null">
-                `time_seq`,
-            </if>
-            
-            <if test="organTypeNo != null">
-                `organ_type_no`,
-            </if>
-            
         </trim>
         <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
             
@@ -428,14 +402,6 @@
                 #{remark},
             </if>
             
-            <if test="timeSeq != null">
-                #{timeSeq},
-            </if>
-            
-            <if test="organTypeNo != null">
-                #{organTypeNo},
-            </if>
-            
         </trim>
     </insert>
 
@@ -497,14 +463,7 @@
             </if> 
             <if test="remark != null">
                 `remark` = #{remark},
-            </if> 
-            <if test="timeSeq != null">
-                `time_seq` = #{timeSeq},
-            </if> 
-            <if test="organTypeNo != null">
-                `organ_type_no` = #{organTypeNo},
-            </if> 
-            update_time =  now() 
+            </if>
         </set>
         WHERE id = #{id} OR brand_no = #{brandNo}
     </update>

@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * 模板工具，主要用于对模板进行预处理
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2018/09/01 15:07
  */

@@ -10,7 +10,7 @@ import cn.mercury.xcode.service.SettingsStorageService;
 /**
  * 当前分组配置获取工具
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2018/09/01 16:51
  */

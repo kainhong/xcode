@@ -6,7 +6,7 @@ import com.intellij.openapi.options.Configurable;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * @author makejava
+
  * @version 1.0.0
  * @since 2021/08/07 19:42
  */
