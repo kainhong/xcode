@@ -12,4 +12,7 @@ public class StrState {
      * 相对路径常量
      */
     public static final String RELATIVE_PATH = "./";
+
+
+    private String name;
 }

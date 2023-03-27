@@ -33,7 +33,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
             And ${params.queryCondition}
         </if>
 #foreach($column in $tableInfo.fullColumn)
-        <if test="$!column.name != null#if($column.type.equals("java.lang.String")) and ''!=params.$!column.name #end">
+        <if test="params.$!column.name != null#if($column.type.equals("java.lang.String")) and ''!=params.$!column.name #end">
             And `$!column.obj.name` = #{params.$!column.name}
         </if>
 #end
