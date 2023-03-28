@@ -147,7 +147,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 设置额外代码生成服务
         param.put("generateService", new ExtraCodeGenerateUtils(this, tableInfo, generateOptions));
         String packagePath = tableInfo.getSavePackageName().replace(".", "/");
-        List<String> baseEntryFields = Arrays.asList("id","status","createUser","createDate","updateUser","updateTime","remark");
+        List<String> baseEntryFields = Arrays.asList("id","createUser","createDate","updateUser","updateTime");
         for (Template template : templates) {
             GenerateContext context = new GenerateContext();
             context.setWriteFile(true);
