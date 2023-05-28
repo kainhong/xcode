@@ -12,11 +12,12 @@ buildscript {
 
 plugins {
     id("java")
-    id("org.jetbrains.intellij") version "1.5.2"
+    id("org.jetbrains.kotlin.jvm") version "1.8.21"
+    id("org.jetbrains.intellij") version "1.13.3"
 }
 
 group = "cn.mercury"
-version = "1.0.0a"
+version = "1.0.0b"
 
 repositories {
     mavenLocal()
@@ -25,7 +26,7 @@ repositories {
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
-    version.set("2021.3.3")
+    version.set("2023.1.2")
     type.set("IU")
     plugins.set(listOf("DatabaseTools","java"))
 }
@@ -43,23 +44,23 @@ dependencies {
     testImplementation("junit:junit:4.12")
     testImplementation("commons-io:commons-io:2.8.0")
 
-    compileOnly("org.projectlombok:lombok:1.18.4")
-    annotationProcessor("org.projectlombok:lombok:1.18.4")
-    testImplementation("org.projectlombok:lombok:1.18.4")
-    testCompileOnly("org.projectlombok:lombok:1.18.4")
+    compileOnly("org.projectlombok:lombok:1.18.28")
+    annotationProcessor("org.projectlombok:lombok:1.18.28")
+    testImplementation("org.projectlombok:lombok:1.18.28")
+    testCompileOnly("org.projectlombok:lombok:1.18.28")
 }
 
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
-        sourceCompatibility = "11"
-        targetCompatibility = "11"
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
         options.encoding = "UTF-8"
     }
 
     patchPluginXml {
         sinceBuild.set("212")
-        untilBuild.set("222.*")
+        untilBuild.set("232.*")
     }
 
     signPlugin {
