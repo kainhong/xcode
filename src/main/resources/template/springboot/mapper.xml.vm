@@ -56,7 +56,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
     </select>
 
     <!--统计总行数-->
-    <select id="selectCount" resultType="java.lang.Long" parameterType="map">
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="map">
         Select Count(1)
         From $!tableInfo.obj.name
         <where>
@@ -110,7 +110,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
            `$!column.obj.name`#if($velocityHasNext),
 #end#end
         ) Values
-        <foreach collection="entities" item="entity" separator=",">
+        <foreach collection="list" item="entity" separator=",">
         (
 #foreach($column in $tableInfo.otherColumn)
             #{entity.$!{column.name}}#if($velocityHasNext),
@@ -120,12 +120,12 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="$!pk.name" useGeneratedKeys="true">
-        Insert Into `$!{tableInfo.obj.name}`
+        Insert Into `$!{tableInfo.obj.name}` (
 #foreach($column in $tableInfo.fullColumn)
         `$!column.obj.name` #if($velocityHasNext),
 #end#end
        )Values
-        <foreach collection="entities" item="entity" separator=",">
+        <foreach collection="list" item="entity" separator=",">
          (
 #foreach($column in $tableInfo.otherColumn)
          #{entity.$!{column.name}}#if($velocityHasNext),
