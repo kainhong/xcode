@@ -43,10 +43,10 @@ dependencies {
     testImplementation("junit:junit:4.12")
     testImplementation("commons-io:commons-io:2.8.0")
 
-    compileOnly("org.projectlombok:lombok:1.18.4")
-    annotationProcessor("org.projectlombok:lombok:1.18.4")
-    testImplementation("org.projectlombok:lombok:1.18.4")
-    testCompileOnly("org.projectlombok:lombok:1.18.4")
+    compileOnly("org.projectlombok:lombok:1.18.24")
+    annotationProcessor("org.projectlombok:lombok:1.18.24")
+    testImplementation("org.projectlombok:lombok:1.18.24")
+    testCompileOnly("org.projectlombok:lombok:1.18.24")
 }
 
 tasks {
