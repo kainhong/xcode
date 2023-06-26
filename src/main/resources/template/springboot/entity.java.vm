@@ -28,27 +28,33 @@ import cn.mercury.domain.AbstractEntryBuilder;
 public class $!{tableInfo.name} extends BaseEntity<$!{tool.getClsNameByFullName($pk.type)}> implements Serializable {
     private static final long serialVersionUID = $!tool.serial();
 #foreach($column in $tableInfo.fullColumn)
-    #if(${column.comment})/**
+
+#if(!$baseEntryFields.contains($column.name))
+#if(${column.comment})/**
      * ${column.comment}
      */
     @Label("$!{tool.caseCommentLabel(${column.comment})}")
-    #end
-
-    private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
 #end
+    private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
+#end#end
 
 #foreach($column in $tableInfo.fullColumn)
-##使用宏定义实现get,set方法
-#getSetMethod($column)
-#end
+#if(!$baseEntryFields.contains($column.name))
+    ##使用宏定义实现get,set方法
+    #getSetMethod($column)
+#end#end
 
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    public $!{tableInfo.name}Builder build(){
-        return new $!{tableInfo.name}Builder(this);
+    public static $!{tableInfo.name}Builder build(){
+        return new $!{tableInfo.name}Builder(new $!{tableInfo.name}());
+    }
+
+    public static $!{tableInfo.name}Builder build($!{tableInfo.name} value){
+        return new $!{tableInfo.name}Builder(value);
     }
 
     public static class $!{tableInfo.name}Builder extends AbstractEntryBuilder<$!{tableInfo.name}> {
@@ -62,7 +68,7 @@ public class $!{tableInfo.name} extends BaseEntity<$!{tool.getClsNameByFullName(
             return this.obj;
         }
 
-        #foreach($column in $tableInfo.fullColumn)
+#foreach($column in $tableInfo.fullColumn)
         public $!{tableInfo.name}Builder $!{column.name}($!{tool.getClsNameByFullName($column.type)} value ){
 
             this.obj.set$!{tool.firstUpperCase($column.name)}(value);
@@ -72,6 +78,6 @@ public class $!{tableInfo.name} extends BaseEntity<$!{tool.getClsNameByFullName(
             this.query.where("$!{column.name}", value);
             return this;
         }
-        #end
+#end
     }
 }

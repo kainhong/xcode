@@ -24,7 +24,7 @@ import java.io.IOException;
 /**
  * Http工具类，按需添加方法
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2018/09/03 14:59
  */

@@ -14,9 +14,9 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="$!{tableInfo.savePackageName}.repository.$!{tableInfo.name}Repository">
     <!-- auto generate -->
-    <resultMap type="$!{tableInfo.savePackageName}.model.$!{tableInfo.name}" id="baseResultMap">
+    <resultMap id="baseResultMap" type="$!{tableInfo.savePackageName}.model.$!{tableInfo.name}" >
 #foreach($column in $tableInfo.fullColumn)
-        <result property="$!column.name" column="$!column.obj.name" jdbcType="$!column.ext.jdbcType"/>
+        <result  column="$!column.obj.name" property="$!column.name" jdbcType="$!column.ext.jdbcType"/>
 #end
     </resultMap>
 
@@ -30,7 +30,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
             And ${params.queryCondition}
         </if>
 #foreach($column in $tableInfo.fullColumn)
-        <if test="$!column.name != null#if($column.type.equals("java.lang.String")) and ''!=params.$!column.name #end">
+        <if test="params.$!column.name != null#if($column.type.equals("java.lang.String")) and ''!=params.$!column.name #end">
             And `$!column.obj.name` = #{params.$!column.name}
         </if>
 #end
@@ -50,7 +50,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
         <include refid="column_list" />
         From $!tableInfo.obj.name
         <where>
-            <include refid="uniqe_condition" />
+            <include refid="condition" />
         </where>
         Limit 1
     </select>
@@ -112,7 +112,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
         ) Values
         <foreach collection="list" item="entity" separator=",">
         (
-#foreach($column in $tableInfo.otherColumn)
+#foreach($column in $tableInfo.fullColumn)
             #{entity.$!{column.name}}#if($velocityHasNext),
 #end#end
         )
@@ -127,7 +127,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
        )Values
         <foreach collection="list" item="entity" separator=",">
          (
-#foreach($column in $tableInfo.otherColumn)
+#foreach($column in $tableInfo.fullColumn)
          #{entity.$!{column.name}}#if($velocityHasNext),
 #end#end )
         </foreach>

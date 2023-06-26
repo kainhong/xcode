@@ -10,7 +10,7 @@ import java.awt.*;
 /**
  * 左右组件
  *
- * @author makejava
+
  * @version 1.0.0
  * @date 2021/08/10 16:49
  */

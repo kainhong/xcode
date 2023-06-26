@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * 模块工具类
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2018/09/01 17:15
  */

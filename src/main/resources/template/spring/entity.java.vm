@@ -6,7 +6,7 @@ $!{define.vm}
 #set($tableName = $tool.append($tableInfo.name))
 ##设置回调
 $!context.setFileName($tool.append($tableName, ".java"))
-$!context.setSavePath($tool.append($sourcePath, ".common",".model"))
+$!context.setSavePath($sourcePath)
 
 #if(!$tableInfo.pkColumn.isEmpty())
     #set($pk = $tableInfo.pkColumn.get(0))
@@ -47,8 +47,12 @@ public class $!{tableInfo.name} implements Serializable,IEntry{
         return ToStringBuilder.reflectionToString(this);
     }
 
-    public $!{tableInfo.name}Builder build(){
-        return new $!{tableInfo.name}Builder(this);
+    public static $!{tableInfo.name}Builder build(){
+        return new $!{tableInfo.name}Builder(new $!{tableInfo.name}());
+    }
+
+    public static $!{tableInfo.name}Builder build($!{tableInfo.name} value){
+        return new $!{tableInfo.name}Builder(value);
     }
 
     public static class $!{tableInfo.name}Builder extends AbstractEntryBuilder<$!{tableInfo.name}> {
@@ -62,7 +66,7 @@ public class $!{tableInfo.name} implements Serializable,IEntry{
             return this.obj;
         }
 
-        #foreach($column in $tableInfo.fullColumn)
+#foreach($column in $tableInfo.fullColumn)
         public $!{tableInfo.name}Builder $!{column.name}($!{tool.getClsNameByFullName($column.type)} value ){
 
             this.obj.set$!{tool.firstUpperCase($column.name)}(value);
@@ -72,6 +76,6 @@ public class $!{tableInfo.name} implements Serializable,IEntry{
             this.query.where("$!{column.name}", value);
             return this;
         }
-        #end
+#end
     }
 }

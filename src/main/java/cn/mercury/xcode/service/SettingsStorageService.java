@@ -6,7 +6,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 
 /**
- * @author makejava
+
  * @version 1.0.0
  * @date 2021/08/07 11:55
  */

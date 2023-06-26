@@ -6,46 +6,48 @@
         
         <id column="id" property="id" jdbcType="INTEGER" />
         
-        <result column="brand_no" property="brandNo" jdbcType="CHAR" />
-
+        <result column="brand_no" property="brandNo" jdbcType="CHAR" />+
+        
         <result column="name" property="name" jdbcType="VARCHAR" />
-
+        
         <result column="en_name" property="enName" jdbcType="VARCHAR" />
-
+        
         <result column="en_short_name" property="enShortName" jdbcType="VARCHAR" />
-
+        
         <result column="opcode" property="opcode" jdbcType="CHAR" />
-
+        
         <result column="category" property="category" jdbcType="VARCHAR" />
-
+        
         <result column="belonger" property="belonger" jdbcType="VARCHAR" />
-
+        
         <result column="status" property="status" jdbcType="TINYINT" />
-
+        
         <result column="sys_no" property="no" jdbcType="VARCHAR" />
-
+        
         <result column="search_code" property="searchCode" jdbcType="VARCHAR" />
-
+        
         <result column="parent_brand_id" property="parentBrandId" jdbcType="INTEGER" />
-
+        
         <result column="logo_url" property="logoUrl" jdbcType="VARCHAR" />
-
+        
         <result column="create_user" property="createUser" jdbcType="VARCHAR" />
-
+        
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-
+        
         <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
-
+        
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-
+        
         <result column="remark" property="remark" jdbcType="VARCHAR" />
-
+        
         <result column="time_seq" property="timeSeq" jdbcType="BIGINT" />
+        
+        <result column="organ_type_no" property="organTypeNo" jdbcType="VARCHAR" />
         
     </resultMap>
 
     <sql id="column_list">
-        `id`,`brand_no`,`name`,`en_name`,`en_short_name`,`opcode`,`category`,`belonger`,`status`,`sys_no`,`search_code`,`parent_brand_id`,`logo_url`,`create_user`,`create_time`,`update_user`,`update_time`,`remark`,`time_seq`
+        `id`,`brand_no`,`name`,`en_name`,`en_short_name`,`opcode`,`category`,`belonger`,`status`,`sys_no`,`search_code`,`parent_brand_id`,`logo_url`,`create_user`,`create_time`,`update_user`,`update_time`,`remark`,`time_seq`,`organ_type_no`
     </sql>
 
     <sql id="condition">
@@ -163,9 +165,16 @@
             </if>
             
             <if test="null!=params.timeSeq ">
+                
                 AND `time_seq`=#{params.timeSeq}
+                
             </if>
-
+            
+            <if test="null!=params.organTypeNo  and ''!=params.organTypeNo ">
+                
+                AND `organ_type_no`=#{params.organTypeNo}
+                
+            </if>
             
         </if>
     </sql>
@@ -339,7 +348,10 @@
             <if test="timeSeq != null">
                 `time_seq`,
             </if>
-
+            
+            <if test="organTypeNo != null">
+                `organ_type_no`,
+            </if>
             
         </trim>
         <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
@@ -419,6 +431,11 @@
             <if test="timeSeq != null">
                 #{timeSeq},
             </if>
+            
+            <if test="organTypeNo != null">
+                #{organTypeNo},
+            </if>
+            
         </trim>
     </insert>
 
@@ -432,6 +449,7 @@
     <update id="update" parameterType="cn.mercury.dlinq.model.Brand">
         UPDATE brand
         <set>
+            
             <if test="brandNo != null">
                 `brand_no` = #{brandNo},
             </if> 
@@ -482,7 +500,11 @@
             </if> 
             <if test="timeSeq != null">
                 `time_seq` = #{timeSeq},
-            </if>
+            </if> 
+            <if test="organTypeNo != null">
+                `organ_type_no` = #{organTypeNo},
+            </if> 
+            update_time =  now() 
         </set>
         WHERE id = #{id} OR brand_no = #{brandNo}
     </update>

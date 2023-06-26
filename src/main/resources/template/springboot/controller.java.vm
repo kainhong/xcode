@@ -24,7 +24,7 @@ import javax.annotation.Resource;
  * @since $!time.currTime()
  */
 @RestController
-@RequestMapping("$!tool.firstLowerCase($tableInfo.name)")
+@RequestMapping("$!{tableInfo.obj.name}")
 public class $!{tableName}  extends ApiController<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}> {
     /**
      * 服务对象
