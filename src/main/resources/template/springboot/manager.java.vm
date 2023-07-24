@@ -21,6 +21,6 @@ import cn.mercury.manager.IManager;
  * @author $!author
  * @since $!time.currTime()
  */
-public interface $!{tableName} extends IManager<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}>{
+public interface I$!{tableName} extends IManager<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}>{
 
 }

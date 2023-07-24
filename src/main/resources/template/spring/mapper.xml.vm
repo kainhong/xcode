@@ -39,7 +39,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
 #end
     </sql>
 
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    <select id="selectByPrimaryKey" resultMap="baseResultMap">
         SELECT
         <include refid="Base_Column_List" />
         FROM $!tableInfo.obj.name
@@ -53,7 +53,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
         </where>
     </select>
 
-    <select id="selectByPage" resultMap="BaseResultMap" parameterType="map">
+    <select id="selectByPage" resultMap="baseResultMap" parameterType="map">
         SELECT
         <include refid="Base_Column_List" />
         FROM $!tableInfo.obj.name WHERE 1=1
@@ -67,7 +67,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
         LIMIT #{page.startRowNum} ,#{page.pageSize}
     </select>
 
-    <select id="selectByParams" resultMap="BaseResultMap" parameterType="map">
+    <select id="selectByParams" resultMap="baseResultMap" parameterType="map">
         SELECT
         <include refid="Base_Column_List" />
         FROM $!tableInfo.obj.name WHERE 1=1

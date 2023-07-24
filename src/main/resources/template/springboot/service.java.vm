@@ -21,6 +21,6 @@ import topmall.framework.service.IService;
  * @author $!author
  * @since $!time.currTime()
  */
-public interface $!{tableName} extends IService<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}>{
+public interface I$!{tableName} extends IService<$!{tableInfo.name},$!{tool.getClsNameByFullName($pk.type)}>{
 
 }

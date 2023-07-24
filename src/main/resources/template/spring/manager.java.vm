@@ -24,6 +24,6 @@ import com.yougou.logistics.base.manager.BaseCrudManager;
  * @author $!author
  * @since $!time.currTime()
  */
-public interface $!{tableName} extends BaseCrudManager{
+public interface I$!{tableName} extends BaseCrudManager{
 
 }
