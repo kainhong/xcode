@@ -13,7 +13,7 @@ import java.awt.datatransfer.DataFlavor;
 /**
  * 剪切板导入导出配置服务实现
  *
- * @author makejava
+
  * @version 1.0.0
  * @date 2021/08/12 14:57
  */

@@ -27,7 +27,7 @@ import java.util.Arrays;
 /**
  * 表配置窗口
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2018/07/17 13:10
  */

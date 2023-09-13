@@ -5,7 +5,7 @@ import cn.mercury.xcode.model.template.AbstractEditorItem;
 /**
  * 全局配置实体类
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2018/07/27 13:07
  */

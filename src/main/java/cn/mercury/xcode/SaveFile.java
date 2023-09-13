@@ -2,6 +2,7 @@ package cn.mercury.xcode;
 
 import cn.mercury.xcode.generate.GenerateContext;
 import cn.mercury.xcode.generate.GenerateOptions;
+import cn.mercury.xcode.generate.MapperMerge;
 import cn.mercury.xcode.utils.CompareFileUtils;
 import cn.mercury.xcode.utils.FileUtils;
 import cn.mercury.xcode.utils.MessageDialogUtils;
@@ -27,7 +28,7 @@ import java.io.File;
  * <p>
  * 如果文件保存在项目路径下，则使用idea提供的psi对象操作。如果文件保存在非项目路径下，则使用java原始IO流操作。
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2020/04/20 22:54
  */
@@ -189,6 +190,26 @@ public class SaveFile {
     }
 
     /**
+     * 合并mapper，保留由原有mapper文件格式
+     * @param content
+     * @param oldText
+     * @return
+     */
+    private String mergeMapper( String content,String oldText){
+        if(!oldText.contains("\"http://mybatis.org/dtd/mybatis-3-mapper.dtd\""))
+            return content;
+
+        MapperMerge merge = new MapperMerge(oldText,content,null);
+
+        try {
+            return merge.merge();
+        }catch (Exception ex){
+            LOG.warn(ex.getMessage(),ex);
+            return content;
+        }
+    }
+
+    /**
      * 保存或替换文件
      *
      * @param file      文件
@@ -205,6 +226,10 @@ public class SaveFile {
             }
             document = coverFile(file);
         } else {
+            String oldText = getFileText(file);
+
+            String newText = mergeMapper(content,oldText);
+
             // 提示覆盖文件
             if (generateOptions.getTitleSure()) {
                 // 默认选是
@@ -214,7 +239,7 @@ public class SaveFile {
                 return;
             } else {
                 String msg = String.format("File %s Exists, Select Operate Mode?", file.getPath());
-                int result = MessageDialogUtils.yesNoCancel(project, msg, "Convert", "Compare", "Cancel");
+                int result = MessageDialogUtils.yesNoCancel(project, msg, "Override", "Compare", "Cancel");
                 switch (result) {
                     case Messages.YES:
                         // 覆盖文件
@@ -222,10 +247,8 @@ public class SaveFile {
                         break;
                     case Messages.NO:
                         // 对比代码时也格式化代码
-                        String newText = content;
                         if (Boolean.TRUE.equals(callback.getReformat())) {
                             // 保留旧文件内容，用新文件覆盖旧文件执行格式化，然后再还原旧文件内容
-                            String oldText = getFileText(file);
                             Document tmpDoc = coverFile(file);
                             // 格式化代码
                             FileUtils.getInstance().reformatFile(project, file);

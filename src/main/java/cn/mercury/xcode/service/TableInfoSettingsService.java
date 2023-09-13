@@ -14,7 +14,7 @@ import com.intellij.psi.PsiClass;
 import java.io.IOException;
 
 /**
- * @author makejava
+
  * @version 1.0.0
  * @date 2021/08/14 15:16
  */

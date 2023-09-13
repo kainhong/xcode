@@ -37,8 +37,8 @@ import com.yougou.logistics.base.web.controller.BaseCrudController;
  * @since $!time.currTime()
  */
 @RestController
-@RequestMapping("$!tool.firstLowerCase($tableInfo.name)")
-public class $!{tableName}  extends BaseCrudController<$!{tableInfo.name}}> {
+@RequestMapping("$!{tableInfo.obj.name}")
+public class $!{tableName}  extends BaseCrudController<$!{tableInfo.name}> {
     /**
      * 服务对象
      */

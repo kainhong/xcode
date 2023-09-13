@@ -3,7 +3,7 @@ package cn.mercury.xcode.model.table;
 /**
  *  列配置类型
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2018/07/17 13:10
  */

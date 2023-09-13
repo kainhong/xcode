@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 模板信息类
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2018/07/17 13:10
  */

@@ -27,7 +27,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @author makejava
+
  * @version 1.0.0
  * @since 2018/09/02 12:50
  */
@@ -147,7 +147,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 设置额外代码生成服务
         param.put("generateService", new ExtraCodeGenerateUtils(this, tableInfo, generateOptions));
         String packagePath = tableInfo.getSavePackageName().replace(".", "/");
-
+        List<String> baseEntryFields = Arrays.asList("id","createUser","createDate","updateUser","updateTime");
         for (Template template : templates) {
             GenerateContext context = new GenerateContext();
             context.setWriteFile(true);
@@ -160,7 +160,8 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             String path = getSavePath(template, generateOptions, tableInfo.getSavePath());
             param.put("context", context);
             param.put("modulePath", path);
-
+            param.put("baseEntryFields",baseEntryFields);
+            
             if (generateOptions.isMixed() || !path.contains("/src/main/java/"))
                 param.put("sourcePath", path + "/src/main/java/"
                         + packagePath + "/"

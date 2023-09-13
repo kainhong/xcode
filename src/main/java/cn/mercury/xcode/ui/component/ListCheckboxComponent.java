@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 列表复选框组件
  *
- * @author makejava
+
  * @version 1.0.0
  * @since 2018/09/03 17:12
  */

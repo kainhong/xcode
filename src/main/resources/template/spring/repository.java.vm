@@ -2,7 +2,7 @@
 #set($tableName = $tool.append($tableInfo.name, "Mapper"))
 ##设置回调
 $!context.setFileName($tool.append($tableName, ".java"))
-$!context.setSavePath($tool.append($sourcePath, "/database"))
+$!context.setSavePath($sourcePath)
 
 ##拿到主键
 #if(!$tableInfo.pkColumn.isEmpty())
