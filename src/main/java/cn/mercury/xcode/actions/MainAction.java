@@ -1,6 +1,7 @@
 package cn.mercury.xcode.actions;
 
 import cn.mercury.xcode.GlobalDict;
+import cn.mercury.xcode.idea.DatasourceHelper;
 import cn.mercury.xcode.model.type.MatchType;
 import cn.mercury.xcode.model.type.TypeMapper;
 import cn.mercury.xcode.ui.SelectSavePath;
@@ -60,6 +61,7 @@ public class MainAction extends AnAction {
             // 没通过不打开窗口
             return;
         }
+        new DatasourceHelper().execute(event);
         //开始处理
         new SelectSavePath(event.getProject()).show();
     }
