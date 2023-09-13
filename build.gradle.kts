@@ -1,7 +1,10 @@
 buildscript {
     repositories {
         mavenLocal()
-        maven { url=uri("https://maven.aliyun.com/repository/public/") }
+        //maven { url=uri("https://maven.aliyun.com/repository/public/") }
+//        maven {
+//            url=uri("http://m2repo.wonhigh.cn:8081/nexus/content/groups/public/")
+//        }
         mavenCentral()
         maven { url=uri("https://plugins.gradle.org/m2/") }
         maven { url=uri("https://oss.sonatype.org/content/repositories/releases/") }
@@ -25,7 +28,7 @@ repositories {
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
-    version.set("2021.3.3")
+    version.set("2022.1")
     type.set("IU")
     plugins.set(listOf("DatabaseTools","java"))
 }
@@ -39,6 +42,9 @@ dependencies {
     implementation("cn.hutool:hutool-core:5.8.0")
     implementation("org.dom4j:dom4j:2.1.3")
     implementation("jaxen:jaxen:1.1.1")
+    implementation("cn.wonhigh.mercury:mybatis-x:3.4.6.1-SNAPSHOT")
+    //implementation("cn.wonhigh.mercury:mercury-mybatis-parser:3.0.0-SNAPSHOT")
+
 
     testImplementation("junit:junit:4.12")
     testImplementation("commons-io:commons-io:2.8.0")

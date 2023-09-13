@@ -1,5 +1,6 @@
 package cn.mercury.xcode.actions;
 
+import cn.mercury.xcode.idea.DatasourceHelper;
 import cn.mercury.xcode.utils.ProjectUtils;
 import cn.mercury.xcode.model.IntellijTableInfo;
 import cn.mercury.xcode.utils.DbToolsUtils;
@@ -37,6 +38,9 @@ public class MybatisGeneratorMainAction extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();
         logger.info(project.getBasePath());
+
+        new DatasourceHelper().execute(e);
+
 
         PsiElement[] tableElements = e.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
         if (tableElements == null) {
