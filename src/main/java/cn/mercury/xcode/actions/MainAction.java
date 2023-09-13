@@ -61,7 +61,7 @@ public class MainAction extends AnAction {
             // 没通过不打开窗口
             return;
         }
-        new DatasourceHelper().execute(event);
+        //new DatasourceHelper().execute(event);
         //开始处理
         new SelectSavePath(event.getProject()).show();
     }

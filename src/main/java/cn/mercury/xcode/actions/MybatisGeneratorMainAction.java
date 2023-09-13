@@ -39,9 +39,6 @@ public class MybatisGeneratorMainAction extends AnAction {
         Project project = e.getProject();
         logger.info(project.getBasePath());
 
-        new DatasourceHelper().execute(e);
-
-
         PsiElement[] tableElements = e.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
         if (tableElements == null) {
             logger.error("must select a table.");
