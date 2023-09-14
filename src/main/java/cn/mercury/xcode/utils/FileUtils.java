@@ -4,10 +4,13 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.mercury.xcode.GlobalDict;
 import com.intellij.codeInsight.actions.AbstractLayoutCodeProcessor;
 import com.intellij.codeInsight.actions.ReformatCodeProcessor;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.impl.LoadTextUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
@@ -18,8 +21,10 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.ExceptionUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
@@ -28,13 +33,23 @@ import java.util.List;
 /**
  * 文件工具类
  *
-
  * @version 1.0.0
  * @since 2018/07/17 13:10
  */
 public class FileUtils {
     private static final Logger LOG = Logger.getInstance(FileUtils.class);
     private static volatile FileUtils fileUtils;
+
+    public static String getFileExtension(DataContext dataContext) {
+        VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(dataContext);
+        return file == null ? null : file.getExtension();
+    }
+
+    public static String readFile(VirtualFile virtualFile) {
+        if (virtualFile.isDirectory())
+            return null;
+        return LoadTextUtil.loadText(virtualFile).toString();
+    }
 
     /**
      * 单例模式
@@ -164,7 +179,8 @@ public class FileUtils {
             processor = constructor.newInstance(processor);
         } catch (ClassNotFoundException ignored) {
             // 类不存在直接忽略
-        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException |
+                 InvocationTargetException e) {
             // 抛出未知异常
             ExceptionUtil.rethrow(e);
         }

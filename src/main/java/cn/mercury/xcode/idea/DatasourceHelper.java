@@ -1,7 +1,6 @@
 package cn.mercury.xcode.idea;
 
 import cn.hutool.core.util.ReflectUtil;
-import cn.mercury.xcode.actions.MybatisGeneratorMainAction;
 import com.intellij.database.dataSource.AbstractDataSource;
 import com.intellij.database.dataSource.DatabaseConnection;
 import com.intellij.database.dataSource.DatabaseConnectionManager;
@@ -15,41 +14,42 @@ import com.intellij.database.util.GuardedRef;
 import com.intellij.database.view.DataSourceNode;
 import com.intellij.database.view.DatabaseView;
 import com.intellij.database.view.structure.DvRootDsGroup;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import net.sf.cglib.core.ReflectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import javax.swing.tree.TreeModel;
-import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.util.*;
 
 public class DatasourceHelper {
 
     private static final Logger logger = LoggerFactory.getLogger(DatasourceHelper.class);
 
-    public List<String> listDatasource(AnActionEvent e) {
-        DatabaseView databaseView = DatabaseView.getDatabaseView(e.getProject());
+    public static List<LocalDataSource> listDatasource(Project project) {
+        DatabaseView databaseView = DatabaseView.getDatabaseView(project);
 
         TreeModel model = databaseView.getTree().getModel();
+
         DvRootDsGroup group = (DvRootDsGroup) model.getRoot();
+
         TreeSet<BasicNode> children = (TreeSet<BasicNode>) ReflectUtil.getFieldValue(group, "children");
 
-        List<String> lst = new ArrayList<>();
+        List<LocalDataSource> lst = new ArrayList<>();
 
         for (BasicNode node : children) {
             String name = node.getDisplayName();
             //System.out.println(name);
-            lst.add(name);
+            DataSourceNode dataSourceNode = (DataSourceNode) node;
+
+            LocalDataSource ds = dataSourceNode.getLocalDataSource();
+
+            lst.add(ds);
         }
 
         return lst;
     }
 
-    public List<Object> execute(Project project, AbstractDataSource realDataSource, String sql) {
+    public static List<Object> execute(Project project, AbstractDataSource realDataSource, String sql) {
         RemoteResultSet rs = null;
         try {
             LocalDataSource localDataSource = (LocalDataSource) realDataSource;
