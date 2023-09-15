@@ -23,7 +23,7 @@ import java.util.*;
 
 public class DatasourceHelper {
 
-    private static final Logger logger = LoggerFactory.getLogger(DatasourceHelper.class);
+    //private static final Logger logger = LoggerFactory.getLogger(DatasourceHelper.class);
 
     public static List<LocalDataSource> listDatasource(Project project) {
         DatabaseView databaseView = DatabaseView.getDatabaseView(project);
@@ -81,7 +81,7 @@ public class DatasourceHelper {
             }
             return rows;
         } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
+            ex.printStackTrace();
             return null;
         } finally {
             if (rs != null) {

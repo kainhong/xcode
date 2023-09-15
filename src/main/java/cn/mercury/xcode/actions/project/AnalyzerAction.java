@@ -7,9 +7,12 @@ import cn.mercury.xcode.utils.FileUtils;
 import com.intellij.database.dataSource.LocalDataSource;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -26,9 +29,11 @@ public class AnalyzerAction extends AnAction {
         //Messages.showInfoMessage("OK", GlobalDict.TITLE_INFO);
 
         //new ParamsSettingForm(event.getProject()).show();
-        ParamsSettingForm dialog = new ParamsSettingForm(event.getProject());
+        @Nullable VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(event.getDataContext());
 
-        dialog.showAndGet();
+        ParamsSettingForm dialog = new ParamsSettingForm(event.getProject(),file);
+
+        dialog.show();
     }
 
     @Override

@@ -42,8 +42,8 @@ dependencies {
     implementation("cn.hutool:hutool-core:5.8.0")
     implementation("org.dom4j:dom4j:2.1.3")
     implementation("jaxen:jaxen:1.1.1")
-    implementation("cn.wonhigh.mercury:mybatis-x:3.4.6.1-SNAPSHOT")
-    //implementation("cn.wonhigh.mercury:mercury-mybatis-parser:3.0.0-SNAPSHOT")
+    implementation("cn.wonhigh.mercury:mercury-mybatis-parser:3.0.1-SNAPSHOT")
+    implementation("cn.wonhigh.mercury:mybatis-x:3.4.6.2-SNAPSHOT")
 
 
     testImplementation("junit:junit:4.12")
