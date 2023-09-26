@@ -1,17 +1,19 @@
 package cn.mercury.xcode.ui.mybatis;
 
 import cn.hutool.core.util.ReflectUtil;
+import cn.mercury.mybatis.analyzer.MybatisAnalyzer;
 import cn.mercury.mybatis.analyzer.MybatisMapperAnalyzer;
 import cn.mercury.mybatis.analyzer.MybatisMapperStatementAnalyzer;
-import cn.mercury.mybatis.analyzer.ParameterMock;
 import cn.mercury.mybatis.analyzer.ParameterSqlNode;
+import cn.mercury.mybatis.analyzer.mock.ParameterMocker;
 import cn.mercury.mybatis.analyzer.model.Tree;
 import cn.mercury.xcode.GlobalDict;
+import cn.mercury.xcode.generate.ParamsSettingConfig;
 import cn.mercury.xcode.idea.DatasourceHelper;
 import cn.mercury.xcode.utils.FileUtils;
+import cn.wonhigh.ibatis.builder.xml.XMLConfigBuilder;
+import cn.wonhigh.ibatis.session.Configuration;
 import com.alibaba.druid.sql.SQLUtils;
-import com.intellij.database.console.DbConsoleRootType;
-import com.intellij.database.console.JdbcConsole;
 import com.intellij.database.dataSource.LocalDataSource;
 import com.intellij.database.editor.DatabaseEditorHelper;
 import com.intellij.database.model.DasNamespace;
@@ -25,16 +27,16 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.TreeModel;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -45,6 +47,8 @@ public class ParamsSettingForm extends DialogWrapper {
     private JTable table1;
     private JComboBox cmbStatement;
     private JComboBox cmbDataSource;
+    private JComboBox cmbMappers;
+    private JLabel label2;
 
     private Vector<Vector<String>> dataVector;
 
@@ -102,6 +106,7 @@ public class ParamsSettingForm extends DialogWrapper {
     private String generateSql() {
 
         Map<String, Object> values = getValues();
+        values.put("params.queryCondition", "");
 
         return this.statement.parse(values, false).getSql();
     }
@@ -132,7 +137,7 @@ public class ParamsSettingForm extends DialogWrapper {
 
             VirtualFile newFile = baseDir.findChild(fileName);
             try {
-                if( newFile == null )
+                if (newFile == null)
                     newFile = FileUtils.getInstance().createChildFile(project, baseDir, fileName);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -158,7 +163,7 @@ public class ParamsSettingForm extends DialogWrapper {
             // 刷新文件系统
             fileSystem.refresh(false);
 
-            openSqlConsole(dsName,newFile);
+            openSqlConsole(dsName, newFile);
 
 //            JdbcConsole.newConsole(project)
 //                    .forFile(newFile)
@@ -168,7 +173,7 @@ public class ParamsSettingForm extends DialogWrapper {
         });
     }
 
-    private void openSqlConsole( String dsName,VirtualFile file) {
+    private void openSqlConsole(String dsName, VirtualFile file) {
         DatabaseView databaseView = DatabaseView.getDatabaseView(project);
 
         TreeModel model = databaseView.getTree().getModel();
@@ -181,7 +186,7 @@ public class ParamsSettingForm extends DialogWrapper {
 
         for (BasicNode node : children) {
             String name = node.getDisplayName();
-            if( dsName.equals(name)) {
+            if (dsName.equals(name)) {
                 dataSourceNode = (DataSourceNode) node;
             }
             //LocalDataSource ds = dataSourceNode.getLocalDataSource();
@@ -191,12 +196,16 @@ public class ParamsSettingForm extends DialogWrapper {
 
         DasNamespace context = dbDataSource.getModel().getCurrentRootNamespace();
 
-        DatabaseEditorHelper.openConsoleForFile(this.project,dataSourceNode.getLocalDataSource(),context,file);
+        DatabaseEditorHelper.openConsoleForFile(this.project, dataSourceNode.getLocalDataSource(), context, file);
     }
 
 
     private void initEvent() {
         btnMock.addActionListener(e -> this.mockParam());
+
+        cmbMappers.addActionListener(e -> {
+            onMapperSelected();
+        });
 
         cmbStatement.addActionListener((e) -> {
             loadParamData();
@@ -207,37 +216,42 @@ public class ParamsSettingForm extends DialogWrapper {
 
     private void loadParamData() {
         String id = (String) cmbStatement.getSelectedItem();
-        if (StringUtils.isEmpty(id))
+
+        if (StringUtils.isEmpty(id) || mybatisMapperAnalyzer == null)
             return;
 
         Vector<Vector<String>> dataVector = new Vector<>();
 
-        statement = analyzer.getStatement(id);
+        statement = mybatisMapperAnalyzer.getStatement(id);
 
         if (StringUtils.isNotEmpty(id)) {
             Tree<ParameterSqlNode> ps = statement.getStatement().getConditions();
             List<ParameterSqlNode> items = ps.toList(v -> v);
-            Set<String> names = new HashSet<>();
+            Map<String, Vector<String>> names = new HashMap<>();
             items.stream().forEach(v -> {
                 if (v == null)
                     return;
                 if (v.getVariables() != null && v.getVariables().size() > 0) {
                     v.getVariables().stream().forEach(v2 -> {
-                        if (names.contains(v2))
-                            return;
-                        Vector<String> row = new Vector<>();
+                        Vector<String> row;
+                        if (handleParamsTypes(names, v, v2)) return;
+                        row = new Vector<>();
                         row.add(v2);
                         row.add(v.getType());
                         dataVector.add(row);
-                        names.add(v2);
+                        names.put(v2, row);
                     });
                 } else {
-                    if (names.contains(v.getExpress()))
+                    Vector<String> row;
+                    if (names.containsKey(v.getExpress())) {
+                        if (handleParamsTypes(names, v, v.getExpress())) return;
                         return;
-                    names.add(v.getExpress());
-                    Vector<String> row = new Vector<>();
+                    }
+
+                    row = new Vector<>();
                     row.add(v.getExpress());
                     row.add(v.getType());
+                    names.put(v.getExpress(), row);
                     dataVector.add(row);
                 }
             });
@@ -262,6 +276,20 @@ public class ParamsSettingForm extends DialogWrapper {
         table1.setModel(model);
     }
 
+    private boolean handleParamsTypes(Map<String, Vector<String>> names, ParameterSqlNode v, String paramName) {
+        Vector<String> row;
+        if (names.containsKey(paramName)) {
+            row = names.get(paramName);
+            String type = row.get(1);
+            if (StringUtils.isEmpty(type))
+                row.set(1, v.getType());
+            else if (!type.contains(v.getType()))
+                row.set(1, type + "," + v.getType());
+            return true;
+        }
+        return false;
+    }
+
     private void mockParam() {
         if (this.statement == null)
             return;
@@ -271,17 +299,22 @@ public class ParamsSettingForm extends DialogWrapper {
 
         Map<String, Object> values = new HashMap<>();
 
-        ParameterMock mocker = ParameterMock.builder().values(values)
+        ParameterMocker mocker = ParameterMocker.builder().values(values)
                 .conditions(this.statement.getStatement().getConditions()).build();
 
         for (int r = 0; r < rowCount; r++) {
             String p = (String) tableModel.getValueAt(r, 0);
-            String t = (String) tableModel.getValueAt(r, 1);
+            //String t = (String) tableModel.getValueAt(r, 1);
             String v = (String) tableModel.getValueAt(r, 2);
-            if (StringUtils.isNotEmpty(v))
-                continue;
 
-            Object d = mocker.make(p, values);
+//            if (StringUtils.isNotEmpty(v))
+//                continue;
+
+            Object d = ParamsSettingConfig.getDefaultValues().get(p);
+
+            if (d == null)
+                d = mocker.make(p, values);
+
             String value = "";
             if (d != null)
                 value = d.toString();
@@ -291,15 +324,69 @@ public class ParamsSettingForm extends DialogWrapper {
     }
 
     //private MybatisMapperAnalyzer analyzer;
-    MybatisMapperAnalyzer analyzer;
+    MybatisMapperAnalyzer mybatisMapperAnalyzer;
+    MybatisAnalyzer analyzer;
 
-    private void load(VirtualFile file) {
+    private void load(VirtualFile file) throws Exception {
         String txt = FileUtils.readFile(file);
+        if (StringUtils.isEmpty(txt))
+            return;
+
         InputStream stream = new ByteArrayInputStream(txt.getBytes(StandardCharsets.UTF_8));
+        if (txt.contains("<configuration>") && txt.contains("</configuration>")) {
+            this.analyzer = MybatisAnalyzer.fromLocalFile(file.getPath());
+            Set<String> mappers = analyzer.getMappers();
 
-        this.analyzer = new MybatisMapperAnalyzer(stream, file.getName());
+            cmbMappers.addItem("");
 
-        List<String> lst = this.analyzer.listStatementIds();
+            for (String mapper : mappers) {
+                cmbMappers.addItem(mapper);
+            }
+
+            cmbMappers.setEnabled(true);
+
+            onMapperSelected();
+
+        } else {
+            this.mybatisMapperAnalyzer = new MybatisMapperAnalyzer(stream, file.getName());
+            cmbMappers.addItem(mybatisMapperAnalyzer.getNamespace());
+            cmbMappers.setEnabled(false);
+
+            loadMapper();
+        }
+
+
+        //analyzer = new MybatisMapperAnalyzer(virtualFile);
+        //analyzer.analyze();
+    }
+
+
+    private void onMapperSelected() {
+        if (analyzer == null)
+            return;
+
+        String id = (String) cmbMappers.getSelectedItem();
+        if (StringUtils.isEmpty(id))
+            return;
+
+        String namespace = analyzer.getMapperNamespace(id);
+
+        if (namespace == null)
+            return;
+
+        this.mybatisMapperAnalyzer = analyzer.getAnalyzer(namespace);
+
+        loadMapper();
+    }
+
+    private void loadMapper() {
+        if (mybatisMapperAnalyzer == null)
+            return;
+
+        cmbStatement.removeAllItems();
+        cmbDataSource.removeAllItems();
+
+        List<String> lst = this.mybatisMapperAnalyzer.listStatementIds();
         for (String id : lst) {
             cmbStatement.addItem(id);
         }
@@ -310,8 +397,6 @@ public class ParamsSettingForm extends DialogWrapper {
         }
 
         loadParamData();
-        //analyzer = new MybatisMapperAnalyzer(virtualFile);
-        //analyzer.analyze();
     }
 
     public ParamsSettingForm(Project project, VirtualFile file) {
@@ -325,7 +410,11 @@ public class ParamsSettingForm extends DialogWrapper {
 
         this.initEvent();
 
-        this.load(file);
+        try {
+            this.load(file);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }
