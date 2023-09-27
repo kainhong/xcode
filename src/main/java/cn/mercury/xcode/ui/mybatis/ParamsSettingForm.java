@@ -48,19 +48,14 @@ public class ParamsSettingForm extends DialogWrapper {
     private JComboBox cmbStatement;
     private JComboBox cmbDataSource;
     private JComboBox cmbMappers;
-    private JLabel label2;
-
-    private Vector<Vector<String>> dataVector;
 
     private MybatisMapperStatementAnalyzer statement;
-
 
     @Override
     protected JComponent createCenterPanel() {
         return this.mainPanel;
     }
 
-    static final String panel_name_prefix = "paramPanel-";
 
     @Override
     protected void doOKAction() {
@@ -106,6 +101,7 @@ public class ParamsSettingForm extends DialogWrapper {
     private String generateSql() {
 
         Map<String, Object> values = getValues();
+
         values.put("params.queryCondition", "");
 
         return this.statement.parse(values, false).getSql();
@@ -201,20 +197,20 @@ public class ParamsSettingForm extends DialogWrapper {
 
 
     private void initEvent() {
-        btnMock.addActionListener(e -> this.mockParam());
+        btnMock.addActionListener(e -> this.mockParamsValue());
 
         cmbMappers.addActionListener(e -> {
             onMapperSelected();
         });
 
         cmbStatement.addActionListener((e) -> {
-            loadParamData();
+            loadParamsInfo();
         });
     }
 
     public static final int TABLE_ROW_HEIGHT = 20;
 
-    private void loadParamData() {
+    private void loadParamsInfo() {
         String id = (String) cmbStatement.getSelectedItem();
 
         if (StringUtils.isEmpty(id) || mybatisMapperAnalyzer == null)
@@ -272,7 +268,7 @@ public class ParamsSettingForm extends DialogWrapper {
                 return column == 2;
             }
         };
-        this.dataVector = dataVector;
+
         table1.setModel(model);
     }
 
@@ -290,7 +286,7 @@ public class ParamsSettingForm extends DialogWrapper {
         return false;
     }
 
-    private void mockParam() {
+    private void mockParamsValue() {
         if (this.statement == null)
             return;
 
@@ -396,7 +392,7 @@ public class ParamsSettingForm extends DialogWrapper {
             cmbDataSource.addItem(item.getName());
         }
 
-        loadParamData();
+        loadParamsInfo();
     }
 
     public ParamsSettingForm(Project project, VirtualFile file) {
