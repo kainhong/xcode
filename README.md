@@ -73,5 +73,8 @@
 > * 由于历史文件和代码生成工具生成的代码现阶段差异比较大，因此对比工具效果不是很好，后续如果保持一致效率会更好
 
 
-
+# 参考
+https://github.com/PerccyKing/batslog.git
+https://github.com/zhengjunbase/codehelper.generator
+https://github.com/starxg/mybatis-log-plugin-free
 
