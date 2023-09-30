@@ -2,9 +2,10 @@ buildscript {
     repositories {
         mavenLocal()
         //maven { url=uri("https://maven.aliyun.com/repository/public/") }
-//        maven {
-//            url=uri("http://m2repo.wonhigh.cn:8081/nexus/content/groups/public/")
-//        }
+        maven {
+            url=uri("http://m2repo.wonhigh.cn:8081/nexus/content/groups/public/")
+            isAllowInsecureProtocol = true
+        }
         mavenCentral()
         maven { url=uri("https://plugins.gradle.org/m2/") }
         maven { url=uri("https://oss.sonatype.org/content/repositories/releases/") }

@@ -22,6 +22,11 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="cn.mercury.xcode.service.impl.SettingsStorageServiceImpl"/>
+        <applicationService serviceImplementation="cn.mercury.xcode.mybatis.settings.LogGlobalConfigState"/>
+
+        <projectService serviceImplementation="cn.mercury.xcode.mybatis.settings.LogSettingState"/>
+
+
         <!--项目服务-->
         <projectService serviceImplementation="cn.mercury.xcode.service.impl.TableInfoSettingsServiceImpl"/>
         <projectService serviceInterface="cn.mercury.xcode.service.CodeGenerateService" serviceImplementation="cn.mercury.xcode.service.impl.CodeGenerateServiceImpl"/>
