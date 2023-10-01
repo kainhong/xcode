@@ -11,8 +11,6 @@ import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.generate.ParamsSettingConfig;
 import cn.mercury.xcode.idea.DatasourceHelper;
 import cn.mercury.xcode.utils.FileUtils;
-import cn.wonhigh.ibatis.builder.xml.XMLConfigBuilder;
-import cn.wonhigh.ibatis.session.Configuration;
 import com.alibaba.druid.sql.SQLUtils;
 import com.intellij.database.dataSource.LocalDataSource;
 import com.intellij.database.editor.DatabaseEditorHelper;
@@ -24,9 +22,9 @@ import com.intellij.database.view.DatabaseView;
 import com.intellij.database.view.structure.DvRootDsGroup;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -36,12 +34,16 @@ import org.apache.commons.lang.StringUtils;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.TreeModel;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ParamsSettingForm extends DialogWrapper {
     private final Project project;
+    private String namespace;
+    private String statementId;
     private JPanel mainPanel;
     private JButton btnMock;
     private JTable table1;
@@ -59,9 +61,8 @@ public class ParamsSettingForm extends DialogWrapper {
 
     @Override
     protected void doOKAction() {
-        this.createSqlFile();
-
-        this.close(0);
+        if (this.createSqlFile())
+            this.close(0);
     }
 
 
@@ -107,9 +108,9 @@ public class ParamsSettingForm extends DialogWrapper {
         return this.statement.parse(values, false).getSql();
     }
 
-    protected void createSqlFile() {
+    protected boolean createSqlFile() {
         if (this.statement == null)
-            return;
+            return true;
 
         String dsName = (String) cmbDataSource.getSelectedItem();
 
@@ -118,10 +119,10 @@ public class ParamsSettingForm extends DialogWrapper {
                 .filter(v -> v.getName().equals(dsName))
                 .findFirst();
 
-        if (opSource.isEmpty()) {
-            Messages.showWarningDialog("请选择一个数据源", GlobalDict.TITLE_INFO);
-            return;
-        }
+//        if (opSource.isEmpty()) {
+//            Messages.showWarningDialog("请选择一个数据源", GlobalDict.TITLE_INFO);
+//            return false;
+//        }
 
         String fileName = statement.getStatement().getId().replace("\\.", "_") + ".sql";
 
@@ -160,13 +161,9 @@ public class ParamsSettingForm extends DialogWrapper {
             fileSystem.refresh(false);
 
             openSqlConsole(dsName, newFile);
-
-//            JdbcConsole.newConsole(project)
-//                    .forFile(newFile)
-//                    .fromDataSource(opSource.get())
-//                    .build();
-
         });
+
+        return true;
     }
 
     private void openSqlConsole(String dsName, VirtualFile file) {
@@ -179,20 +176,25 @@ public class ParamsSettingForm extends DialogWrapper {
         TreeSet<BasicNode> children = (TreeSet<BasicNode>) ReflectUtil.getFieldValue(group, "children");
 
         DataSourceNode dataSourceNode = null;
-
-        for (BasicNode node : children) {
-            String name = node.getDisplayName();
-            if (dsName.equals(name)) {
-                dataSourceNode = (DataSourceNode) node;
+        if (children != null && dsName != null) {
+            for (BasicNode node : children) {
+                String name = node.getDisplayName();
+                if (dsName.equals(name)) {
+                    dataSourceNode = (DataSourceNode) node;
+                }
+                //LocalDataSource ds = dataSourceNode.getLocalDataSource();
             }
-            //LocalDataSource ds = dataSourceNode.getLocalDataSource();
         }
 
-        DbDataSource dbDataSource = dataSourceNode.dbDataSource;
+        if (dataSourceNode != null) {
+            DbDataSource dbDataSource = dataSourceNode.dbDataSource;
 
-        DasNamespace context = dbDataSource.getModel().getCurrentRootNamespace();
+            DasNamespace context = dbDataSource.getModel().getCurrentRootNamespace();
 
-        DatabaseEditorHelper.openConsoleForFile(this.project, dataSourceNode.getLocalDataSource(), context, file);
+            DatabaseEditorHelper.openConsoleForFile(this.project, dataSourceNode.getLocalDataSource(), context, file);
+        } else {
+            FileEditorManager.getInstance(project).openFile(file, true);
+        }
     }
 
 
@@ -383,8 +385,14 @@ public class ParamsSettingForm extends DialogWrapper {
         cmbDataSource.removeAllItems();
 
         List<String> lst = this.mybatisMapperAnalyzer.listStatementIds();
+
         for (String id : lst) {
             cmbStatement.addItem(id);
+        }
+        if (this.statement != null) {
+            int index = lst.indexOf(this.statementId);
+            if (index > 0)
+                cmbStatement.setSelectedIndex(index);
         }
 
         List<LocalDataSource> ds = DatasourceHelper.listDatasource(project);
@@ -395,10 +403,12 @@ public class ParamsSettingForm extends DialogWrapper {
         loadParamsInfo();
     }
 
-    public ParamsSettingForm(Project project, VirtualFile file) {
+    public ParamsSettingForm(Project project, VirtualFile file, String ns, String id) {
         super(project);
         this.project = project;
         this.init();
+        this.namespace = ns;
+        this.statementId = id;
 
         setTitle(GlobalDict.TITLE_INFO);
 
@@ -411,6 +421,9 @@ public class ParamsSettingForm extends DialogWrapper {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
 
+    public ParamsSettingForm(Project project, VirtualFile file) {
+        this(project, file, null, null);
     }
 }

@@ -3,14 +3,14 @@ buildscript {
         mavenLocal()
         //maven { url=uri("https://maven.aliyun.com/repository/public/") }
         maven {
-            url=uri("http://m2repo.wonhigh.cn:8081/nexus/content/groups/public/")
+            url = uri("http://m2repo.wonhigh.cn:8081/nexus/content/groups/public/")
             isAllowInsecureProtocol = true
         }
         mavenCentral()
-        maven { url=uri("https://plugins.gradle.org/m2/") }
-        maven { url=uri("https://oss.sonatype.org/content/repositories/releases/") }
-        maven { url=uri("https://dl.bintray.com/jetbrains/intellij-plugin-service") }
-        maven { url=uri("https://dl.bintray.com/jetbrains/intellij-third-party-dependencies/") }
+        maven { url = uri("https://plugins.gradle.org/m2/") }
+        maven { url = uri("https://oss.sonatype.org/content/repositories/releases/") }
+        maven { url = uri("https://dl.bintray.com/jetbrains/intellij-plugin-service") }
+        maven { url = uri("https://dl.bintray.com/jetbrains/intellij-third-party-dependencies/") }
     }
 }
 
@@ -31,7 +31,12 @@ repositories {
 intellij {
     version.set("2022.1")
     type.set("IU")
-    plugins.set(listOf("DatabaseTools","java"))
+    plugins.set(
+        listOf(
+            "DatabaseTools", "java", "Spring",
+            "SpringBoot",
+        )
+    )
 }
 
 

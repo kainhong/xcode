@@ -15,8 +15,6 @@ import com.intellij.database.view.DataSourceNode;
 import com.intellij.database.view.DatabaseView;
 import com.intellij.database.view.structure.DvRootDsGroup;
 import com.intellij.openapi.project.Project;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.tree.TreeModel;
 import java.util.*;
@@ -33,6 +31,10 @@ public class DatasourceHelper {
         DvRootDsGroup group = (DvRootDsGroup) model.getRoot();
 
         TreeSet<BasicNode> children = (TreeSet<BasicNode>) ReflectUtil.getFieldValue(group, "children");
+
+        if(children == null) {
+            return Collections.emptyList();
+        }
 
         List<LocalDataSource> lst = new ArrayList<>();
 

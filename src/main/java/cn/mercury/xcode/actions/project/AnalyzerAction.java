@@ -47,9 +47,6 @@ public class AnalyzerAction extends AnAction {
         List<LocalDataSource> ds = DatasourceHelper.listDatasource(project);
         if (ds == null || ds.size() == 0)
             return false;
-
-        ds.stream().forEach(v->System.out.println(v.getName()));
-
         return true;
     }
 }
