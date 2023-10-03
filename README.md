@@ -74,6 +74,8 @@
 
 
 # 参考
+https://plugins.jetbrains.com/docs/intellij/welcome.html
+
 https://github.com/PerccyKing/batslog.git
 
 https://github.com/zhengjunbase/codehelper.generator
