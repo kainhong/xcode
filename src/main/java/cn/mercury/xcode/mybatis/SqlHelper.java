@@ -55,7 +55,7 @@ public class SqlHelper {
         });
     }
 
-    public static void createSqlConsole(Project project, String dataSourceName, String fileName, String parent, final String sql) {
+    public static void createSqlConsole(Project project, String dataSourceName, String parent, String fileName, final String sql) {
 
         ApplicationManager.getApplication().invokeAndWait(() -> {
             // 获取 LocalFileSystem 实例
