@@ -6,6 +6,7 @@ import com.intellij.database.dataSource.DatabaseConnection;
 import com.intellij.database.dataSource.DatabaseConnectionManager;
 import com.intellij.database.dataSource.LocalDataSource;
 import com.intellij.database.model.basic.BasicNode;
+import com.intellij.database.psi.DbDataSource;
 import com.intellij.database.remote.jdbc.RemoteConnection;
 import com.intellij.database.remote.jdbc.RemoteResultSet;
 import com.intellij.database.remote.jdbc.RemoteResultSetMetaData;
@@ -37,6 +38,8 @@ public class DatasourceHelper {
         }
 
         List<LocalDataSource> lst = new ArrayList<>();
+        if( children == null )
+            return lst;
 
         for (BasicNode node : children) {
             String name = node.getDisplayName();
@@ -50,6 +53,11 @@ public class DatasourceHelper {
 
         return lst;
     }
+
+    public static Optional<LocalDataSource> getDatasource(Project project,String name){
+        return listDatasource(project).stream().filter(v->v.getName().equals(name)).findFirst();
+    }
+
 
     public static List<Object> execute(Project project, AbstractDataSource realDataSource, String sql) {
         RemoteResultSet rs = null;
