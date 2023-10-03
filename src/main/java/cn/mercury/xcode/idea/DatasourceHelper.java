@@ -5,6 +5,8 @@ import com.intellij.database.dataSource.AbstractDataSource;
 import com.intellij.database.dataSource.DatabaseConnection;
 import com.intellij.database.dataSource.DatabaseConnectionManager;
 import com.intellij.database.dataSource.LocalDataSource;
+import com.intellij.database.editor.DatabaseEditorHelper;
+import com.intellij.database.model.DasNamespace;
 import com.intellij.database.model.basic.BasicNode;
 import com.intellij.database.psi.DbDataSource;
 import com.intellij.database.remote.jdbc.RemoteConnection;
@@ -15,16 +17,19 @@ import com.intellij.database.util.GuardedRef;
 import com.intellij.database.view.DataSourceNode;
 import com.intellij.database.view.DatabaseView;
 import com.intellij.database.view.structure.DvRootDsGroup;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 
 import javax.swing.tree.TreeModel;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DatasourceHelper {
 
     //private static final Logger logger = LoggerFactory.getLogger(DatasourceHelper.class);
 
-    public static List<LocalDataSource> listDatasource(Project project) {
+    public static List<DataSourceNode> listDataSourceNode(Project project) {
         DatabaseView databaseView = DatabaseView.getDatabaseView(project);
 
         TreeModel model = databaseView.getTree().getModel();
@@ -33,29 +38,78 @@ public class DatasourceHelper {
 
         TreeSet<BasicNode> children = (TreeSet<BasicNode>) ReflectUtil.getFieldValue(group, "children");
 
-        if(children == null) {
+        if (children == null) {
             return Collections.emptyList();
         }
 
-        List<LocalDataSource> lst = new ArrayList<>();
-        if( children == null )
-            return lst;
-
-        for (BasicNode node : children) {
-            String name = node.getDisplayName();
-            //System.out.println(name);
-            DataSourceNode dataSourceNode = (DataSourceNode) node;
-
-            LocalDataSource ds = dataSourceNode.getLocalDataSource();
-
-            lst.add(ds);
-        }
-
-        return lst;
+        return children.stream().map(n -> (DataSourceNode) n).collect(Collectors.toList());
     }
 
-    public static Optional<LocalDataSource> getDatasource(Project project,String name){
-        return listDatasource(project).stream().filter(v->v.getName().equals(name)).findFirst();
+    public static List<LocalDataSource> listDatasource(Project project) {
+        return listDataSourceNode(project).stream().map(n -> n.getLocalDataSource()).collect(Collectors.toList());
+
+//        List<LocalDataSource> lst = new ArrayList<>();
+//        if (children == null)
+//            return lst;
+//
+//        for (BasicNode node : children) {
+//            String name = node.getDisplayName();
+//            //System.out.println(name);
+//            DataSourceNode dataSourceNode = (DataSourceNode) node;
+//
+//            LocalDataSource ds = dataSourceNode.getLocalDataSource();
+//
+//            lst.add(ds);
+//        }
+//
+//        return lst;
+    }
+
+    public static Optional<DataSourceNode> getDatasourceNode(Project project, String name) {
+        return listDataSourceNode(project).stream().filter(n -> n.getDisplayName().equals(name)).findFirst();
+    }
+
+
+    public static void openSqlConsole(Project project, String dsName, VirtualFile file) {
+        DatabaseView databaseView = DatabaseView.getDatabaseView(project);
+
+        TreeModel model = databaseView.getTree().getModel();
+
+        DvRootDsGroup group = (DvRootDsGroup) model.getRoot();
+
+        TreeSet<BasicNode> children = (TreeSet<BasicNode>) ReflectUtil.getFieldValue(group, "children");
+
+        DataSourceNode dataSourceNode = null;
+        if (children != null && dsName != null) {
+            for (BasicNode node : children) {
+                String name = node.getDisplayName();
+                if (dsName.equals(name)) {
+                    dataSourceNode = (DataSourceNode) node;
+                }
+                //LocalDataSource ds = dataSourceNode.getLocalDataSource();
+            }
+        }
+
+        if (dataSourceNode != null) {
+            DbDataSource dbDataSource = dataSourceNode.dbDataSource;
+
+            DasNamespace context = dbDataSource.getModel().getCurrentRootNamespace();
+
+            DatabaseEditorHelper.openConsoleForFile(project, dataSourceNode.getLocalDataSource(), context, file);
+        } else {
+            FileEditorManager.getInstance(project).openFile(file, true);
+        }
+    }
+
+    public static void openSqlConsole(Project project, DataSourceNode dataSourceNode, VirtualFile file) {
+
+        if (dataSourceNode != null) {
+            DasNamespace context = dataSourceNode.getModel().getCurrentRootNamespace();
+
+            DatabaseEditorHelper.openConsoleForFile(project, dataSourceNode.getLocalDataSource(), context, file);
+        } else {
+            FileEditorManager.getInstance(project).openFile(file, true);
+        }
     }
 
 

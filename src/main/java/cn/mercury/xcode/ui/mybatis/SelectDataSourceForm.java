@@ -2,6 +2,7 @@ package cn.mercury.xcode.ui.mybatis;
 
 import cn.mercury.xcode.idea.DatasourceHelper;
 import com.intellij.database.dataSource.LocalDataSource;
+import com.intellij.database.view.DataSourceNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import org.jetbrains.annotations.Nullable;
@@ -12,16 +13,16 @@ public class SelectDataSourceForm extends DialogWrapper {
     private JComboBox cmbDataSource;
     private JPanel mainPanel;
 
-    private LocalDataSource dbDataSource;
+    private DataSourceNode dbDataSource;
 
     private Project project;
 
-    public LocalDataSource getDbDataSource() {
+    public DataSourceNode getDbDataSource() {
         return dbDataSource;
 
     }
 
-    protected SelectDataSourceForm(@Nullable Project project) {
+    public SelectDataSourceForm(@Nullable Project project) {
         super(project);
         this.project = project;
     }
@@ -37,7 +38,7 @@ public class SelectDataSourceForm extends DialogWrapper {
         if( val == null )
             return;
 
-        this.dbDataSource = DatasourceHelper.getDatasource(project,val).orElse(null);
+        this.dbDataSource = DatasourceHelper.getDatasourceNode(project,val).orElse(null);
 
         this.close(0);
     }

@@ -27,7 +27,9 @@ public class LogUtil {
     public static void copySqlToClipboard(AnActionEvent e, String text) {
 
         SqlFormatUtil.format(text, e.getProject(), Boolean.FALSE);
+
         List<String> sqlCache = GlobalVar.getSqlCacheList(e.getProject());
+
         if (CollectionUtils.isNotEmpty(sqlCache)) {
             String cache = String.join("\n\n", sqlCache);
             //复制到剪贴板
@@ -35,6 +37,22 @@ public class LogUtil {
         }
         //清空缓存
         GlobalVar.putSqlCache(e.getProject(), new ArrayList<>());
+    }
+
+    public static String copySql(AnActionEvent e) {
+        String text = LogUtil.getSelectText(e);
+
+        SqlFormatUtil.format(text, e.getProject(), Boolean.FALSE);
+
+        List<String> sqlCache = GlobalVar.getSqlCacheList(e.getProject());
+
+        if (CollectionUtils.isNotEmpty(sqlCache)) {
+            String cache = String.join("\n\n", sqlCache);
+            return cache;
+        }
+
+        return null;
+
     }
 
     public static void copyToClipboard(String cache) {

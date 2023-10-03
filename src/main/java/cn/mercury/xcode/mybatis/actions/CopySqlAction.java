@@ -4,11 +4,15 @@ package cn.mercury.xcode.mybatis.actions;
 import cn.mercury.xcode.mybatis.utils.LogUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonShortcuts;
+import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+
+import java.awt.event.KeyEvent;
 
 import static cn.mercury.xcode.mybatis.utils.LogUtil.copySqlToClipboard;
 
@@ -19,6 +23,7 @@ public class CopySqlAction extends AnAction {
      */
     @SuppressWarnings("unused")
     public CopySqlAction() {
+
     }
 
     /**
@@ -34,6 +39,8 @@ public class CopySqlAction extends AnAction {
                          @Nls(capitalization = Nls.Capitalization.Sentence) @Nullable String description,
                          @Nullable Icon icon) {
         super(text, description, icon);
+
+        //this.registerCustomShortcutSet(new CustomShortcutSet(KeyEvent.CTRL_DOWN_MASK, KeyEvent.ALT_DOWN_MASK, KeyEvent.VK_C), null);
     }
 
     @Override

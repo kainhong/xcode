@@ -40,6 +40,18 @@ public class FileUtils {
     private static final Logger LOG = Logger.getInstance(FileUtils.class);
     private static volatile FileUtils fileUtils;
 
+
+    public VirtualFile getParentFolder(Project project, String folder) {
+
+        VirtualFile baseDir = project.getBaseDir();
+        try {
+            return createChildDirectory(project, baseDir, folder);
+        } catch (Exception e) {
+
+        }
+        return null;
+    }
+
     public static String getFileExtension(DataContext dataContext) {
         VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(dataContext);
         return file == null ? null : file.getExtension();

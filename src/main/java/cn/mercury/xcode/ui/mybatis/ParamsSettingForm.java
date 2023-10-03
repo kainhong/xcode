@@ -10,6 +10,7 @@ import cn.mercury.mybatis.analyzer.model.Tree;
 import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.generate.ParamsSettingConfig;
 import cn.mercury.xcode.idea.DatasourceHelper;
+import cn.mercury.xcode.mybatis.SqlHelper;
 import cn.mercury.xcode.utils.FileUtils;
 import com.alibaba.druid.sql.SQLUtils;
 import com.intellij.database.dataSource.LocalDataSource;
@@ -89,14 +90,7 @@ public class ParamsSettingForm extends DialogWrapper {
     }
 
     private VirtualFile getParentFolder() {
-
-        VirtualFile baseDir = project.getBaseDir();
-        try {
-            return FileUtils.getInstance().createChildDirectory(project, baseDir, "output");
-        } catch (Exception e) {
-
-        }
-        return null;
+        return FileUtils.getInstance().getParentFolder(this.project, "output");
     }
 
     private String generateSql() {
@@ -114,10 +108,10 @@ public class ParamsSettingForm extends DialogWrapper {
 
         String dsName = (String) cmbDataSource.getSelectedItem();
 
-        Optional<LocalDataSource> opSource = DatasourceHelper.listDatasource(project)
-                .stream()
-                .filter(v -> v.getName().equals(dsName))
-                .findFirst();
+//        Optional<LocalDataSource> opSource = DatasourceHelper.listDatasource(project)
+//                .stream()
+//                .filter(v -> v.getName().equals(dsName))
+//                .findFirst();
 
 //        if (opSource.isEmpty()) {
 //            Messages.showWarningDialog("请选择一个数据源", GlobalDict.TITLE_INFO);
@@ -126,75 +120,49 @@ public class ParamsSettingForm extends DialogWrapper {
 
         String fileName = statement.getStatement().getId().replace("\\.", "_") + ".sql";
 
-        ApplicationManager.getApplication().invokeAndWait(() -> {
-            // 获取 LocalFileSystem 实例
-            VirtualFileSystem fileSystem = LocalFileSystem.getInstance();
-            // 在项目根目录下创建一个新的虚拟文件
-            VirtualFile baseDir = getParentFolder();
+        String sql = generateSql();
 
-            VirtualFile newFile = baseDir.findChild(fileName);
-            try {
-                if (newFile == null)
-                    newFile = FileUtils.getInstance().createChildFile(project, baseDir, fileName);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            // 写入文件内容
-            if (newFile == null)
-                return;
+        SqlHelper.createSqlConsole(project, dsName, "output", fileName, sql);
 
-            final VirtualFile file = newFile;
-            WriteCommandAction.runWriteCommandAction(project, () -> {
-                try {
-                    String sql = generateSql();
-
-                    sql = SQLUtils.formatMySql(sql);
-
-                    VfsUtil.saveText(file, sql);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
-            // 刷新文件系统
-            fileSystem.refresh(false);
-
-            openSqlConsole(dsName, newFile);
-        });
+//        ApplicationManager.getApplication().invokeAndWait(() -> {
+//            // 获取 LocalFileSystem 实例
+//            VirtualFileSystem fileSystem = LocalFileSystem.getInstance();
+//            // 在项目根目录下创建一个新的虚拟文件
+//            VirtualFile baseDir = getParentFolder();
+//
+//            VirtualFile newFile = baseDir.findChild(fileName);
+//            try {
+//                if (newFile == null)
+//                    newFile = FileUtils.getInstance().createChildFile(project, baseDir, fileName);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            // 写入文件内容
+//            if (newFile == null)
+//                return;
+//
+//            final VirtualFile file = newFile;
+//            WriteCommandAction.runWriteCommandAction(project, () -> {
+//                try {
+//                    String sql = generateSql();
+//
+//                    sql = SQLUtils.formatMySql(sql);
+//
+//                    VfsUtil.saveText(file, sql);
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            });
+//
+//            // 刷新文件系统
+//            fileSystem.refresh(false);
+//
+//            DatasourceHelper.openSqlConsole(project, dsName, newFile);
+//
+//        });
 
         return true;
-    }
-
-    private void openSqlConsole(String dsName, VirtualFile file) {
-        DatabaseView databaseView = DatabaseView.getDatabaseView(project);
-
-        TreeModel model = databaseView.getTree().getModel();
-
-        DvRootDsGroup group = (DvRootDsGroup) model.getRoot();
-
-        TreeSet<BasicNode> children = (TreeSet<BasicNode>) ReflectUtil.getFieldValue(group, "children");
-
-        DataSourceNode dataSourceNode = null;
-        if (children != null && dsName != null) {
-            for (BasicNode node : children) {
-                String name = node.getDisplayName();
-                if (dsName.equals(name)) {
-                    dataSourceNode = (DataSourceNode) node;
-                }
-                //LocalDataSource ds = dataSourceNode.getLocalDataSource();
-            }
-        }
-
-        if (dataSourceNode != null) {
-            DbDataSource dbDataSource = dataSourceNode.dbDataSource;
-
-            DasNamespace context = dbDataSource.getModel().getCurrentRootNamespace();
-
-            DatabaseEditorHelper.openConsoleForFile(this.project, dataSourceNode.getLocalDataSource(), context, file);
-        } else {
-            FileEditorManager.getInstance(project).openFile(file, true);
-        }
     }
 
 

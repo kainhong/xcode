@@ -68,9 +68,9 @@
 
     <actions>
 
-        <action id="ViewSql" class="cn.mercury.xcode.mybatis.actions.ViewSqlAction" text="ViewSql"
-                description="ViewSql" icon="JavaUltimateIcons.Javaee.Gutter.PersistenceMappedSuperclass">
-            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-        </action>
+<!--        <action id="RunAsSql" class="cn.mercury.xcode.mybatis.actions.RunAsSql" text="RunAsSql" description="RunAsSql">-->
+<!--            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="CopyUrl"/>-->
+<!--            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt C"/>-->
+<!--        </action>-->
     </actions>
 </idea-plugin>

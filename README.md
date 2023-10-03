@@ -75,6 +75,11 @@
 
 # 参考
 https://github.com/PerccyKing/batslog.git
+
 https://github.com/zhengjunbase/codehelper.generator
+
 https://github.com/starxg/mybatis-log-plugin-free
+
+# TODO
+自动补全manager, service, dal 代码
 
