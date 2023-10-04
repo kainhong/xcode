@@ -72,6 +72,29 @@
 > * 左侧是现有文件内容，右侧是生成的文件内容，注意：当关闭窗口时会使用右侧的内容覆盖当前文件，因此需要根据实际情况，点击![img.png](doc/img_1_6.png)调换左右内容。对比工具详细使用说明参见idea的对比工具
 > * 由于历史文件和代码生成工具生成的代码现阶段差异比较大，因此对比工具效果不是很好，后续如果保持一致效率会更好
 
+## mybatis 支持
+### mybatis mapper文件分析
+支持对mapper文件的分析，可以选择mapper文件，或者mybatis-config文件（如果mapper有依赖其他mapper文件，就必须选择mybatis-config文件来分析）
+也可以在打开的mapper文件中右键选择对应的<select> 所在行也可以进行sql解析。需要注意，选中的<select>必须是完整的一行，不存在换行。
+![img.png](doc/M-1.gif)
+选择对应的mapper文件的查询语句的ID，在弹出的对话框中设置好对应的参数，即可生成对应的sql代码。参数可以手动生成，可以自动填充。
+![img.png](doc/M-2.gif)
+
+### 代码导航
+现在很多插件都支持mapper xml到代码的导航，为了方便使用集成了该功能。
+![img.png](doc/M-3.gif)
+
+
+### 日志语句复制
+为了方便调试sql，在debug时的mybatis日志，可以在控制台复制成对应的sql语句，方便调试。
+需要注意复制时需要选择mybatis日志完整的两行。
+![img.png](doc/M-4.gif)
+当然也可以直接复制在sql 控制台
+![img.png](doc/M-5.gif)
+### 其他
+第一次打开sql console的时候idea默认是不会有可执行的按钮，因此需要手动绑定一下数据源，这样可以比较方便的执行sql语句。
+小技巧，如果在项目中添加了数据源，编辑mapper.xml时sql会有字段提示的。
+![img.png](doc/M-6.gif)
 
 # 参考
 https://plugins.jetbrains.com/docs/intellij/welcome.html
