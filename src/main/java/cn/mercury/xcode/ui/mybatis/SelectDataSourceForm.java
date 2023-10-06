@@ -1,7 +1,6 @@
 package cn.mercury.xcode.ui.mybatis;
 
 import cn.mercury.xcode.idea.DatasourceHelper;
-import com.intellij.database.dataSource.LocalDataSource;
 import com.intellij.database.view.DataSourceNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -25,6 +24,7 @@ public class SelectDataSourceForm extends DialogWrapper {
     public SelectDataSourceForm(@Nullable Project project) {
         super(project);
         this.project = project;
+        this.init();
     }
 
     @Override

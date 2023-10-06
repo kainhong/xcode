@@ -21,10 +21,8 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.ExceptionUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
@@ -149,6 +147,7 @@ public class FileUtils {
         PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
         // 提交改动，并非VCS中的提交文件
         psiDocumentManager.commitDocument(document);
+
         return document;
     }
 

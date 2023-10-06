@@ -58,6 +58,11 @@
         <codeInsight.lineMarkerProvider id="xcode.InjectionLineMarkerProvider" language="JAVA"
                                         implementationClass="cn.mercury.xcode.mybatis.language.provider.InjectionLineMarkerProvider"/>
 
+        <intentionAction order="first" id="xcode.GenerateMapperIntention">
+            <className>cn.mercury.xcode.intention.GenerateMapperIntention</className>
+        </intentionAction>
+
+
         <!--项目服务-->
         <projectService serviceImplementation="cn.mercury.xcode.service.impl.TableInfoSettingsServiceImpl"/>
         <projectService serviceInterface="cn.mercury.xcode.service.CodeGenerateService"
