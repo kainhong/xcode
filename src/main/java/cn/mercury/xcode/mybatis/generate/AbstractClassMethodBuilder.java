@@ -158,7 +158,8 @@ public abstract class AbstractClassMethodBuilder {
     }
 
     protected String getMethodParameterVariable() {
-        PsiParameter[] parameters = this.method.getParameterList().getParameters();
+        PsiParameter[] parameters = getParameters();
+
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < parameters.length; i++) {
             PsiParameter parameter = parameters[i];

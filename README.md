@@ -1,5 +1,7 @@
 # xCode
 
+[toc]
+
 ## xCode能做什么？
 
 > xCode是基于[EasyCode](https://gitee.com/makejava/EasyCode.git)开源组件基础上根据现有项目模板，在IntelliJ IDEA Ultimate版开发的一个代码生成插件，主要通过自定义模板（基于velocity）来生成各种你想要的代码。通常用于生成Entity、Dao、Service、Controller。如果你动手能力强还可以用于生成HTML、JS、PHP等代码。理论上来说只要是与数据有关的代码都是可以生成的。
@@ -84,6 +86,13 @@
 现在很多插件都支持mapper xml到代码的导航，为了方便使用集成了该功能。
 ![img.png](doc/M-3.gif)
 
+### 代码完成
+在mapper xml中的select对应的方法在java代码中不存在的时候可以通过context menu中的Generate来生成对应的方法。
+![img.png](doc/M-7.gif)
+
+在mapper对应的java类中，可以通过context menu中的Generate来生成对应的service和manager方法。
+![img.png](doc/M-8.gif)
+
 
 ### 日志语句复制
 为了方便调试sql，在debug时的mybatis日志，可以在控制台复制成对应的sql语句，方便调试。
@@ -91,10 +100,14 @@
 ![img.png](doc/M-4.gif)
 当然也可以直接复制在sql 控制台
 ![img.png](doc/M-5.gif)
+
+
+
 ### 其他
 第一次打开sql console的时候idea默认是不会有可执行的按钮，因此需要手动绑定一下数据源，这样可以比较方便的执行sql语句。
 小技巧，如果在项目中添加了数据源，编辑mapper.xml时sql会有字段提示的。
 ![img.png](doc/M-6.gif)
+
 
 # 参考
 https://plugins.jetbrains.com/docs/intellij/welcome.html
