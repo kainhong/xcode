@@ -25,7 +25,7 @@ import java.util.*;
 /**
  * The type Id based tag converter.
  *
- * @author yanglin
+
  */
 public abstract class IdBasedTagConverter extends ConverterAdaptor<XmlAttributeValue> implements CustomReferenceConverter<XmlAttributeValue> {
 

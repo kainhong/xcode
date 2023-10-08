@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * The interface Group one.
  *
- * @author yanglin
+
  */
 public interface GroupOne extends DomElement {
 

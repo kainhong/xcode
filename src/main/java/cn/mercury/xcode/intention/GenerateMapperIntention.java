@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The type Generate mapper intention.
  *
- * @author yanglin
+
  */
 public class GenerateMapperIntention extends AbstractGenericIntention {
 

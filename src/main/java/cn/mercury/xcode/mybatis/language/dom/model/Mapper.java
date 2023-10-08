@@ -12,7 +12,7 @@ import java.util.List;
  * Mapper 元素接口
  * </p>
  *
- * @author yanglin jobob
+ jobob
  * @since 2018 -07-30
  */
 @Namespace("MybatisXml")

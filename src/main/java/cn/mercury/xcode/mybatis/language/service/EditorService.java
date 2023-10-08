@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The type Editor service.
  *
- * @author yanglin
+
  */
 public class EditorService {
 

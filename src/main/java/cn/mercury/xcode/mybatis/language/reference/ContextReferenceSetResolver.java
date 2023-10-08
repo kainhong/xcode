@@ -17,7 +17,7 @@ import java.util.Optional;
  *
  * @param <F> the type parameter
  * @param <K> the type parameter
- * @author yanglin
+
  */
 public abstract class ContextReferenceSetResolver<F extends PsiElement, K extends PsiElement> {
 

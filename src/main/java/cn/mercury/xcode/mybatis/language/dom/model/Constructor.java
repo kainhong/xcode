@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * The interface Constructor.
  *
- * @author yanglin
+
  */
 public interface Constructor extends DomElement {
 

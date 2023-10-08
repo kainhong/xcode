@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * The type Sql converter.
  *
- * @author yanglin
+
  */
 public class SqlConverter extends IdBasedTagConverter {
 

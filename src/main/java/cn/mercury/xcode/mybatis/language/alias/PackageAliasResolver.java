@@ -18,7 +18,7 @@ import java.util.Set;
 /**
  * The type Package alias resolver.
  *
- * @author yanglin
+
  */
 public abstract class PackageAliasResolver extends AliasResolver {
 

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * The interface Type aliases.
  *
- * @author yanglin
+
  */
 public interface TypeAliases extends DomElement {
 

@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * The interface Group two.
  *
- * @author yanglin
+
  */
 public interface GroupTwo extends GroupOne {
 

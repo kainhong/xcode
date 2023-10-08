@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The type Result property reference set.
  *
- * @author yanglin
+
  */
 public class ResultColumnReferenceSet extends ReferenceSetBase<PsiReference> {
 

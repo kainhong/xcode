@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The interface Package.
  *
- * @author yanglin
+
  */
 public interface Package extends DomElement {
 

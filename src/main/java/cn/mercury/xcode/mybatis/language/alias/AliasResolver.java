@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * The type Alias resolver.
  *
- * @author yanglin
+
  */
 public abstract class AliasResolver {
 

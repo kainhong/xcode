@@ -29,7 +29,7 @@ import java.util.*;
 /**
  * The type Mapper utils.
  *
- * @author yanglin
+
  */
 public final class MapperUtils {
 

@@ -17,7 +17,7 @@ import java.util.Optional;
 /**
  * The type Context psi field reference.
  *
- * @author yanglin
+
  */
 public class ContextPsiFieldReference extends PsiReferenceBase<XmlAttributeValue> {
 

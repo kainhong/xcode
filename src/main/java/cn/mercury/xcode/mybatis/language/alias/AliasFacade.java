@@ -15,7 +15,7 @@ import java.util.*;
 /**
  * The type Alias facade.
  *
- * @author yanglin
+
  */
 public class AliasFacade {
 

@@ -62,6 +62,10 @@
             <className>cn.mercury.xcode.intention.GenerateMapperIntention</className>
         </intentionAction>
 
+        <intentionAction order="first" id="xcode.MybatisMapperIntention">
+            <className>cn.mercury.xcode.intention.MybatisMapperIntention</className>
+        </intentionAction>
+
 
         <!--项目服务-->
         <projectService serviceImplementation="cn.mercury.xcode.service.impl.TableInfoSettingsServiceImpl"/>

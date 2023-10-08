@@ -13,7 +13,7 @@ import java.util.Collection;
 /**
  * The type Config package alias resolver.
  *
- * @author yanglin
+
  */
 public class ConfigPackageAliasResolver extends PackageAliasResolver {
 

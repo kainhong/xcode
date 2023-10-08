@@ -19,7 +19,7 @@ import java.util.Optional;
 /**
  * The type Mapper backtracking utils.
  *
- * @author yanglin
+
  */
 public final class MapperBacktrackingUtils {
 

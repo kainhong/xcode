@@ -4,6 +4,9 @@ import cn.mercury.xcode.mybatis.utils.StringUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiParameter;
+
+import java.util.Arrays;
 
 public class ManagerClassMethodBuilder extends AbstractClassMethodBuilder {
 
@@ -13,7 +16,7 @@ public class ManagerClassMethodBuilder extends AbstractClassMethodBuilder {
                                      String packageName,
                                      String beanName) {
 
-        super(project, method, packageName.replaceAll("repository|dal","manager."), beanName);
+        super(project, method, packageName.replaceAll("repository|dal", "manager"), beanName);
 
         this.serviceClassMethodBuilder = new ServiceClassMethodBuilder(project, method, packageName, beanName);
     }
@@ -22,10 +25,21 @@ public class ManagerClassMethodBuilder extends AbstractClassMethodBuilder {
         return serviceClassMethodBuilder.getInterfaceClazz();
     }
 
+    protected PsiClass getReferenceClazz() {
+        return this.serviceClassMethodBuilder.getInterfaceClazz();
+    }
+
     public void build() {
         this.serviceClassMethodBuilder.build();
-        if(this.serviceClassMethodBuilder.getInterfaceClazz() != null   && this.serviceClassMethodBuilder.getImplClazz() != null )
+        if (this.serviceClassMethodBuilder.getInterfaceClazz() != null && this.serviceClassMethodBuilder.getImplClazz() != null) {
+            this.init();
             super.build();
+        }
+    }
+
+    @Override
+    protected boolean enableConvertMapParameter() {
+        return false;
     }
 
     @Override

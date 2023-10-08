@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * The interface Parameter map.
  *
- * @author yanglin
+
  */
 public interface ParameterMap extends IdDomElement {
 

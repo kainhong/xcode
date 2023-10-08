@@ -8,7 +8,7 @@ import com.intellij.util.xml.DomFileDescription;
  * mapper.xml 文件属性提示
  * </p>
  *
- * @author yanglin jobob
+ jobob
  * @since 2018 -07-30
  */
 public class MapperDescription extends DomFileDescription<Mapper> {

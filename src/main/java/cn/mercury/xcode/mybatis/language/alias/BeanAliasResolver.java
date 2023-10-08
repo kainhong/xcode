@@ -17,7 +17,7 @@ import java.util.*;
 /**
  * The type Bean alias resolver.
  *
- * @author yanglin
+
  */
 public class BeanAliasResolver extends PackageAliasResolver {
 

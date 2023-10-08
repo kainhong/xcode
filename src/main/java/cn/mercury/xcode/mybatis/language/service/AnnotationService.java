@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The type Annotation service.
  *
- * @author yanglin
+
  */
 public class AnnotationService {
 

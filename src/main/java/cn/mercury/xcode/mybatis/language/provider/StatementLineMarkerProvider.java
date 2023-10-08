@@ -24,7 +24,7 @@ import java.util.Optional;
 /**
  * The type Statement line marker provider.
  *
- * @author yanglin
+
  */
 public class StatementLineMarkerProvider extends SimpleLineMarkerProvider<XmlToken, PsiElement> {
 

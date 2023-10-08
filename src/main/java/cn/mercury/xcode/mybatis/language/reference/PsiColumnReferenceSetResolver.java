@@ -19,7 +19,7 @@ import java.util.Optional;
 /**
  * The type Psi field reference set resolver.
  *
- * @author yanglin
+
  */
 public class PsiColumnReferenceSetResolver {
 

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * The interface Choose.
  *
- * @author yanglin
+
  */
 public interface Choose extends DomElement {
 

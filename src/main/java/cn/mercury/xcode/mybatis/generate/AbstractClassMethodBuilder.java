@@ -25,7 +25,7 @@ public abstract class AbstractClassMethodBuilder {
 
     protected abstract String getName();
 
-    protected final PsiMethod method;
+    protected PsiMethod method;
 
     protected PsiClass implClazz;
 
@@ -41,31 +41,39 @@ public abstract class AbstractClassMethodBuilder {
 
     protected AbstractClassMethodBuilder(Project project, PsiMethod method, String packageName, String beanName) {
         this.project = project;
-        this.packageName = packageName + this.getName().toLowerCase() + ".";
+        this.packageName = packageName + "." + this.getName().toLowerCase() + ".";
         this.beanName = beanName;
         this.method = method;
+    }
 
+    protected void init() {
         implClazz = findClass();
         if (implClazz != null) {
             interfaceClazz = findInterface();
         }
         if (implClazz == null || interfaceClazz == null)
             this.findWillBeCompletedClass();
+    }
 
+    protected PsiClass getReferenceClazz() {
+        return method.getContainingClass();
     }
 
     protected void findWillBeCompletedClass() {
-        var all = ReferencesSearch.search(method.getContainingClass(),
+        var all = ReferencesSearch.search(getReferenceClazz(),
                 GlobalSearchScope.projectScope(project),
                 false).findAll();
 
         String type = this.getName();
 
         for (PsiReference psiReference : all) {
-            PsiClass refrenceClazz = PsiTreeUtil.getParentOfType(psiReference.getElement(), PsiClass.class);
-            String className = refrenceClazz.getName();
+            PsiClass referenceClazz = PsiTreeUtil.getParentOfType(psiReference.getElement(), PsiClass.class);
+            if (referenceClazz == null)
+                continue;
+
+            String className = referenceClazz.getName();
             if (className.equals(beanName + type) || className.equals(beanName + type + "Impl")) {
-                this.implClazz = refrenceClazz;
+                this.implClazz = referenceClazz;
                 break;
             }
         }
@@ -104,7 +112,7 @@ public abstract class AbstractClassMethodBuilder {
 
         className = this.packageName + this.beanName + this.getName() + "Impl";
         op = JavaUtils.findClazz(project, className);
-        if(!op.isPresent())
+        if (!op.isPresent())
             return null;
         return op.orElseGet(null);
     }
@@ -122,7 +130,9 @@ public abstract class AbstractClassMethodBuilder {
     }
 
     protected static final String QUERY_TYPE = "cn.mercury.basic.query.Query";
+    protected static final String MAP_TYPE = "java.util.Map<java.lang.String,java.lang.Object>";
 
+    protected abstract boolean enableConvertMapParameter();
 
     protected String getMethodParameterString() {
         PsiParameter[] parameters = this.method.getParameterList().getParameters();
@@ -131,7 +141,7 @@ public abstract class AbstractClassMethodBuilder {
             PsiParameter parameter = parameters[i];
             String parameterType = parameter.getType().getCanonicalText();
             String name = parameter.getName();
-            if (!this.oldVersion && QUERY_TYPE.equals(parameterType)) {
+            if (!this.oldVersion && MAP_TYPE.equals(parameterType)) {
                 parameterType = QUERY_TYPE;
                 name = "query";
             }
@@ -143,6 +153,10 @@ public abstract class AbstractClassMethodBuilder {
         return sb.toString();
     }
 
+    protected PsiParameter[] getParameters() {
+        return this.method.getParameterList().getParameters();
+    }
+
     protected String getMethodParameterVariable() {
         PsiParameter[] parameters = this.method.getParameterList().getParameters();
         StringBuilder sb = new StringBuilder();
@@ -150,8 +164,11 @@ public abstract class AbstractClassMethodBuilder {
             PsiParameter parameter = parameters[i];
             String parameterType = parameter.getType().getCanonicalText();
             String name = parameter.getName();
-            if (!this.oldVersion  && QUERY_TYPE.equals(parameterType)) {
-                name = "query.asMap()";
+            if (!this.oldVersion && MAP_TYPE.equals(parameterType)) {
+                if (enableConvertMapParameter())
+                    name = "query.asMap()";
+                else
+                    name = "query";
             }
             sb.append(" ").append(name);
             if (i < parameters.length - 1) {

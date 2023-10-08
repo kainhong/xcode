@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * The type Java utils.
  *
- * @author yanglin
+
  */
 public final class JavaUtils {
 

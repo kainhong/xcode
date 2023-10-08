@@ -6,7 +6,7 @@ import com.intellij.util.xml.DomFileDescription;
 /**
  * The type Configuration description.
  *
- * @author yanglin
+
  */
 public class ConfigurationDescription extends DomFileDescription<Configuration> {
 

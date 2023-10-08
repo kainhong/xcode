@@ -7,7 +7,7 @@ import com.intellij.util.xml.*;
 /**
  * The interface Id dom element.
  *
- * @author yanglin
+
  */
 public interface IdDomElement extends DomElement {
 

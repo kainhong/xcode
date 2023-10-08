@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The type Reference set resolver factory.
  *
- * @author yanglin
+
  */
 public final class ReferenceSetResolverFactory {
 

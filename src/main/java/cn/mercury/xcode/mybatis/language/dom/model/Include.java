@@ -10,7 +10,7 @@ import com.intellij.util.xml.GenericAttributeValue;
 /**
  * The interface Include.
  *
- * @author yanglin
+
  */
 public interface Include extends DomElement {
 

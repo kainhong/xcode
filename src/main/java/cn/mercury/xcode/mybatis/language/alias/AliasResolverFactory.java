@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The type Alias resolver factory.
  *
- * @author yanglin
+
  */
 public class AliasResolverFactory {
 

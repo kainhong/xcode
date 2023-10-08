@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * The interface Group four.
  *
- * @author yanglin
+
  */
 public interface GroupFour extends DomElement {
 

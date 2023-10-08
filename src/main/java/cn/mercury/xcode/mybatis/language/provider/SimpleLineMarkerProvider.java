@@ -15,7 +15,7 @@ import java.util.Optional;
  *
  * @param <F> the type parameter
  * @param <T> the type parameter
- * @author yanglin
+
  */
 public abstract class SimpleLineMarkerProvider<F extends PsiElement, T> extends RelatedItemLineMarkerProvider {
 

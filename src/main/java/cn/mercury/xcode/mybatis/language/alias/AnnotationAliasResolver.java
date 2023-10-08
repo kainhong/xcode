@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * The type Annotation alias resolver.
  *
- * @author yanglin
+
  */
 public class AnnotationAliasResolver extends AliasResolver {
 

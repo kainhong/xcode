@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * The type Java service.
  *
- * @author yanglin
+
  */
 public class JavaService implements Serializable {
 

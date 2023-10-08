@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The interface Association.
  *
- * @author yanglin
+
  */
 public interface Association extends GroupFour, ResultMapGroup, PropertyGroup {
 

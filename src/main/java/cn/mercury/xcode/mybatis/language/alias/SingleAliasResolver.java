@@ -14,7 +14,7 @@ import java.util.Set;
  * <p>
  * The type Single alias resolver.
  *
- * @author yanglin
+
  */
 public class SingleAliasResolver extends AliasResolver {
 

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The interface Type alias.
  *
- * @author yanglin
+
  */
 public interface TypeAlias extends DomElement {
 

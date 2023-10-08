@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The type Alias class reference.
  *
- * @author yanglin
+
  */
 public class AliasClassReference extends PsiReferenceBase<XmlAttributeValue> {
 

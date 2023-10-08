@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The type Alias converter.
  *
- * @author yanglin
+
  */
 public class AliasConverter extends ConverterAdaptor<PsiClass> implements CustomReferenceConverter<PsiClass> {
 

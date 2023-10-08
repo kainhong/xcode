@@ -5,7 +5,7 @@ import com.intellij.psi.util.ReferenceSetBase;
 /**
  * The type Mybatis constants.
  *
- * @author yanglin
+
  */
 public final class MybatisConstants {
 

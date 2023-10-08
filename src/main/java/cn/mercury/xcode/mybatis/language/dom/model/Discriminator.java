@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * The interface Discriminator.
  *
- * @author yanglin
+
  */
 public interface Discriminator extends DomElement {
 

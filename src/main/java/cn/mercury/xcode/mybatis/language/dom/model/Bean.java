@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * The interface Bean.
  *
- * @author yanglin
+
  */
 public interface Bean extends DomElement {
 

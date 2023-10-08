@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The type Alias desc.
  *
- * @author yanglin
+
  */
 public class AliasDesc {
 

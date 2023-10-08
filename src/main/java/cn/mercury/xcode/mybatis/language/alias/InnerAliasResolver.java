@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * The type Inner alias resolver.
  *
- * @author yanglin
+
  */
 public class InnerAliasResolver extends AliasResolver {
     private static final Logger logger = LoggerFactory.getLogger(InnerAliasResolver.class);

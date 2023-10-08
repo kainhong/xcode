@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * The interface Cache.
  *
- * @author yanglin
+
  */
 public interface Cache extends DomElement {
 

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The interface Intention chooser.
  *
- * @author yanglin
+
  */
 public interface IntentionChooser {
 

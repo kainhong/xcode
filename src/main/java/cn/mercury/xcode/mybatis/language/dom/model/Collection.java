@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The interface Collection.
  *
- * @author yanglin
+
  */
 public interface Collection extends GroupFour, ResultMapGroup, PropertyGroup {
 

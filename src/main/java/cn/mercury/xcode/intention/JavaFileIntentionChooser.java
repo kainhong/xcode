@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The type Java file intention chooser.
  *
- * @author yanglin
+
  */
 public abstract class JavaFileIntentionChooser implements IntentionChooser {
 
@@ -35,7 +35,6 @@ public abstract class JavaFileIntentionChooser implements IntentionChooser {
                 && JavaUtils.isElementWithinInterface(psiClass)
                 && isAvailable(element);
 
-        System.out.println(r);
         return r;
     }
 

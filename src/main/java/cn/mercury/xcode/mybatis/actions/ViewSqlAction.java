@@ -12,16 +12,22 @@ import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.xml.XmlFile;
+import com.intellij.psi.xml.XmlTag;
+import com.intellij.util.xml.DomElement;
+import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ViewSqlAction extends AnAction {
 
-    final Pattern pattern = Pattern.compile("<select.*?id\\W*=\\W*\"(?<id>\\w+)\".*?>", Pattern.CASE_INSENSITIVE);
+    final Pattern pattern = Pattern.compile("<select[^<>]*?\\sid=['\"]?(?<id>\\w+?)['\"]?(\\s|.)*?>", Pattern.CASE_INSENSITIVE);
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -46,6 +52,7 @@ public class ViewSqlAction extends AnAction {
         // Get required data keys
         final Project project = e.getProject();
         final Editor editor = e.getData(CommonDataKeys.EDITOR);
+
 
 
         boolean enable = editor != null && project != null
@@ -87,9 +94,11 @@ public class ViewSqlAction extends AnAction {
 
         int line = selectionModel.getLeadSelectionPosition().getLine();
 
+        int count = document.getLineCount();
+
         int start = document.getLineStartOffset(line);
 
-        int end = document.getLineEndOffset(line);
+        int end = document.getLineEndOffset(Math.min(line + 4, count - 1)); //
 
         TextRange range = new TextRange(start, end);
 

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * The interface Group three.
  *
- * @author yanglin
+
  */
 public interface GroupThree extends GroupTwo {
 

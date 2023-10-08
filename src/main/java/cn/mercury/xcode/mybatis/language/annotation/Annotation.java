@@ -18,7 +18,7 @@ import java.util.Set;
  * Mybatis 相关注解定义
  * </p>
  *
- * @author yanglin
+
  * @since 2018 -07-30
  */
 public class Annotation implements Cloneable {

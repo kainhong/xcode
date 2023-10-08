@@ -8,7 +8,13 @@ import com.intellij.psi.PsiMethod;
 public class ServiceClassMethodBuilder extends AbstractClassMethodBuilder {
 
     public ServiceClassMethodBuilder(Project project, PsiMethod method, String packageName, String beanName) {
-        super(project, method, packageName.replaceAll("repository|dal","service."), beanName);
+        super(project, method, packageName.replaceAll("repository|dal","service"), beanName);
+        this.init();
+    }
+
+    @Override
+    protected boolean enableConvertMapParameter() {
+        return true;
     }
 
     @Override

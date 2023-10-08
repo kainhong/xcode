@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The interface Result map.
  *
- * @author yanglin
+
  */
 public interface ResultMap extends GroupFour, IdDomElement {
 

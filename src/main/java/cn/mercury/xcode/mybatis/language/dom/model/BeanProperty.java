@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The interface Bean property.
  *
- * @author yanglin
+
  */
 public interface BeanProperty extends DomElement {
 
