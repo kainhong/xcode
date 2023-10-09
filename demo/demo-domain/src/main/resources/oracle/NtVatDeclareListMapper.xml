@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wonhigh.retail.fas.rebate.dal.tax.NtVatDeclareListMapper" >
+ 	<select id="getNtVatDeclareListFooter" parameterType="map" 
+ 	resultType="cn.wonhigh.retail.fas.rebate.model.tax.NtVatDeclareListDto">
+ 		select count(1) as count_val
+ 		from (
+ 		<include refid="getNtVatDeclareListCore"></include>
+ 		) a
+ 	</select>
+ 	
+ 	<select id="getNtVatDeclareList" parameterType="map" 
+ 	resultType="cn.wonhigh.retail.fas.rebate.model.tax.NtVatDeclareListDto">
+ 	  SELECT * FROM (SELECT a.*, ROWNUM AS rn
+          FROM (  
+			<include refid="getNtVatDeclareListCore"></include>
+			order by oc.company_no, oc.frequency
+            ) a
+         	WHERE ROWNUM &lt;= #{page.startRowNum} + #{page.pageSize}
+         ) b
+ 	  WHERE b.rn &gt; #{page.startRowNum}
+ 	</select>
+ 	
+ 	<sql id="withTemp">
+ 		with branch_company as (
+		select * from (select main_company_no, main_company_name, branch_company_no, branch_company_name, tax_no, vat_type,
+		'${params.period}' as frequency, rank() over(partition by main_company_no, branch_company_no
+		order by main_company_no, branch_company_no, effective_date desc) as rank_no
+		from main_branch_company_list
+		<include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.whereFieldByZoneTaxCitySqlOracle">
+			<property name="companyNoField" value="main_branch_company_list.branch_company_no"/>
+		</include>
+		where effective_date &lt;= to_date('${params.period}01','yyyy-MM-dd')
+		<if test="null==params.dataAccess or ''.equals(params.dataAccess)" >
+			$company_no@branch_company_no#
+		</if>
+		<if test="null!=params.companyNoMulti and !''.equals(params.companyNoMulti)" >
+			AND branch_company_no in ${params.companyNoMulti}
+		</if>
+		) where rank_no = 1
+		), branch_company_config as (
+			select bc.main_company_no, bc.main_company_name,
+			bc.branch_company_no, bc.branch_company_name,
+		    bc.tax_no, bc.vat_type, bc.frequency,
+			co.province_name, co.company_type, 3 main_branch_company_type,
+			tc.city_name, tc.tax_name,
+			listagg ( co.nc_org_code, ',' ) within GROUP ( ORDER BY co.nc_org_code ) AS nc_org_codes,
+			max(tp.param_value) param_value, max(tp.param_value2) param_value2
+			from branch_company bc inner join bus_company_org co
+			on bc.branch_company_no = co.company_no
+			and bc.vat_type = co.vat_type
+			inner join tax_city_config tc on co.city_no = tc.city_no
+			left join tax_param_config tp on tc.tax_name = tp.tax_name
+			and tp.param_no = 10
+			where tp.param_value = 4
+			group by bc.main_company_no, bc.main_company_name, bc.branch_company_no, bc.branch_company_name,
+			    bc.tax_no, bc.vat_type, bc.frequency, co.province_name, co.company_type, tc.city_name, tc.tax_name
+		), branch_main_company AS (
+			select * from (select main_company_no, main_company_name, vat_type,
+			'${params.period}' as frequency, rank() over(partition by main_company_no
+			order by main_company_no, effective_date desc) as rank_no
+			from main_branch_company_list
+			<include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.whereFieldByZoneTaxCitySqlOracle">
+				<property name="companyNoField" value="main_branch_company_list.main_company_no"/>
+			</include>
+			where effective_date &lt;= to_date('${params.period}01','yyyy-MM-dd')
+			<if test="null==params.dataAccess or ''.equals(params.dataAccess)" >
+				$company_no@main_company_no#
+			</if>
+			<if test="null!=params.companyNoMulti and !''.equals(params.companyNoMulti)" >
+				AND main_company_no in ${params.companyNoMulti}
+			</if>
+			) where rank_no = 1
+		), main_company_type as (
+		select bc.main_company_no, bc.main_company_name,
+		case when max(nvl(tp.param_value, 0)) = 4 then 1 else 2 end main_branch_company_type
+		from branch_main_company bc inner join bus_company_org co
+		on bc.main_company_no = co.company_no
+		and bc.vat_type = co.vat_type
+		inner join tax_city_config tc on co.city_no = tc.city_no
+		inner join tax_param_config tp on tc.tax_name = tp.tax_name
+		and tp.param_no = 10
+		group by bc.main_company_no, bc.main_company_name
+		), org_config as (
+		select branch_company_no company_no, branch_company_name company_name,
+		frequency, frequency start_period, frequency end_period, main_branch_company_type,
+		tax_no, province_name, city_name, company_type, 0 ratio_reduction_city, 0 ratio_reduction_edu,
+		0 ratio_reduction_local, null income_tax_type, null collection_frequency, null reduction_start_date,
+		null reduction_end_date, nc_org_codes, null guide_start_period, null guide_end_period
+		from branch_company_config bc
+		where 1=1
+		<if test="null!=params.saverFlag and !''.equals(params.saverFlag)" >
+			<if test="0 == params.saverFlag" >and not exists</if>
+			<if test="1 == params.saverFlag" >and exists</if>
+			(
+			select 1 from tax_declare_vat n where bc.branch_company_no = n.company_no
+			and bc.vat_type = n.vat_type and bc.frequency = n.frequency
+			)
+		</if>
+		union all
+		<include refid="mainCompanyDataQuery"></include>
+		)
+		<include refid="rateDataQuery"></include>
+ 	</sql>
+
+	<sql id="rateDataQuery" >
+		, check_rate_data as (
+		SELECT oc.company_no, oc.company_name, oc.frequency, max( oc.company_type ) company_type,
+		   CASE WHEN actual_tax_rate = 13 THEN 1 WHEN actual_tax_rate = 9 THEN 2
+			WHEN actual_tax_rate = 5 THEN 4 ELSE 3 END tax_rate_details,
+		  sum(nvl(table_not_tax_amount, 0)) table_not_tax_amount,
+		  sum(nvl(table_tax_amount, 0 )) table_tax_amount,
+		  0 as issue_vat_sales_volume, 0 as issue_vat_output_tax,
+		  0 as issue_other_sales_volume, 0 as issue_other_output_tax,
+		  0 as tax_inspection_sales_volume, 0 as tax_inspection_output_tax
+		FROM org_config oc INNER JOIN taxpayer_vat_check tc ON oc.company_no = tc.company_no
+		  AND tc.period BETWEEN oc.start_period AND oc.end_period
+		  AND tc.save_type = 1 AND tc.actual_tax_rate IN ( 13, 9, 6, 5 )
+		GROUP BY oc.company_no, oc.company_name, oc.frequency, actual_tax_rate
+		)
+		, item_rate_date as (
+			SELECT
+				company_no,
+				company_name,
+				frequency,
+				max( company_type ) company_type,
+				tax_rate_details,
+				max( table_not_tax_amount ) table_not_tax_amount,
+				max( table_tax_amount ) table_tax_amount,
+				sum( nvl( issue_vat_sales_volume, nvl( issue_vat_sales_volume_1, nvl( issue_vat_sales_volume_2, 0 ) ) ) ) issue_vat_sales_volume,
+				sum( nvl( issue_vat_output_tax, nvl( issue_vat_output_tax_1, nvl( issue_vat_output_tax_2, 0 ) ) ) ) issue_vat_output_tax,
+				sum( nvl( issue_other_sales_volume, nvl( issue_other_sales_volume_1, nvl( issue_other_sales_volume_2, 0 ) ) ) ) issue_other_sales_volume,
+				sum( nvl( issue_other_output_tax, nvl( issue_other_output_tax_1, nvl( issue_other_output_tax_2, 0 ) ) ) ) issue_other_output_tax,
+				0 AS tax_inspection_sales_volume,
+				0 AS tax_inspection_output_tax 
+			FROM
+				(
+				SELECT
+					oc.company_no,
+					oc.company_name,
+					oc.frequency,
+					max( oc.company_type ) company_type,
+					CASE WHEN t1.TAX_ITEMS_RATE = '13%税率的货物及加工修理修配劳务' THEN 1 
+						 WHEN t1.TAX_ITEMS_RATE = '9%税率的服务、不动产和无形资产' THEN 2 
+						 WHEN t1.TAX_ITEMS_RATE = '6%税率' THEN 3 
+						 WHEN t1.TAX_ITEMS_RATE = '5%征收率的服务、不动产和无形资产' THEN 4 ELSE NULL 
+					END tax_rate_details,
+					0 AS table_not_tax_amount,
+					0 AS table_tax_amount,
+					NULL issue_vat_sales_volume,
+					NULL issue_vat_output_tax,
+					NULL issue_other_sales_volume,
+					NULL issue_other_output_tax,
+					sum( CASE T1.remark WHEN '财云通' THEN t1.vat_amount ELSE NULL END ) issue_vat_sales_volume_1,
+					sum( CASE T1.remark WHEN '财云通' THEN t1.vat_tax_amount ELSE NULL END ) issue_vat_output_tax_1,
+					sum( CASE T1.remark WHEN '财云通' THEN t1.other_amount ELSE NULL END ) issue_other_sales_volume_1,
+					sum( CASE T1.remark WHEN '财云通' THEN t1.other_tax_amount ELSE NULL END ) issue_other_output_tax_1,
+					sum( CASE T1.remark WHEN '财云通' THEN NULL ELSE t1.vat_amount END ) issue_vat_sales_volume_2,
+					sum( CASE T1.remark WHEN '财云通' THEN NULL ELSE t1.vat_tax_amount END ) issue_vat_output_tax_2,
+					sum( CASE T1.remark WHEN '财云通' THEN NULL ELSE t1.other_amount END ) issue_other_sales_volume_2,
+					sum( CASE T1.remark WHEN '财云通' THEN NULL ELSE t1.other_tax_amount END ) issue_other_output_tax_2,
+					0 AS tax_inspection_sales_volume,
+					0 AS tax_inspection_output_tax 
+				FROM
+					org_config oc
+					INNER JOIN RPA_DECLARE_COLLECTION_DATA t1 ON t1.tax_no = oc.tax_no 
+					AND t1.YEAR_MONTH BETWEEN oc.start_period 
+					AND oc.end_period 
+					AND t1.TAX_CALCULATION_METHOD IN ( 1, 2 ) 
+					AND t1.data_type = 0 
+					AND t1.TAX_ITEMS_RATE IN ( '13%税率的货物及加工修理修配劳务', '9%税率的服务、不动产和无形资产', '6%税率', '5%征收率的服务、不动产和无形资产' ) 
+				GROUP BY
+					oc.company_no,
+					oc.company_name,
+					oc.frequency,
+					t1.TAX_ITEMS_RATE 
+				UNION ALL
+				SELECT
+					oc.company_no,
+					oc.company_name,
+					oc.frequency,
+					oc.company_type,
+					ii.item_type tax_rate_details,
+					0 AS table_not_tax_amount,
+					0 AS table_tax_amount,
+					issue_vat_sales_volume,
+					issue_vat_output_tax,
+					issue_other_sales_volume,
+					issue_other_output_tax,
+					NULL issue_vat_sales_volume_1,
+					NULL issue_vat_output_tax_1,
+					NULL issue_other_sales_volume_1,
+					NULL issue_other_output_tax_1,
+					NULL issue_vat_sales_volume_2,
+					NULL issue_vat_output_tax_2,
+					NULL issue_other_sales_volume_2,
+					NULL issue_other_output_tax_2,
+					tax_inspection_sales_volume,
+					tax_inspection_output_tax 
+				FROM
+					org_config oc
+					INNER JOIN import_company_freq_item ii ON oc.company_no = ii.company_no 
+					AND oc.frequency = ii.frequency 
+			) t GROUP BY company_no, company_name, frequency, tax_rate_details 
+		)
+	</sql>
+
+	<sql id="mainCompanyDataQuery" >
+		select ac.company_no, ac.company_name, ac.frequency, ac.start_period, ac.end_period,
+		max(nvl(mc.main_branch_company_type, 0)) main_branch_company_type, max(ts.tax_no) tax_no,
+		max(ts.province_name) province_name, max(ts.city_name) city_name, max(ac.company_type) company_type,
+		max(ac.ratio_reduction_city) ratio_reduction_city,
+		max(ac.ratio_reduction_edu) ratio_reduction_edu,
+		max(ac.ratio_reduction_local) ratio_reduction_local,
+		max(ts.income_tax_type) income_tax_type,max(ts.collection_frequency) collection_frequency,
+		max(ts.reduction_start_date) reduction_start_date, max(ts.reduction_end_date) reduction_end_date,
+		listagg(ts.nc_org_code,',') within group(order by ts.nc_org_code) as nc_org_codes,
+		case when max(ts.guide_start_period) is not null and max(ts.guide_end_period) is not null
+		and max(ts.guide_start_period) &lt;= ac.end_period and max(ts.guide_end_period) &gt;= ac.start_period
+		then greatest(ac.start_period, max(ts.guide_start_period)) else null end as guide_start_period,
+		case when max(ts.guide_start_period) is not null and max(ts.guide_end_period) is not null
+		and max(ts.guide_start_period) &lt;= ac.end_period and max(ts.guide_end_period) &gt;= ac.start_period
+		then least(ac.end_period, max(ts.guide_end_period)) else null end as guide_end_period
+		from (
+		select company_no, company_name, 1 vat_type, frequency, start_period, end_period,
+		0 ratio_reduction_city, 0 ratio_reduction_edu, 0 ratio_reduction_local, max(vf.company_type) company_type
+		from taxpayer_vat_accure vf
+		<include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.whereCompanyByZoneTaxCitySqlOracle">
+			<property name="alias" value="vf"/>
+		</include>
+		where 1=1
+		$company_no@company_no#
+		<if test="null!=params.period and !''.equals(params.period)" >
+			AND #{params.period} between start_period and end_period
+		</if>
+		<if test="null!=params.companyNoMulti and !''.equals(params.companyNoMulti)" >
+			AND company_no in ${params.companyNoMulti}
+		</if>
+		group by company_no, company_name, frequency, start_period, end_period
+		union
+		select b.company_no, b.company_name, b.vat_type, b.frequency, b.start_period, b.end_period,
+		max(b.ratio_reduction_city) ratio_reduction_city,
+		max(b.ratio_reduction_edu) ratio_reduction_edu,
+		max(b.ratio_reduction_local) ratio_reduction_local, max(b.company_type) company_type
+		from (
+		select oc.company_no, oc.company_name, oc.vat_type, oc.frequency, oc.start_period, oc.end_period,
+		case when oc.tax_category = 2 then nvl(ps.discount_ratio, 0) else 0 end as ratio_reduction_city,
+		case when oc.tax_category = 3 then nvl(ps.discount_ratio, 0) else 0 end as ratio_reduction_edu,
+		case when oc.tax_category = 4 then nvl(ps.discount_ratio, 0) else 0 end as ratio_reduction_local,
+		rank() over(partition by oc.company_no, oc.nc_org_code, oc.tax_category, oc.frequency
+		order by oc.company_no, oc.nc_org_code, oc.tax_category, oc.frequency,
+		ps.effective_date desc, ps.region_type desc) as rank_no, oc.company_type
+		from (
+		select sf.company_no, sf.company_name, sf.vat_type, sf.frequency, sf.start_period, sf.end_period,
+		sf.tax_category, sf.nc_org_code, ts.province_no, ts.income_tax_type, sf.company_type
+		from taxpayer_surtax_accrue_file sf
+		inner join tax_company_set ts on sf.company_no = ts.company_no
+		and sf.nc_org_code = ts.nc_org_code
+		and sf.vat_type = ts.vat_type
+		and sf.tax_category = ts.tax_category
+		and sf.start_period between to_char(ts.effective_date, 'YYYYMM') and to_char(ts.disable_date, 'YYYYMM')
+		and sf.end_period between to_char(ts.effective_date, 'YYYYMM') and to_char(ts.disable_date, 'YYYYMM')
+		<include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.whereCompanyByZoneTaxCitySqlOracle">
+			<property name="alias" value="sf"/>
+		</include>
+		where 1=1 AND sf.tax_category in (2, 3, 4)
+		$company_no@sf.company_no#
+		<if test="null!=params.period and !''.equals(params.period)" >
+			AND #{params.period} between sf.start_period and sf.end_period
+		</if>
+		<if test="null!=params.companyNoMulti and !''.equals(params.companyNoMulti)" >
+			AND sf.company_no in ${params.companyNoMulti}
+		</if>
+		) oc
+		left join region_prefer_policy_set ps
+		on (ps.region_no = oc.nc_org_code or ps.region_no = oc.province_no or ps.region_no = '00')
+		and (ps.cit_category = oc.income_tax_type or ps.cit_category is null)
+		and ps.vat_category = oc.vat_type
+		and oc.tax_category = ps.tax_category
+		and ps.effective_date &lt;= to_date(concat(oc.start_period, '01'), 'yyyy-MM-dd')
+		and ps.status = 100
+		) b where rank_no = 1
+		group by b.company_no, b.company_name, b.vat_type, b.frequency, b.start_period, b.end_period
+		) ac
+		inner join tax_company_set ts on ac.company_no = ts.company_no
+		and ac.vat_type = ts.vat_type
+		and ac.start_period between to_char(ts.effective_date, 'YYYYMM') and to_char(ts.disable_date, 'YYYYMM')
+		and ac.end_period between to_char(ts.effective_date, 'YYYYMM') and to_char(ts.disable_date, 'YYYYMM')
+		left join main_company_type mc on mc.main_company_no = ts.company_no
+		where 1=1
+		<if test="null!=params.saverFlag and !''.equals(params.saverFlag)" >
+			<if test="0 == params.saverFlag" >and not exists</if>
+			<if test="1 == params.saverFlag" >and exists</if>
+			(
+			select 1 from tax_declare_vat n where ac.company_no = n.company_no
+			and ac.vat_type = n.vat_type and ac.frequency = n.frequency
+			)
+		</if>
+		group by ac.company_no, ac.company_name, ac.frequency, ac.start_period, ac.end_period
+	</sql>
+ 	
+ 	<sql id="getNtVatDeclareListCore">
+		<include refid="withTemp"></include>		
+		select oc.company_no, oc.company_name, oc.frequency, oc.start_period, oc.end_period,
+		oc.main_branch_company_type, oc.tax_no,
+		oc.province_name, oc.city_name, oc.nc_org_codes, oc.guide_start_period, oc.guide_end_period,
+		oc.ratio_reduction_city, oc.ratio_reduction_edu, oc.ratio_reduction_local,
+		oc.income_tax_type, oc.reduction_start_date, oc.reduction_end_date,oc.collection_frequency,
+		dc.group_item, dc.tax_rate_details, dc.issue_vat_sales_volume, dc.issue_vat_output_tax,
+		dc.issue_other_sales_volume, dc.issue_other_output_tax, dc.tax_inspection_sales_volume,
+		dc.tax_inspection_output_tax, dc.table_not_tax_amount, dc.table_tax_amount, dc.de_project_one, dc.de_project_two,
+		dc.de_quantity_two, dc.de_amount_two, dc.de_tax_amount_two, dc.project_in,
+		dc.deduction_reduce_type, dc.tax_amount_in,
+		dc.other_quantity, dc.other_amount, dc.other_tax_amount,
+		dc.levy_rate_city, dc.tax_savings_city, 
+		dc.levy_rate_local, dc.tax_savings_local,
+		dc.levy_rate_edu, dc.tax_savings_edu, oc.company_type,
+		rank() over(partition by oc.company_no, oc.frequency order by oc.company_no, oc.frequency, dc.group_item) as cp_rank,
+		sum(nvl(dc.tax_inspection_sales_volume,0)) over(partition by oc.company_no, oc.frequency) as tax_inspection_sales_volume_t,
+		sum(CASE WHEN dc.tax_rate_details IS NOT NULL AND dc.tax_rate_details = 3 THEN
+		nvl(dc.table_not_tax_amount, 0) + nvl(dc.tax_inspection_sales_volume, 0) ELSE 0
+		END) over ( PARTITION BY oc.company_no, oc.frequency ) AS six_total_sales_volume,
+		sum(CASE WHEN dc.tax_rate_details IS NOT NULL AND dc.tax_rate_details = 4 THEN
+		nvl(dc.table_tax_amount, 0) + nvl(dc.tax_inspection_output_tax, 0) ELSE 0
+		END) over ( PARTITION BY oc.company_no, oc.frequency ) AS five_total_output_tax,
+		sum(CASE WHEN dc.tax_rate_details IS NOT NULL AND dc.tax_rate_details = 3 THEN
+		nvl(dc.table_tax_amount, 0) + nvl(dc.tax_inspection_output_tax, 0) ELSE 0
+		END) over ( PARTITION BY oc.company_no, oc.frequency ) AS six_total_output_tax,
+		sum(CASE WHEN dc.tax_rate_details IS NOT NULL AND dc.tax_rate_details = 1 THEN
+		nvl(dc.table_tax_amount, 0) + nvl(dc.tax_inspection_output_tax, 0) ELSE 0
+		END) over ( PARTITION BY oc.company_no, oc.frequency ) AS thirteen_total_output_tax,
+		sum(case when dc.tax_rate_details is not null and dc.tax_rate_details = 1 
+		then nvl(dc.table_not_tax_amount,0)+nvl(dc.tax_inspection_sales_volume,0) else 0 end)
+		over(partition by oc.company_no, oc.frequency) as total_sales_volume_total1,
+		sum(case
+             WHEN dc.tax_rate_details is not null AND dc.tax_rate_details = 4  
+             THEN 0 else nvl(dc.table_not_tax_amount, 0) + nvl(dc.tax_inspection_sales_volume, 0) end ) over(partition by oc.company_no, oc.frequency) AS total_sales_volume_total,
+        sum(case
+             WHEN dc.tax_rate_details is not null AND dc.tax_rate_details = 4  
+             THEN nvl(dc.table_not_tax_amount, 0) + nvl(dc.tax_inspection_sales_volume, 0) else 0 end ) over(partition by oc.company_no, oc.frequency) AS simple_total_sales_volume,
+        sum(case WHEN dc.tax_rate_details is NOT null AND dc.tax_rate_details = 4 
+                 THEN nvl(dc.table_tax_amount, 0) + nvl(dc.tax_inspection_output_tax, 0) ELSE 0 END) over(partition by oc.company_no, oc.frequency) AS total_simple_tax_payable,
+        sum(case WHEN dc.tax_rate_details is NOT null AND dc.tax_rate_details = 4 
+                 THEN nvl(dc.tax_inspection_output_tax, 0) ELSE 0 END) over(partition by oc.company_no, oc.frequency) AS total_tax_inspection_output,   
+		sum(case WHEN dc.tax_rate_details is NOT null AND dc.tax_rate_details = 4  then 0
+		    else nvl(dc.table_tax_amount,0)+nvl(dc.tax_inspection_output_tax,0) end) over(partition by oc.company_no, oc.frequency) as total_output_tax_total,
+		sum(nvl(dc.de_quantity_two,0)) over(partition by oc.company_no, oc.frequency) as de_quantity_two_total,
+		sum(nvl(dc.de_amount_two,0)) over(partition by oc.company_no, oc.frequency) as de_amount_two_total,
+		sum(nvl(dc.de_tax_amount_two,0)) over(partition by oc.company_no, oc.frequency) as de_tax_amount_two_total,
+		sum(nvl(dc.tax_amount_in,0)) over(partition by oc.company_no, oc.frequency) as tax_amount_in_total_db,
+		sum(nvl(dc.other_quantity,0)) over(partition by oc.company_no, oc.frequency) as other_quantity_total,
+		sum(nvl(dc.other_amount,0)) over(partition by oc.company_no, oc.frequency) as other_amount_total,
+		sum(nvl(dc.other_tax_amount,0)) over(partition by oc.company_no, oc.frequency) as other_tax_amount_total
+		from org_config oc left join (
+		select company_no, company_name, frequency, group_item, max(tax_rate_details) tax_rate_details, 
+		sum(nvl(issue_vat_sales_volume, 0)) issue_vat_sales_volume,
+		sum(nvl(issue_vat_output_tax, 0)) issue_vat_output_tax,
+		sum(nvl(issue_other_sales_volume, 0)) issue_other_sales_volume,
+		sum(nvl(issue_other_output_tax, 0)) issue_other_output_tax,
+		sum(nvl(tax_inspection_sales_volume, 0)) as tax_inspection_sales_volume,
+		sum(nvl(tax_inspection_output_tax, 0)) as tax_inspection_output_tax,
+		sum(nvl(table_not_tax_amount, 0)) as table_not_tax_amount, 
+		sum(nvl(table_tax_amount, 0)) as table_tax_amount,
+		max(de_project_one) de_project_one, max(de_project_two) de_project_two,
+		sum(nvl(de_quantity_two, 0)) de_quantity_two,
+		sum(nvl(de_amount_two, 0)) de_amount_two,
+		sum(nvl(de_tax_amount_two, 0)) de_tax_amount_two,
+		max(project_in) project_in, max(deduction_reduce_type) deduction_reduce_type,
+		sum(nvl(tax_amount_in, 0)) tax_amount_in,
+		sum(nvl(other_quantity, 0)) other_quantity,
+		sum(nvl(other_amount, 0)) other_amount,
+		sum(nvl(other_tax_amount, 0)) other_tax_amount,
+		max(levy_rate_city) as levy_rate_city, sum(nvl(tax_savings_city, 0)) as tax_savings_city, 
+		max(levy_rate_local) as levy_rate_local, sum(nvl(tax_savings_local, 0)) as tax_savings_local,
+		max(levy_rate_edu) as levy_rate_edu, sum(nvl(tax_savings_edu, 0)) as tax_savings_edu
+		from (
+		select company_no, company_name, frequency, max(company_type) company_type, tax_rate_details,
+		rank() over(partition by company_no, frequency order by company_no, frequency, tax_rate_details) as group_item,
+		sum(nvl(issue_vat_sales_volume, 0)) issue_vat_sales_volume,
+		sum(nvl(issue_vat_output_tax, 0)) issue_vat_output_tax,
+		sum(nvl(issue_other_sales_volume, 0)) issue_other_sales_volume,
+		sum(nvl(issue_other_output_tax, 0)) issue_other_output_tax,
+		sum(nvl(tax_inspection_sales_volume, 0)) tax_inspection_sales_volume,
+		sum(nvl(tax_inspection_output_tax, 0)) tax_inspection_output_tax,
+		sum(nvl(table_not_tax_amount, 0)) table_not_tax_amount,
+		sum(nvl(table_tax_amount, 0)) table_tax_amount,
+		NULL AS de_project_one, NULL de_project_two, 0 AS de_quantity_two, 0 AS de_amount_two,
+		0 AS de_tax_amount_two, NULL project_in, NULL deduction_reduce_type,
+		0 AS tax_amount_in, 0 AS other_quantity, 0 AS other_amount,
+		0 AS other_tax_amount, 0 AS levy_rate_city, 0 AS tax_savings_city,
+		0 AS levy_rate_local, 0 AS tax_savings_local, 0 AS levy_rate_edu, 0 AS tax_savings_edu
+		from (
+		select * from check_rate_data
+		union all
+		select * from item_rate_date
+		) rd
+		group by company_no, company_name, frequency, tax_rate_details
+		UNION ALL
+		SELECT
+		oc.company_no, oc.company_name, oc.frequency, max( oc.company_type ) company_type,
+		null tax_rate_details, 1 group_item, 0 AS issue_vat_sales_volume,
+		0 AS issue_vat_output_tax, 0 AS issue_other_sales_volume,
+		0 AS issue_other_output_tax, 0 AS tax_inspection_sales_volume, 0 AS tax_inspection_output_tax,
+		sum(nvl (br.nc_sales_notax_amount, 0)+nvl(br.hands_sales_notax_amount, 0)) table_not_tax_amount,
+		sum(nvl (br.branch_tax_amount, 0)) table_tax_amount,
+		null AS de_project_one, NULL de_project_two, 0 AS de_quantity_two, 0 AS de_amount_two,
+		0 AS de_tax_amount_two, NULL project_in, null deduction_reduce_type, 0 AS tax_amount_in, 0 AS other_quantity,
+		0 AS other_amount, 0 AS other_tax_amount, 0 AS levy_rate_city, 0 AS tax_savings_city,
+		0 AS levy_rate_local, 0 AS tax_savings_local, 0 AS levy_rate_edu, 0 AS tax_savings_edu
+		FROM
+		org_config oc INNER JOIN main_branch_company_report br ON oc.company_no = br.branch_company_no
+		AND br.frequency BETWEEN oc.start_period AND oc.end_period AND br.report_type = 2
+		GROUP BY
+		oc.company_no, oc.company_name, oc.frequency
+		union all 
+		select ocg.company_no, ocg.company_name, ocg.frequency, ocg.company_type, null as tax_rate_details, group_item, 
+		0 as issue_vat_sales_volume, 0 as issue_vat_output_tax, 0 as issue_other_sales_volume, 
+		0 as issue_other_output_tax, 0 as tax_inspection_sales_volume, 0 as tax_inspection_output_tax,
+		0 as table_not_tax_amount, 0 as table_tax_amount, de_project_one, null de_project_two,
+		0 as de_quantity_two, 0 as de_amount_two, 0 as de_tax_amount_two, null project_in, null deduction_reduce_type,
+		0 as tax_amount_in, 0 as other_quantity, 0 as other_amount, 0 as other_tax_amount,
+		0 as levy_rate_city, 0 as tax_savings_city, 
+		0 as levy_rate_local, 0 as tax_savings_local,
+		0 as levy_rate_edu, 0 as tax_savings_edu
+		from (
+		select oc.company_no, oc.company_name, oc.frequency,oc.company_type, 1 as group_item, 1 as de_project_one
+		from org_config oc
+		union all 
+		select oc.company_no, oc.company_name, oc.frequency,oc.company_type company_type, 2 as group_item, 2 as de_project_one
+		from org_config oc
+		where oc.guide_start_period is not null and oc.guide_end_period is not null
+		) ocg
+		union all
+		select ocg.company_no, ocg.company_name, ocg.frequency, ocg.company_type, null as tax_rate_details, group_item,
+		0 as issue_vat_sales_volume, 0 as issue_vat_output_tax, 0 as issue_other_sales_volume,
+		0 as issue_other_output_tax, 0 as tax_inspection_sales_volume, 0 as tax_inspection_output_tax,
+		0 as table_not_tax_amount, 0 as table_tax_amount, null de_project_one, null de_project_two,
+		0 as de_quantity_two, 0 as de_amount_two, 0 as de_tax_amount_two, null project_in, deduction_reduce_type,
+		0 as tax_amount_in, 0 as other_quantity, 0 as other_amount, 0 as other_tax_amount,
+		0 as levy_rate_city, 0 as tax_savings_city,
+		0 as levy_rate_local, 0 as tax_savings_local,
+		0 as levy_rate_edu, 0 as tax_savings_edu
+		from (
+		select oc.company_no, oc.company_name, oc.frequency,oc.company_type, 1 as group_item, 1 as deduction_reduce_type
+		from org_config oc
+		union all
+		select oc.company_no, oc.company_name, oc.frequency,oc.company_type company_type, 2 as group_item, 2 as deduction_reduce_type
+		from org_config oc
+		where oc.main_branch_company_type = 1
+		) ocg
+		union all
+		select oc.company_no, oc.company_name, oc.frequency,max(oc.company_type) company_type, null as tax_rate_details, 1 as group_item,
+		0 as issue_vat_sales_volume, 0 as issue_vat_output_tax, 0 as issue_other_sales_volume, 
+		0 as issue_other_output_tax, 0 as tax_inspection_sales_volume, 0 as tax_inspection_output_tax, 
+		0 as table_not_tax_amount, 0 as table_tax_amount, null as de_project_one,
+		'其他' as de_project_two, sum(nvl(de_quantity_two, 0)) de_quantity_two, 
+		sum(nvl(de_amount_two, 0)) de_amount_two, 
+		sum(nvl(de_tax_amount_two, 0)) de_tax_amount_two,
+		null project_in, null deduction_reduce_type, 0 as tax_amount_in, 0 as other_quantity,
+		0 as other_amount, 0 as other_tax_amount,
+		0 as levy_rate_city, 0 as tax_savings_city, 
+		0 as levy_rate_local, 0 as tax_savings_local,
+		0 as levy_rate_edu, 0 as tax_savings_edu
+		from org_config oc inner join (
+		select COMPANY_NO,FREQUENCY,
+           sum(nvl(quantity,0))AS de_quantity_two,
+           sum(nvl(amount,0))AS de_amount_two,
+           sum(nvl(tax_amount,0))AS de_tax_amount_two
+        from import_company_freq where import_type=5 and vat_type = 1
+        $company_no@company_no#
+		<if test="null!=params.companyNoMulti and !''.equals(params.companyNoMulti)" >
+        AND company_no in ${params.companyNoMulti}
+        </if>
+        GROUP BY COMPANY_NO, FREQUENCY
+		) et ON oc.company_no = et.company_no AND oc.frequency=et.FREQUENCY
+		group by oc.company_no, oc.company_name, oc.frequency
+		union all
+		select oc.company_no, oc.company_name, oc.frequency,max(oc.company_type) company_type, null as tax_rate_details, case when tc.is_red = 0 then 1 else 2 end group_item, 
+		0 as issue_vat_sales_volume, 0 as issue_vat_output_tax, 
+		0 as issue_other_sales_volume, 0 as issue_other_output_tax,
+		0 as tax_inspection_sales_volume, 0 as tax_inspection_output_tax,
+		0 as table_not_tax_amount, 0 as table_tax_amount,
+		null as de_project_one, null de_project_two, 0 as de_quantity_two,
+		0 as de_amount_two, 0 as de_tax_amount_two,
+		case when tc.is_red = 0 then '其他应作进项税额转出的情形' else '红字专用发票信息表注明的进项税额' end project_in,
+		null deduction_reduce_type,
+		sum(nvl(amount, 0)) tax_amount_in, 0 as other_quantity,
+		0 as other_amount, 0 as other_tax_amount,
+		0 as levy_rate_city, 0 as tax_savings_city, 
+		0 as levy_rate_local, 0 as tax_savings_local,
+		0 as levy_rate_edu, 0 as tax_savings_edu
+		from org_config oc inner join taxpayer_vat_inpurt_check tc
+		on oc.company_no = tc.company_no and tc.period between oc.start_period and oc.end_period
+		and tc.save_type = 3 and tc.is_red in (0, 1)
+		group by oc.company_no, oc.company_name, oc.frequency, tc.is_red
+		union all 
+		select company_no, company_name, frequency,max(company_type) company_type, null as tax_rate_details,  1 as group_item,
+		0 as issue_vat_sales_volume, 0 as issue_vat_output_tax, 0 as issue_other_sales_volume, 
+		0 as issue_other_output_tax, 0 as tax_inspection_sales_volume, 0 as tax_inspection_output_tax, 
+		0 as table_not_tax_amount, 0 as table_tax_amount, null as de_project_one, null as de_project_two, 
+		0 as de_quantity_two, 0 as de_amount_two, 0 as de_tax_amount_two,
+		null project_in, null deduction_reduce_type, 0 tax_amount_in,
+		sum( nvl(other_quantity, nvl(other_quantity_1, nvl(other_quantity_2, 0))) ) other_quantity,
+		sum( nvl(other_amount, nvl(other_amount_1, nvl(other_amount_2, 0))) ) other_amount,
+		sum( nvl(other_tax_amount, nvl(other_tax_amount_1, nvl(other_tax_amount_2, 0))) ) other_tax_amount,
+		0 as levy_rate_city, 0 as tax_savings_city, 
+		0 as levy_rate_local, 0 as tax_savings_local,
+		0 as levy_rate_edu, 0 as tax_savings_edu
+		from (
+		SELECT oc.company_no,oc.company_name,oc.frequency,max(oc.company_type) company_type,
+			null other_quantity,
+			null other_amount,
+			null other_tax_amount,
+			sum( case T1.remark when '财云通' then T1.INVOICE_QUANTITY else null end  ) other_quantity_1,
+			sum( case T1.remark when '财云通' then T1.VAT_AMOUNT else null end ) other_amount_1,
+			sum( case T1.remark when '财云通' then T1.VAT_TAX_AMOUNT else null end ) other_tax_amount_1 ,
+			sum( case T1.remark when '财云通' then null else T1.INVOICE_QUANTITY end  ) other_quantity_2,
+			sum( case T1.remark when '财云通' then null else T1.VAT_AMOUNT  end ) other_amount_2,
+			sum( case T1.remark when '财云通' then null else T1.VAT_TAX_AMOUNT end ) other_tax_amount_2
+		FROM org_config oc INNER JOIN RPA_DECLARE_COLLECTION_DATA T1
+               ON T1.tax_no =oc.tax_no AND T1.year_month BETWEEN oc.start_period AND oc.end_period
+			   AND T1.data_type=1
+         WHERE 1=1
+         GROUP BY oc.company_no,oc.company_name,oc.frequency
+		union all 
+		select company_no, company_name, frequency,tcct.c_tcs_company_type as company_type, 
+		    quantity as other_quantity, amount as other_amount, tax_amount as other_tax_amount,
+			null other_quantity_1,
+			null other_amount_1,
+			null other_tax_amount_1,
+			null other_quantity_2,
+			null other_amount_2,
+			null other_tax_amount_2
+		from import_company_freq icf
+		<include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.companyByTaxSqlOracle">
+			<property name="alias" value="icf"/>
+		</include>
+		where vat_type = 1 and import_type not in(5)
+		 $company_no@company_no#
+		<if test="null!=params.companyNoMulti and !''.equals(params.companyNoMulti)" >
+        AND company_no in ${params.companyNoMulti}
+        </if>
+		) et2 group by company_no, company_name, frequency
+		union all 
+		select tf.company_no, tf.company_name, tf.frequency,max(tf.company_type) company_type, null as tax_rate_details,  1 as group_item,
+		0 as issue_vat_sales_volume, 0 as issue_vat_output_tax, 0 as issue_other_sales_volume, 
+		0 as issue_other_output_tax, 0 as tax_inspection_sales_volume, 0 as tax_inspection_output_tax, 
+		0 as table_not_tax_amount, 0 as table_tax_amount, null as de_project_one, null as de_project_two, 
+		0 as de_quantity_two, 0 as de_amount_two, 0 as de_tax_amount_two,
+		null project_in, null deduction_reduce_type, 0 as tax_amount_in, 0 as other_quantity,
+		0 as other_amount, 0 as other_tax_amount,
+		max(city_tax_rate) as levy_rate_city, sum(nvl(city_tax_free_amount, 0)) as tax_savings_city, 
+		max(area_tax_rate) as levy_rate_local, sum(nvl(area_tax_free_amount, 0)) as tax_savings_local,
+		max(edu_tax_rate) as levy_rate_edu, sum(nvl(edu_tax_free_amount, 0)) as tax_savings_edu
+		from (
+		select company_no, company_name, frequency, company_type, tax_category, tax_rate, tax_free_amount 
+		from taxpayer_surtax_accrue_file 
+		where 1=1 AND tax_category in (2, 3, 4)
+		 $company_no@company_no#
+		<if test="null!=params.period and !''.equals(params.period)" >
+        AND #{params.period} between start_period and end_period
+        </if>
+        <if test="null!=params.companyNoMulti and !''.equals(params.companyNoMulti)" >
+        AND company_no in ${params.companyNoMulti}
+        </if>
+		) pivot (max(tax_rate) tax_rate, max(tax_free_amount) tax_free_amount for tax_category in (2 as city, 3 as area, 4 as edu)) tf
+		group by company_no, company_name, frequency
+		) basic group by basic.company_no, basic.company_name, basic.frequency, basic.group_item
+		) dc on oc.company_no = dc.company_no and oc.frequency = dc.frequency 
+ 	</sql>
+ 	
+ 	<select id="selectNcAmount" resultType="cn.wonhigh.retail.fas.rebate.model.tax.SupplementAmountDto" parameterType="map">
+ 		select nvl(sum(case when substr(accountcode, 0, 4) = '1131' then nvl(localdebitamount, 0) - nvl(localcreditamount, 0) else 0 end), 0) balance_receivable,
+		nvl(sum(case when substr(accountcode, 0, 4) = '5102' then nvl(localcreditamount, 0) - nvl(localdebitamount, 0) else 0 end), 0) other_business_income
+		from MV_BALANCE_ASSID 
+		where 1=1 and flag=1
+		and substr(orgcode, 0, 3) in ('103', '104')
+		and substr(accountcode, 0, 4) in ('1131', '5102') 
+		<if test="params.ncOrgCodeMulti != null and !''.equals(params.ncOrgCodeMulti)" >
+        	AND orgcode in ${params.ncOrgCodeMulti}
+        </if>
+        <if test="params.startPeriod != null and !''.equals(params.startPeriod)
+        	and params.endPeriod != null and !''.equals(params.endPeriod)" >
+        	AND period BETWEEN #{params.startPeriod} and #{params.endPeriod} 
+        </if>
+ 	</select>
+ 	
+ 	<select id="selectNcAmountByOrg" resultType="java.math.BigDecimal" parameterType="java.lang.String">
+ 		select sum(nvl(localdebitamount,0)) ncAmount
+		from MV_BALANCE_ASSID 
+		where 1=1 and flag=1
+		and substr(accountcode, 0, 6) in ('217102') 
+		<if test="ncOrgCodeMulti != null and !''.equals(ncOrgCodeMulti)" >
+        	AND orgcode in ${ncOrgCodeMulti}
+        </if>
+        <if test="startPeriod != null and !''.equals(startPeriod)
+        	and endPeriod != null and !''.equals(endPeriod)" >
+        	AND period BETWEEN #{startPeriod} and #{endPeriod} 
+        </if>
+ 	</select>
+ 	
+ 	
+</mapper>

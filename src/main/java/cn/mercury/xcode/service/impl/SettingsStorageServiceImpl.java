@@ -12,11 +12,11 @@ import cn.mercury.xcode.utils.ResourcesUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.diagnostic.Logger;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.io.File;
 import java.util.List;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 @State(name = "xCodeSetting", storages = @Storage("x-code-setting.xml"))
 public class SettingsStorageServiceImpl implements SettingsStorageService {
-    private static final Logger logger = LoggerFactory.getLogger(SettingsStorageServiceImpl.class);
+    private static final Logger logger = Logger.getInstance(SettingsStorageServiceImpl.class);
 
     private SettingsStorage settingsStorage = SettingsStorage.defaultVal();
 

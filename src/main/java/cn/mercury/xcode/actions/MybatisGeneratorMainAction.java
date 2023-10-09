@@ -1,5 +1,6 @@
 package cn.mercury.xcode.actions;
 
+import cn.mercury.xcode.idea.DatasourceHelper;
 import cn.mercury.xcode.utils.ProjectUtils;
 import cn.mercury.xcode.model.IntellijTableInfo;
 import cn.mercury.xcode.utils.DbToolsUtils;
@@ -10,6 +11,7 @@ import com.intellij.database.psi.DbTable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -20,8 +22,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MybatisGeneratorMainAction extends AnAction {
-    private static final Logger logger = LoggerFactory.getLogger(MybatisGeneratorMainAction.class);
+    private static final Logger logger = com.intellij.openapi.diagnostic.Logger.getInstance(MybatisGeneratorMainAction.class);
     private LinkedList<Module> moduleList;
 
     @Override

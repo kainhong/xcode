@@ -1,0 +1,64 @@
+
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+	<id>package</id>
+	<!-- zip中包含目录 ${project.version} -->
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<dependencySets>
+		<dependencySet>
+			<useProjectArtifact>true</useProjectArtifact>
+			<outputDirectory>lib</outputDirectory>
+			 <scope>runtime</scope>
+		</dependencySet>
+	</dependencySets>
+	<fileSets>
+		<!-- <fileSet>
+			<directory>bin</directory>
+			<outputDirectory>${file.separator}</outputDirectory>
+		</fileSet> -->
+		<fileSet>
+			<directory>target/classes</directory>
+			<outputDirectory>${file.separator}</outputDirectory>
+			<includes>
+				<include>*.properties</include>
+				<include>*.xml</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/resources/static</directory>
+			<outputDirectory>${file.separator}/static</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/resources/templates</directory>
+			<outputDirectory>${file.separator}/templates</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>target/</directory>
+			<outputDirectory>${file.separator}</outputDirectory>
+			<includes>
+				<include>${project.build.finalName}.jar</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>../wrapper</directory>
+			<outputDirectory>${file.separator}</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>./</directory>
+			<includes>
+				<include>*.conf</include>
+			</includes>
+			<outputDirectory>${file.separator}/conf</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../sql</directory>
+			<outputDirectory>${file.separator}/sql</outputDirectory>
+		</fileSet>
+	</fileSets>
+</assembly>
+                

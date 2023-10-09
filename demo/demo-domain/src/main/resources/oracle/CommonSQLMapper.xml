@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper" >
+  
+  <sql id="companyByZoneTaxCitySqlMySQL">
+    <if test="(null != params.multiZoneNo and !''.equals(params.multiZoneNo))
+              or (null != params.multiCityNo and !''.equals(params.multiCityNo))
+              or (null != params.companyType and !''.equals(params.companyType))">
+      inner join (
+        SELECT c_tcs.company_no as c_tcs_no from bus_company_org c_tcs
+        where 1=1
+        <include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.taxCompanySetWhere">
+            <property name="alias" value="c_tcs"/>
+        </include>
+        group by c_tcs.company_no
+      ) tcct on ${alias} = tcct.c_tcs_no
+    </if>
+  </sql>
+
+    <sql id="fieldByZoneTaxCitySqlOracle">
+        inner join (
+        SELECT c_tcs.company_no as c_tcs_no, nc_org_code c_tcs_nc_org_code, company_type as c_tcs_company_type from bus_company_org c_tcs
+        <include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.companyAndOrgWhere"/>
+        group by c_tcs.company_no, c_tcs.nc_org_code, c_tcs.company_type
+        ) tcct on ${companyNoField} = tcct.c_tcs_no
+    </sql>
+  
+  <sql id="companyByZoneTaxCitySqlOracle">
+    inner join (
+      SELECT c_tcs.company_no as c_tcs_no, nc_org_code c_tcs_nc_org_code, company_type as c_tcs_company_type from bus_company_org c_tcs
+      <include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.companyAndOrgWhere"/>
+      group by c_tcs.company_no, c_tcs.nc_org_code, c_tcs.company_type
+    ) tcct on ${alias}.company_no = tcct.c_tcs_no and ${alias}.nc_org_code = tcct.c_tcs_nc_org_code
+  </sql>
+
+    <sql id="whereFieldByZoneTaxCitySqlOracle">
+        <if test="(null != params.multiZoneNo and !''.equals(params.multiZoneNo))
+                  or (null != params.multiCityNo and !''.equals(params.multiCityNo))
+                  or (null != params.multiTaxName and !''.equals(params.multiTaxName))
+                  or (null != params.companyType and !''.equals(params.companyType))">
+            <include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.fieldByZoneTaxCitySqlOracle">
+                <property name="companyNoField" value="${companyNoField}"/>
+            </include>
+        </if>
+    </sql>
+  
+  <sql id="whereCompanyByZoneTaxCitySqlOracle">
+    <if test="(null != params.multiZoneNo and !''.equals(params.multiZoneNo))
+                  or (null != params.multiCityNo and !''.equals(params.multiCityNo))
+                  or (null != params.multiTaxName and !''.equals(params.multiTaxName))
+                  or (null != params.companyType and !''.equals(params.companyType))">
+         <include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.companyByZoneTaxCitySqlOracle">
+            <property name="alias" value="${alias}"/>
+         </include>
+    </if>
+  </sql>
+
+    <sql id="deleteCompanyByZoneTaxCitySqlOracle">
+        <if test="(null != params.multiZoneNo and !''.equals(params.multiZoneNo))
+                  or (null != params.multiCityNo and !''.equals(params.multiCityNo))
+                  or (null != params.multiTaxName and !''.equals(params.multiTaxName))
+                  or (null != params.companyType and !''.equals(params.companyType))">
+                AND ${deleteKey} in (
+                    <include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.companyOrgTypeKeyByZoneTaxCitySqlOracle"></include>
+                )
+        </if>
+    </sql>
+
+    <sql id="companyOrgTypeKeyByZoneTaxCitySqlOracle">
+        SELECT c_tcs.company_no||c_tcs.nc_org_code||company_type from bus_company_org c_tcs
+        <include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.companyAndOrgWhere"/>
+        group by c_tcs.company_no, c_tcs.nc_org_code, c_tcs.company_type
+    </sql>
+  
+  <sql id="companyByTaxSqlOracle">
+      inner join (
+        SELECT c_tcs.company_no as c_tcs_no, max(company_type) as c_tcs_company_type from bus_company_org c_tcs
+        <include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.companyAndOrgWhere"/>
+        group by c_tcs.company_no
+      ) tcct on ${alias}.company_no = tcct.c_tcs_no
+  </sql>
+  
+  <sql id="whereCompanyByTaxSqlOracle">
+    <if test="(null != params.multiTaxName and !''.equals(params.multiTaxName))">
+      inner join (
+        SELECT c_tcs.company_no as c_tcs_no from bus_company_org c_tcs
+        <include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.companyAndOrgWhere"/>
+        group by c_tcs.company_no
+      ) tcct on ${alias}.company_no = tcct.c_tcs_no
+    </if>
+  </sql>
+
+    <sql id="fieldExistsByZoneTaxCitySql">
+        <if test="(null != params.multiZoneNo and !''.equals(params.multiZoneNo))
+              or (null != params.multiCityNo and !''.equals(params.multiCityNo))
+              or (null != params.multiTaxName and !''.equals(params.multiTaxName))">
+            AND EXISTS (
+            SELECT 1 from bus_company_org c_tcs
+            <include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.companyAndOrgWhere"/>
+            and ${companyNoField} = c_tcs.company_no
+            )
+        </if>
+    </sql>
+
+  <sql id="companyExistsByZoneTaxCitySql">
+    <if test="(null != params.multiZoneNo and !''.equals(params.multiZoneNo))
+              or (null != params.multiCityNo and !''.equals(params.multiCityNo))
+              or (null != params.multiTaxName and !''.equals(params.multiTaxName))">
+      AND EXISTS (
+        SELECT 1 from bus_company_org c_tcs
+        <include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.companyAndOrgWhere"/>
+        and ${alias}.company_no = c_tcs.company_no
+      )
+    </if>
+  </sql>
+    
+  <sql id="noCompanyTypeExistsByZoneTaxCitySql">
+    <if test="(null != params.multiZoneNo and !''.equals(params.multiZoneNo))
+              or (null != params.multiCityNo and !''.equals(params.multiCityNo))
+              or (null != params.multiTaxName and !''.equals(params.multiTaxName))
+              or (null != params.companyType and !''.equals(params.companyType))">
+      AND EXISTS (
+        SELECT 1 from bus_company_org c_tcs
+        <include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.companyAndOrgWhere"/>
+        and ${alias}.company_no = c_tcs.company_no
+      )
+    </if>
+  </sql>
+  
+  <sql id="taxCompanySetWhere">
+      <if test="null != params.multiZoneNo and !''.equals(params.multiZoneNo)">
+        and ${alias}.company_zone_no in ${params.multiZoneNo}
+      </if>
+      <if test="null != params.multiCityNo and !''.equals(params.multiCityNo)">
+        and ${alias}.city_no in ${params.multiCityNo}
+      </if>
+      <if test="null!=params.companyType and !''.equals(params.companyType)" >
+        AND ${alias}.company_type = #{params.companyType}
+      </if>
+  </sql>
+  
+  <sql id="companyAndOrgWhere">
+      <if test="null != params.multiTaxName and !''.equals(params.multiTaxName)">
+        inner join tax_city_config c_tcc on c_tcs.city_no = c_tcc.city_no and c_tcc.tax_name in ${params.multiTaxName}
+      </if>
+      where 1=1
+      <if test="null != params.multiZoneNo and !''.equals(params.multiZoneNo)">
+        and c_tcs.company_zone_no in ${params.multiZoneNo}
+      </if>
+      <if test="null != params.multiCityNo and !''.equals(params.multiCityNo)">
+        and c_tcs.city_no in ${params.multiCityNo}
+      </if>
+      <if test="null!=params.companyNoMulti and !''.equals(params.companyNoMulti)" >
+          AND c_tcs.company_no in ${params.companyNoMulti}
+      </if>
+      <if test="null!=params.ncOrgCodeMulti and !''.equals(params.ncOrgCodeMulti)" >
+          AND c_tcs.nc_org_code in ${params.ncOrgCodeMulti}
+      </if>
+      <if test="null!=params.companyType and !''.equals(params.companyType)" >
+        AND c_tcs.company_type = #{params.companyType}
+      </if>
+  </sql>
+  
+</mapper>

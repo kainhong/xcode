@@ -1,0 +1,373 @@
+package cn.mercury.xcode.ui.mybatis;
+
+import cn.mercury.mybatis.JsonUtils;
+import cn.mercury.mybatis.analyzer.MybatisAnalyzer;
+import cn.mercury.mybatis.analyzer.MybatisMapperAnalyzer;
+import cn.mercury.mybatis.analyzer.MybatisMapperStatementAnalyzer;
+import cn.mercury.mybatis.analyzer.mock.ParameterMocker;
+import cn.mercury.mybatis.analyzer.model.ParameterVariable;
+import cn.mercury.xcode.GlobalDict;
+import cn.mercury.xcode.generate.ParamsSettingConfig;
+import cn.mercury.xcode.idea.DatasourceHelper;
+import cn.mercury.xcode.mybatis.SqlHelper;
+import cn.mercury.xcode.utils.FileUtils;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.intellij.database.dataSource.LocalDataSource;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.messages.MessageDialog;
+import com.intellij.openapi.vfs.VirtualFile;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.regex.Pattern;
+
+public class ParamsSettingForm extends DialogWrapper {
+    //static final Logger logger = Logger.getInstance(ParamsSettingForm.class);
+
+    private final Project project;
+    private String namespace;
+    private String statementId;
+    private JPanel mainPanel;
+    private JButton btnMock;
+    private JTable table1;
+    private JComboBox cmbStatement;
+    private JComboBox cmbDataSource;
+    private JComboBox cmbMappers;
+
+    private MybatisMapperStatementAnalyzer statement;
+
+    @Override
+    protected JComponent createCenterPanel() {
+        return this.mainPanel;
+    }
+
+
+    @Override
+    protected void doOKAction() {
+        if (this.createSqlFile())
+            this.close(0);
+    }
+
+    static final Pattern jsonRegex = Pattern.compile("\\{.*\\}|\\[.*\\]");
+
+    private Map<String, Object> getParamsValues() {
+        if (this.statement == null)
+            return null;
+
+        DefaultTableModel tableModel = (DefaultTableModel) table1.getModel();
+        int rowCount = tableModel.getRowCount();
+
+        Map<String, Object> values = new HashMap<>();
+
+        for (int r = 0; r < rowCount; r++) {
+            Object v = tableModel.getValueAt(r, 2);
+            if (v == null || StringUtils.isEmpty(v.toString()))
+                continue;
+
+            String type = (String) tableModel.getValueAt(r, 1);
+
+            String p = (String) tableModel.getValueAt(r, 0);
+            if (p != null && jsonRegex.matcher((String) v).find()) {
+                try {
+                    if( (String) v != null && ((String) v).startsWith("["))
+                        v = JsonUtils.fromListJson((String) v, Map.class);
+                    else
+                        v = JsonUtils.fromJson((String) v, Map.class);
+                } catch (Exception e) {
+
+                }
+            }
+            values.put(p, v);
+        }
+
+        return values;
+    }
+
+    private VirtualFile getParentFolder() {
+        return FileUtils.getInstance().getParentFolder(this.project, "output");
+    }
+
+    private String generateSql() {
+
+        Map<String, Object> values = getParamsValues();
+
+        values.put("params.queryCondition", "");
+
+        return this.statement.parse(values, false).getSql();
+    }
+
+    protected boolean createSqlFile() {
+        if (this.statement == null)
+            return true;
+
+        String dsName = (String) cmbDataSource.getSelectedItem();
+
+//        Optional<LocalDataSource> opSource = DatasourceHelper.listDatasource(project)
+//                .stream()
+//                .filter(v -> v.getName().equals(dsName))
+//                .findFirst();
+
+//        if (opSource.isEmpty()) {
+//            Messages.showWarningDialog("请选择一个数据源", GlobalDict.TITLE_INFO);
+//            return false;
+//        }
+
+        String fileName = statement.getStatement().getId().replace("\\.", "_") + ".sql";
+        try {
+            String sql = generateSql();
+
+            SqlHelper.createSqlConsole(project, dsName, "output", fileName, sql);
+
+            return true;
+        } catch (Exception ex) {
+            Messages.showWarningDialog("生成失败:" + ex.getMessage(), GlobalDict.TITLE_INFO);
+            return false;
+        }
+    }
+
+
+    private void initEvent() {
+        btnMock.addActionListener(e -> this.mockParamsValue());
+
+        cmbMappers.addActionListener(e -> {
+            onMapperSelected();
+        });
+
+        cmbStatement.addActionListener((e) -> {
+            loadParamsInfo();
+        });
+    }
+
+    public static final int TABLE_ROW_HEIGHT = 20;
+
+    private void loadParamsInfo() {
+        String id = (String) cmbStatement.getSelectedItem();
+
+        if (StringUtils.isEmpty(id) || mybatisMapperAnalyzer == null)
+            return;
+
+        Vector<Vector<String>> dataVector = new Vector<>();
+
+        statement = mybatisMapperAnalyzer.getStatement(id);
+
+        var ps = statement.getStatement().getAllVariables();
+        Multimap<String, ParameterVariable> map = HashMultimap.create();
+        for (var p : ps) {
+            String name = p.getName();
+
+            if (name.contains(","))
+                name = name.substring(0, name.indexOf(","));
+            map.put(name, p);
+        }
+
+        for (String name : map.keySet()) {
+            Vector<String> row = new Vector<>();
+            var items = map.get(name);
+            String type = items.stream().filter(c -> "$".equals(c.getType()) || "#".equals(c.getType())).findFirst().map(c -> c.getType()).orElse("");
+
+            if (StringUtils.isEmpty(type)) {
+                type = items.stream().filter(c -> c.getType() != null && c.getType().contains("for")).findFirst().map(c -> c.getType()).orElse("");
+            }
+
+            if (StringUtils.isEmpty(type)) {
+                type = items.stream().filter(c -> c.getType() != null && c.getType().contains("if")).findFirst().map(c -> c.getType()).orElse("");
+            }
+
+
+            row.add(0, name);
+            row.add(1, type);
+
+            dataVector.add(row);
+        }
+
+        dataVector.sort((o1, o2) -> {
+            String s1 = o1.get(0);
+            String s2 = o2.get(0);
+            return s1.compareTo(s2);
+        });
+
+        Vector<String> columnIdentifiers = new Vector<>();
+        columnIdentifiers.add("参数");
+        columnIdentifiers.add("类型");
+        columnIdentifiers.add("值");
+
+        DefaultTableModel model = new DefaultTableModel(dataVector, columnIdentifiers) {
+            public boolean isCellEditable(int row, int column) {
+                return column == 2;
+            }
+        };
+
+        table1.setModel(model);
+    }
+
+    private void mockParamsValue() {
+        if (this.statement == null)
+            return;
+
+        DefaultTableModel tableModel = (DefaultTableModel) table1.getModel();
+        int rowCount = tableModel.getRowCount();
+
+        Map<String, Object> values = new HashMap<>();
+
+        ParameterMocker mocker = ParameterMocker.builder().values(values)
+                .conditions(this.statement.getStatement().getConditions()).build();
+
+        for (int r = 0; r < rowCount; r++) {
+            String p = (String) tableModel.getValueAt(r, 0);
+            String type = (String) tableModel.getValueAt(r, 1);
+            String v = (String) tableModel.getValueAt(r, 2);
+
+//            if (StringUtils.isNotEmpty(v))
+//                continue;
+
+            Object d = ParamsSettingConfig.getDefaultValues().get(p);
+
+            if (d == null) {
+                if ("for".equals(type))
+                    d = "[]";
+                else
+                    d = mocker.make(p, values);
+            }
+
+            String value = "";
+            if (d != null)
+                value = d.toString();
+
+            tableModel.setValueAt(value, r, 2);
+        }
+    }
+
+    //private MybatisMapperAnalyzer analyzer;
+    MybatisMapperAnalyzer mybatisMapperAnalyzer;
+    MybatisAnalyzer analyzer;
+
+    private void load(VirtualFile file) throws Exception {
+        String txt = FileUtils.readFile(file);
+        if (StringUtils.isEmpty(txt))
+            return;
+
+        InputStream stream = new ByteArrayInputStream(txt.getBytes(StandardCharsets.UTF_8));
+        if (txt.contains("<configuration>") && txt.contains("</configuration>")) {
+            this.analyzer = MybatisAnalyzer.fromLocalFile(file.getPath());
+            Set<String> mappers = analyzer.getMappers();
+
+            cmbMappers.addItem("");
+
+            for (String mapper : mappers) {
+                cmbMappers.addItem(mapper);
+            }
+
+            cmbMappers.setEnabled(true);
+
+            onMapperSelected();
+
+        } else {
+            this.mybatisMapperAnalyzer = new MybatisMapperAnalyzer(stream, file.getName());
+            cmbMappers.addItem(mybatisMapperAnalyzer.getNamespace());
+            cmbMappers.setEnabled(false);
+
+            loadMapper();
+        }
+
+
+        //analyzer = new MybatisMapperAnalyzer(virtualFile);
+        //analyzer.analyze();
+    }
+
+
+    private void onMapperSelected() {
+        if (analyzer == null)
+            return;
+
+        String id = (String) cmbMappers.getSelectedItem();
+        if (StringUtils.isEmpty(id))
+            return;
+
+        String namespace = analyzer.getMapperNamespace(id);
+
+        if (namespace == null)
+            return;
+
+        this.mybatisMapperAnalyzer = analyzer.getAnalyzer(namespace);
+
+        loadMapper();
+    }
+
+    private void loadMapper() {
+        if (mybatisMapperAnalyzer == null)
+            return;
+
+        if (cmbStatement.getItemCount() > 0)
+            cmbStatement.removeAllItems();
+
+        if (cmbDataSource.getItemCount() > 0)
+            cmbDataSource.removeAllItems();
+
+        List<String> lst = this.mybatisMapperAnalyzer.listStatementIds();
+
+        for (String id : lst) {
+            cmbStatement.addItem(id);
+        }
+        if (this.statement != null) {
+            int index = lst.indexOf(this.statementId);
+            if (index > 0)
+                cmbStatement.setSelectedIndex(index);
+        }
+
+        List<LocalDataSource> ds = DatasourceHelper.listDatasource(project);
+        for (LocalDataSource item : ds) {
+            cmbDataSource.addItem(item.getName());
+        }
+
+        loadParamsInfo();
+    }
+
+    VirtualFile file;
+
+    public ParamsSettingForm(Project project, VirtualFile file, String ns, String id) {
+        super(project);
+        this.project = project;
+        this.init();
+        this.namespace = ns;
+        this.statementId = id;
+        this.file = file;
+
+        setTitle(GlobalDict.TITLE_INFO);
+
+        table1.setRowHeight(TABLE_ROW_HEIGHT);
+
+        this.initEvent();
+
+        this.load();
+    }
+
+    public void load() {
+        try {
+            load(this.file);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //logger.error(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void init() {
+        super.init();
+
+    }
+
+    public ParamsSettingForm(Project project, VirtualFile file) {
+        this(project, file, null, null);
+    }
+}

@@ -16,15 +16,71 @@
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.database</depends>
-
+    <depends optional="true" config-file="spring.xml">com.intellij.spring</depends>
+    <!-- support aliases -->
+    <depends optional="true" config-file="spring-boot.xml">com.intellij.spring.boot</depends>
     <depends optional="true" config-file="database.xml">com.intellij.database</depends>
+    <depends optional="true" config-file="project.xml">com.intellij.database</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="cn.mercury.xcode.service.impl.SettingsStorageServiceImpl"/>
+        <applicationService serviceImplementation="cn.mercury.xcode.mybatis.settings.LogGlobalConfigState"/>
+
+        <projectService serviceImplementation="cn.mercury.xcode.mybatis.settings.LogSettingState"/>
+        <projectService id="xcode.JavaService"
+                        serviceImplementation="cn.mercury.xcode.mybatis.language.service.JavaService"/>
+        <projectService id="xcode.AnnotationService"
+                        serviceImplementation="cn.mercury.xcode.mybatis.language.service.AnnotationService"/>
+        <projectService id="xcode.EditorService"
+                        serviceImplementation="cn.mercury.xcode.mybatis.language.service.EditorService"/>
+        <projectService id="xcode.AliasFacade"
+                        serviceImplementation="cn.mercury.xcode.mybatis.language.alias.AliasFacade"/>
+
+
+        <!--文件描述-->
+        <!-- mapper.xml文件属性提示 -->
+        <dom.fileMetaData id="xcode.MapperDescription"
+                          rootTagName="mapper"
+                          implementation="cn.mercury.xcode.mybatis.language.dom.description.MapperDescription"/>
+        <!-- mybatis配置文件属性提示 -->
+        <dom.fileMetaData id="xcode.ConfigurationDescription"
+                          rootTagName="configuration"
+                          implementation="cn.mercury.xcode.mybatis.language.dom.description.ConfigurationDescription"/>
+
+        <!--代码行插件，实现代码导航功能-->
+        <!-- java 跳转到 xml  -->
+        <codeInsight.lineMarkerProvider id="xcode.MapperLineMarkerProvider" language="JAVA"
+                                        implementationClass="cn.mercury.xcode.mybatis.language.provider.MapperLineMarkerProvider"/>
+        <!-- xml 跳转到 java -->
+        <codeInsight.lineMarkerProvider id="xcode.StatementLineMarkerProvider" language="XML"
+                                        implementationClass="cn.mercury.xcode.mybatis.language.provider.StatementLineMarkerProvider"/>
+        <!-- 在service层注入了mapper对象, 在这个对象进行跳转到 mapper 类-->
+        <codeInsight.lineMarkerProvider id="xcode.InjectionLineMarkerProvider" language="JAVA"
+                                        implementationClass="cn.mercury.xcode.mybatis.language.provider.InjectionLineMarkerProvider"/>
+
+        <intentionAction order="first" id="xcode.GenerateMapperIntention">
+            <className>cn.mercury.xcode.intention.GenerateMapperIntention</className>
+        </intentionAction>
+
+        <intentionAction order="first" id="xcode.MybatisMapperIntention">
+            <className>cn.mercury.xcode.intention.MybatisMapperIntention</className>
+        </intentionAction>
+
+
         <!--项目服务-->
         <projectService serviceImplementation="cn.mercury.xcode.service.impl.TableInfoSettingsServiceImpl"/>
-        <projectService serviceInterface="cn.mercury.xcode.service.CodeGenerateService" serviceImplementation="cn.mercury.xcode.service.impl.CodeGenerateServiceImpl"/>
+        <projectService serviceInterface="cn.mercury.xcode.service.CodeGenerateService"
+                        serviceImplementation="cn.mercury.xcode.service.impl.CodeGenerateServiceImpl"/>
         <!--系统设置面板 -->
-        <applicationConfigurable dynamic="true" instance="cn.mercury.xcode.ui.MainSettingForm"/>
+<!--        <applicationConfigurable dynamic="true" instance="cn.mercury.xcode.ui.MainSettingForm"/>-->
+
     </extensions>
+
+    <actions>
+
+<!--        <action id="RunAsSql" class="cn.mercury.xcode.mybatis.actions.RunAsSql" text="RunAsSql" description="RunAsSql">-->
+<!--            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="CopyUrl"/>-->
+<!--            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt C"/>-->
+<!--        </action>-->
+    </actions>
 </idea-plugin>

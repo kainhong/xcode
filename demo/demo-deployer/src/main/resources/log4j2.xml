@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <configuration status="OFF">
+        <Properties>
+            <!-- 日志默认存放的位置,这里设置为项目根路径下,也可指定绝对路径 -->
+            <!-- ${web:rootDir}是web项目根路径,java项目没有这个变量,需要删掉,否则会报异常 ;${sys:catalina.home}默认是tomcat的根目录,根据需要调整,可以设置项目服务器绝对路径 -->
+            <property name="basefile">${sys:logFilePath}</property>
+        
+            <!-- 控制台默认输出格式,"%-5level":日志级别,"%l":输出完整的错误位置,是小写的L,因为有行号显示,所以影响日志输出的性能 -->
+            <property name="console_log_pattern">[%-5p]%d{yyyy-MM-dd HH:mm:ss}[%t]%c{2}:%m%n</property>
+            
+            <!-- 日志文件默认输出格式,不带行号输出(行号显示会影响日志输出性能);%C:大写,类名;%M:方法名;%m:错误信息;%n:换行 -->
+            <property name="log_pattern">[%-5p]%d{yyyy-MM-dd HH:mm:ss}[%t]%c{2}:%m%n</property>
+            <property name="db_log_pattern">[%-5p]%d{yyyy-MM-dd HH:mm:ss}[%t]%c{2}:%m%n</property>
+            <property name="performance_pattern">{%m,"time":"%d{yyyy-MM-dd HH:mm:ss.SSS}","thread":"%t","level":"%-5p"}%n</property>
+            
+            <!-- 日志默认切割的最小单位 -->
+            <property name="every_file_size">50MB</property>
+            <!-- 日志默认输出级别 -->
+            <property name="output_log_level">INFO</property>
+        
+            <!-- 日志默认存放路径(所有级别日志) -->	 	 		
+            <!--&lt;!&ndash; 日志默认同类型日志,同一文件夹下可以存放的数量,不设置此属性则默认为7个 &ndash;&gt; -->
+            <property name="rolling_max">50</property>
+        
+            <!-- app日志默认存放路径(Info级别日志) -->
+            <property name="app_fileName">${basefile}/app.log</property>
+            <!-- Info日志默认压缩路径,将超过指定文件大小的日志,自动存入按"年月"建立的文件夹下面并进行压缩,作为存档 -->
+            <property name="app_filePattern">${basefile}/$${date:yyyy-MM}/app-%d{yyyy-MM-dd}-%i.log.gz</property>
+            
+            
+            <!-- performance日志默认存放路径(Info级别日志) -->
+            <property name="performance_fileName">${basefile}/performance.log</property>
+            <!-- Info日志默认压缩路径,将超过指定文件大小的日志,自动存入按"年月"建立的文件夹下面并进行压缩,作为存档 -->
+            <property name="performance_filePattern">${basefile}/$${date:yyyy-MM}/performance-%d{yyyy-MM-dd}-%i.log.gz</property>
+            
+            
+            <!-- db日志默认存放路径(Info级别日志) -->
+            <property name="db_fileName">${basefile}/db.log</property>
+            <!-- Info日志默认压缩路径,将超过指定文件大小的日志,自动存入按"年月"建立的文件夹下面并进行压缩,作为存档 -->
+            <property name="db_filePattern">${basefile}/$${date:yyyy-MM}/db-%d{yyyy-MM-dd}-%i.log.gz</property>
+            
+            
+            <!-- Info日志默认同一文件夹下可以存放的数量,不设置此属性则默认为7个 -->
+            <property name="file_max">30</property>
+            <!-- 控制台显示的日志最低级别 -->
+            <property name="console_print_level">DEBUG</property>
+    
+        </Properties>
+            
+        <appenders> 
+            
+            <Console name="Console" target="SYSTEM_OUT">
+                <!-- 设置控制台只输出level及以上级别的信息(onMatch),其他的直接拒绝(onMismatch) -->
+                <ThresholdFilter level="${console_print_level}"
+                    onMatch="ACCEPT" onMismatch="DENY" />
+                <!-- 设置输出格式,不设置默认为:%m%n -->
+                <PatternLayout pattern="${console_log_pattern}" />
+            </Console>
+    
+            <RollingFile name="PerformanceRollingFile"
+                fileName="${performance_fileName}" filePattern="${performance_filePattern}">
+                <!--设置输出日志的编码格式,根据需求自行调整. -->
+                <PatternLayout charset="UTF-8" pattern="${performance_pattern}" />
+                <Policies>
+                    <SizeBasedTriggeringPolicy	size="${every_file_size}" />
+                    <TimeBasedTriggeringPolicy />
+                </Policies>
+                <DefaultRolloverStrategy max="${file_max}" />			 
+            </RollingFile>		
+            
+            <RollingFile name="AppRollingFile"
+                fileName="${app_fileName}" filePattern="${app_filePattern}">
+                <!--设置输出日志的编码格式,根据需求自行调整. -->
+                <PatternLayout charset="UTF-8" pattern="${log_pattern}" />
+                <Policies>
+                    <SizeBasedTriggeringPolicy	size="${every_file_size}" />
+                    <TimeBasedTriggeringPolicy  />
+                </Policies>
+                <DefaultRolloverStrategy max="${file_max}" />			 
+            </RollingFile>
+            
+            <RollingFile name="DbRollingFile"
+                fileName="${db_fileName}" filePattern="${db_filePattern}">			 
+                <PatternLayout charset="UTF-8" pattern="${db_log_pattern}" />
+                <Policies>
+                    <SizeBasedTriggeringPolicy	size="${every_file_size}" />
+                    <TimeBasedTriggeringPolicy />
+                </Policies>
+                <DefaultRolloverStrategy max="${file_max}" />			 
+            </RollingFile>
+             
+        </appenders>
+    
+        <loggers>
+            <root level="ERROR">
+                <appender-ref ref="Console" />
+                <appender-ref ref="AppRollingFile" />
+            </root>
+            
+            <Logger name="topmall" level="info" />
+            <Logger name="cn.wonhigh" level="info" />
+            <Logger name="cn.wonhigh" level="info" />
+            <Logger name="com.ctrip" level="error" />
+    
+            <Logger name="performance" level="info" additivity="false">
+                <appender-ref ref="Console" />
+                <appender-ref ref="PerformanceRollingFile" />
+            </Logger>
+            
+            <Logger name="cn.wonhigh.repository" level="debug" additivity="false">
+                <appender-ref ref="Console" />
+                <appender-ref ref="DbRollingFile" />
+            </Logger>
+        </loggers>
+    </configuration>

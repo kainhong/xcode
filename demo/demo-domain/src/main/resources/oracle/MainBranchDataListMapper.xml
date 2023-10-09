@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wonhigh.retail.fas.rebate.dal.tax.MainBranchDataListMapper" >
+
+  <select id="selectBranchSalesFooter" resultType="cn.wonhigh.retail.fas.rebate.model.tax.MainBranchCompanyReportDto"
+          parameterType="java.util.Map">
+    select count(1) as count_val, sum(nvl(nc_sales_amount, 0)) nc_sales_amount,
+           sum(nvl(nc_sales_notax_amount, 0)) nc_sales_notax_amount,
+           sum(nvl(hands_sales_amount, 0)) hands_sales_amount,
+           sum(nvl(hands_sales_notax_amount, 0)) hands_sales_notax_amount
+    from (
+        <include refid="branchSalesSql" />
+    ) c
+  </select>
+
+  <select id="selectBranchSalesList"
+          resultType="cn.wonhigh.retail.fas.rebate.model.tax.MainBranchCompanyReportDto">
+    SELECT * FROM (SELECT a.*, ROWNUM AS rn
+    FROM (
+        <include refid="branchSalesSql" />
+        order by bc.branch_company_no, bc.shop_no, bc.frequency
+    ) a
+    WHERE ROWNUM &lt;= #{page.startRowNum} + #{page.pageSize}
+    ) b
+    WHERE b.rn &gt; #{page.startRowNum}
+  </select>
+
+  <sql id="branchSalesSql">
+    with branch_company as (
+      select * from (select main_company_no, main_company_name, branch_company_no, branch_company_name,
+                            tax_no, vat_type, shop_no, shop_name,
+      '${params.period}' as frequency, rank() over(partition by main_company_no, branch_company_no, shop_no
+      order by main_company_no, branch_company_no, shop_no, effective_date desc) as rank_no
+      from main_branch_company_list
+      <include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.whereFieldByZoneTaxCitySqlOracle">
+        <property name="companyNoField" value="main_branch_company_list.branch_company_no"/>
+      </include>
+      where effective_date &lt;= to_date('${params.period}01','yyyy-MM-dd')
+      <if test="null==params.dataAccess or ''.equals(params.dataAccess)" >
+        
+      </if>
+      <if test="null!=params.branchCompanyNoMulti and !''.equals(params.branchCompanyNoMulti)" >
+        AND branch_company_no in ${params.branchCompanyNoMulti}
+      </if>
+      <if test="null!=params.mainCompanyNoMulti and !''.equals(params.mainCompanyNoMulti)" >
+        AND main_company_no in ${params.mainCompanyNoMulti}
+      </if>
+      <if test="null!=params.shopNoMulti and !''.equals(params.shopNoMulti)" >
+        AND shop_no in ${params.shopNoMulti}
+      </if>
+      ) where rank_no = 1
+    ),
+    main_org as (
+      select bc.main_company_no, co.nc_org_code
+      from branch_company bc inner join bus_company_org co
+      on bc.main_company_no = co.company_no and bc.vat_type = co.vat_type
+      group by bc.main_company_no, co.nc_org_code
+    ),
+    fsp_data as (
+        <include refid="fspShopData" />
+    )
+    select bc.main_company_no, bc.main_company_name, bc.branch_company_no, bc.branch_company_name,
+    bc.tax_no, bc.vat_type, bc.shop_no, bc.shop_name, bc.frequency,
+    sum(nvl(fd.retail_amount, 0)) nc_sales_amount, sum(nvl(fd.retail_not_tax_amount, 0)) nc_sales_notax_amount,
+    max(nvl(cr.hands_sales_amount, 0)) hands_sales_amount, max(nvl(cr.hands_sales_notax_amount, 0)) hands_sales_notax_amount
+    from branch_company bc INNER JOIN main_org bo
+    on bc.main_company_no = bo.main_company_no
+    inner join fsp_data fd on fd.nc_org_code = bo.nc_org_code
+    and fd.shop_no = bc.shop_no
+    and fd.period = bc.frequency
+    left join main_branch_company_report cr on cr.report_type = 3
+    and cr.main_company_no = bc.main_company_no
+    and cr.branch_company_no = bc.branch_company_no
+    and cr.vat_type = bc.vat_type
+    and cr.shop_no = bc.shop_no
+    and cr.frequency = bc.frequency
+    group by bc.main_company_no, bc.main_company_name, bc.branch_company_no, bc.branch_company_name,
+    bc.tax_no, bc.vat_type, bc.shop_no, bc.shop_name, bc.frequency
+  </sql>
+
+  <sql id="fspShopData">
+    select b.nc_org_code, b.period, b.shop_no,
+    sum(retail_amount)retail_amount,sum(retail_not_tax_amount)retail_not_tax_amount ,sum(retail_tax_amount)retail_tax_amount
+    from (
+    SELECT pk_voucher,detail_id, tax_type, max(source_billNo)source_billNo, max(menu) menu,
+    max(temp_add_item) temp_add_item, max(nc_org_code) nc_org_code, max(company_no) company_no,
+    max(period) period,
+    max(retail_amount) retail_amount, max(retail_not_tax_amount) retail_not_tax_amount,
+    max(retail_tax_amount) retail_tax_amount,
+    round(max( retail_tax_amount ) / max( retail_not_tax_amount ), 2) retail_tax_rate,
+    max(nvl(brandNo1_re, brandNo2_re)) brand_no,
+    max(shopNo1_re) shop_no
+    from (
+    select b.pk_voucher,b.menu, '1' tax_type, b.process_batno,b.source_billNo,
+    '1' AS temp_add_item,
+    b.nc_orgcode nc_org_code,
+    b.company_no,
+    to_char(to_date(substr(b.billdate,1,10), 'yyyy-MM-dd'), 'yyyyMM') period,
+    nvl(b.amount, 0) retail_amount,
+    nvl(b.notaxamount, 0) retail_not_tax_amount,
+    nvl(b.amount, 0) - nvl(b.notaxamount, 0) retail_tax_amount,
+    c.assitem_value,
+    upper(c.assitem_code) assitem_code,
+    c.nc_assitem_value,
+    c.nc_assitem_code,
+    c.DETAIL_ID
+    FROM retail_nc_report.nc_interface_head b
+    INNER JOIN retail_nc_report.nc_interface_assitems c
+    ON c.DETAIL_ID = b.id
+    INNER JOIN main_org bo on bo.nc_org_code = b.nc_orgcode
+    WHERE 1 = 1 AND b.pk_voucher is NOT null AND b.process_status IN (2, 5, 6) and nvl(b.amount, 0) != 0
+    AND b.menu IN ('FAS-001','FAS-005','FAS-008','FAS-009',
+    'FAS-010','FAS-069','FAS-016','FAS-078','FAS-080','FAS-077',
+    'FAS-131', 'FAS-133', 'FAS-134', 'FAS-135')
+    <if test="null!=params.period and !''.equals(params.period)" >
+      AND to_char(to_date(substr(b.billdate,1,10), 'yyyy-MM-dd'),'yyyyMM') = #{params.period}
+    </if>
+    union all
+    select b.pk_voucher,b.menu, '2' tax_type, b.process_batno,b.source_billNo,
+    '1' AS temp_add_item,
+    b.nc_orgcode nc_org_code,
+    b.company_no,
+    to_char(to_date(substr(b.billdate,1,10), 'yyyy-MM-dd'), 'yyyyMM') period,
+    nvl(b.invoice_amount, 0) retail_amount,
+    nvl(b.notax_invoice_amount, 0) retail_not_tax_amount,
+    nvl(b.invoice_amount, 0) - nvl(b.notax_invoice_amount, 0) retail_tax_amount,
+    c.assitem_value,
+    upper(c.assitem_code) assitem_code,
+    c.nc_assitem_value,
+    c.nc_assitem_code,
+    c.DETAIL_ID
+    FROM retail_nc_report.nc_interface_head b
+    INNER JOIN retail_nc_report.nc_interface_assitems c
+    ON c.DETAIL_ID = b.id
+    INNER JOIN main_org bo on bo.nc_org_code = b.nc_orgcode
+    WHERE 1 = 1 AND b.pk_voucher is NOT null AND b.process_status IN (2, 5, 6)
+    and nvl(b.invoice_amount, 0) != 0
+    AND b.menu IN ('FAS-133', 'FAS-134')
+    <if test="null!=params.period and !''.equals(params.period)" >
+      AND to_char(to_date(substr(b.billdate,1,10), 'yyyy-MM-dd'),'yyyyMM') = #{params.period}
+    </if>
+    union all
+    select b.pk_voucher,b.menu, '3' tax_type, b.process_batno,b.source_billNo,
+    '1' AS temp_add_item,
+    b.nc_orgcode nc_org_code,
+    b.company_no,
+    to_char(to_date(substr(b.billdate,1,10), 'yyyy-MM-dd'), 'yyyyMM') period,
+    to_number(nvl(b.def26, 0)) retail_amount,
+    to_number(nvl(b.def27, 0)) retail_not_tax_amount,
+    to_number(nvl(b.def26, 0)) - to_number(nvl(b.def27, 0)) retail_tax_amount,
+    c.assitem_value,
+    upper(c.assitem_code) assitem_code,
+    c.nc_assitem_value,
+    c.nc_assitem_code,
+    c.DETAIL_ID
+    FROM retail_nc_report.nc_interface_head b
+    INNER JOIN retail_nc_report.nc_interface_assitems c
+    ON c.DETAIL_ID = b.id
+    INNER JOIN main_org bo on bo.nc_org_code = b.nc_orgcode
+    WHERE 1 = 1 AND b.pk_voucher is NOT null AND b.process_status IN (2, 5, 6)
+    and to_number(nvl(b.def26, 0)) != 0
+    AND b.menu IN ('FAS-133', 'FAS-134')
+    <if test="null!=params.period and !''.equals(params.period)" >
+      AND to_char(to_date(substr(b.billdate,1,10), 'yyyy-MM-dd'),'yyyyMM') = #{params.period}
+    </if>
+    union all
+    select b.pk_voucher,b.menu, '4' tax_type, b.process_batno,b.source_billNo,
+    '1' AS temp_add_item,
+    b.nc_orgcode nc_org_code,
+    b.company_no,
+    to_char(to_date(substr(b.billdate,1,10), 'yyyy-MM-dd'), 'yyyyMM') period,
+    to_number(nvl(b.def28, 0)) retail_amount,
+    to_number(nvl(b.def29, 0)) retail_not_tax_amount,
+    to_number(nvl(b.def28, 0)) - to_number(nvl(b.def29, 0)) retail_tax_amount,
+    c.assitem_value,
+    upper(c.assitem_code) assitem_code,
+    c.nc_assitem_value,
+    c.nc_assitem_code,
+    c.DETAIL_ID
+    FROM retail_nc_report.nc_interface_head b
+    INNER JOIN retail_nc_report.nc_interface_assitems c
+    ON c.DETAIL_ID = b.id
+    INNER JOIN main_org bo on bo.nc_org_code = b.nc_orgcode
+    WHERE 1 = 1 AND b.pk_voucher is NOT null AND b.process_status IN (2, 5, 6)
+    and to_number(nvl(b.def28, 0)) != 0
+    AND b.menu IN ('FAS-133', 'FAS-134')
+    <if test="null!=params.period and !''.equals(params.period)" >
+      AND to_char(to_date(substr(b.billdate,1,10), 'yyyy-MM-dd'),'yyyyMM') = #{params.period}
+    </if>
+    union all
+    select b.pk_voucher,b.menu, '5' tax_type, b.process_batno,b.source_billNo,
+    '1' AS temp_add_item,
+    b.nc_orgcode nc_org_code,
+    b.company_no,
+    to_char(to_date(substr(b.billdate,1,10), 'yyyy-MM-dd'), 'yyyyMM') period,
+    to_number(nvl(b.def30, 0)) retail_amount,
+    to_number(nvl(b.def14, 0)) retail_not_tax_amount,
+    to_number(nvl(b.def30, 0)) - to_number(nvl(b.def14, 0)) retail_tax_amount,
+    c.assitem_value,
+    upper(c.assitem_code) assitem_code,
+    c.nc_assitem_value,
+    c.nc_assitem_code,
+    c.DETAIL_ID
+    FROM retail_nc_report.nc_interface_head b
+    INNER JOIN retail_nc_report.nc_interface_assitems c
+    ON c.DETAIL_ID = b.id
+    INNER JOIN main_org bo on bo.nc_org_code = b.nc_orgcode
+    WHERE 1 = 1 AND b.pk_voucher is NOT null AND b.process_status IN (2, 5, 6)
+    and to_number(nvl(b.def30, 0)) != 0
+    AND b.menu IN ('FAS-133', 'FAS-134')
+    <if test="null!=params.period and !''.equals(params.period)" >
+      AND to_char(to_date(substr(b.billdate,1,10), 'yyyy-MM-dd'),'yyyyMM') = #{params.period}
+    </if>
+    )
+    pivot(max(assitem_value) as re
+    for assitem_code in('BRANDNO' AS brandNo1, 'BRANDNOTY' AS brandNo2, 'SOURCESTORE' as shopNo1))
+    group by pk_voucher,detail_id, process_batno, tax_type
+    )b  where 1=1
+    <if test="null!=params.skqBrandUnitNo and !''.equals(params.skqBrandUnitNo)" >
+      AND (menu in('FAS-001','FAS-005','FAS-078','FAS-080') and brand_no not in('SX','SF'))
+      or menu in('FAS-008','FAS-009','FAS-010','FAS-069','FAS-016','FAS-077',
+      'FAS-131', 'FAS-133', 'FAS-134', 'FAS-135')
+    </if>
+    group by b.nc_org_code, b.period, b.shop_no
+  </sql>
+
+
+
+  <select id="selectBranchDistributeFooter"
+          resultType="cn.wonhigh.retail.fas.rebate.model.tax.MainBranchCompanyReportDto"
+          parameterType="java.util.Map">
+    select count(1) as count_val, sum(nvl(nc_sales_amount, 0)) nc_sales_amount,
+    sum(nvl(nc_sales_notax_amount, 0)) nc_sales_notax_amount,
+    sum(nvl(hands_sales_amount, 0)) hands_sales_amount,
+    sum(nvl(hands_sales_notax_amount, 0)) hands_sales_notax_amount
+    from (
+    <include refid="branchDistributeSql" />
+    ) c
+  </select>
+  <select id="selectBranchDistributeList"
+          resultType="cn.wonhigh.retail.fas.rebate.model.tax.MainBranchCompanyReportDto">
+    SELECT * FROM (SELECT a.*, ROWNUM AS rn
+    FROM (
+    <include refid="branchDistributeSql" />
+    order by bc.branch_company_no, bc.frequency
+    ) a
+    WHERE ROWNUM &lt;= #{page.startRowNum} + #{page.pageSize}
+    ) b
+    WHERE b.rn &gt; #{page.startRowNum}
+  </select>
+  <sql id="branchDistributeSql">
+    with branch_company as (
+      select * from (select main_company_no, main_company_name, branch_company_no, branch_company_name, tax_no, vat_type,
+      '${params.period}' as frequency, rank() over(partition by main_company_no, branch_company_no
+      order by main_company_no, branch_company_no, effective_date desc) as rank_no
+      from main_branch_company_list
+      <include refid="cn.wonhigh.retail.fas.rebate.dal.tax.CommonSQLMapper.whereFieldByZoneTaxCitySqlOracle">
+        <property name="companyNoField" value="main_branch_company_list.branch_company_no"/>
+      </include>
+      where effective_date &lt;= to_date('${params.period}01','yyyy-MM-dd')
+      <if test="null==params.dataAccess or ''.equals(params.dataAccess)" >
+        
+      </if>
+      <if test="null!=params.branchCompanyNoMulti and !''.equals(params.branchCompanyNoMulti)" >
+        AND branch_company_no in ${params.branchCompanyNoMulti}
+      </if>
+      <if test="null!=params.mainCompanyNoMulti and !''.equals(params.mainCompanyNoMulti)" >
+        AND main_company_no in ${params.mainCompanyNoMulti}
+      </if>
+      <if test="null!=params.shopNoMulti and !''.equals(params.shopNoMulti)" >
+        AND shop_no in ${params.shopNoMulti}
+      </if>
+      ) where rank_no = 1
+    ),
+    branch_main_company as (
+    select main_company_no, vat_type, frequency
+    from branch_company group by main_company_no, vat_type, frequency
+    ),
+    branch_company_config as (
+    select bc.main_company_no, bc.main_company_name, bc.branch_company_no, bc.branch_company_name,
+    tc.city_no, tc.tax_name,
+    bc.tax_no, bc.vat_type, bc.frequency,
+    max(tp.param_value) param_value, max(tp.param_value2) param_value2
+    from branch_company bc inner join bus_company_org co
+    on bc.branch_company_no = co.company_no
+    and bc.vat_type = co.vat_type
+    inner join tax_city_config tc on co.city_no = tc.city_no
+    left join tax_param_config tp on tc.tax_name = tp.tax_name
+    and tp.param_no = 10
+    group by bc.main_company_no, bc.main_company_name, bc.branch_company_no, bc.branch_company_name,
+    tc.city_no, tc.tax_name, bc.tax_no, bc.vat_type, bc.frequency
+    ),
+    branch_company_sales as (
+    select br.main_company_no, br.main_company_name, br.branch_company_no, br.branch_company_name,
+    br.tax_no, br.vat_type, br.frequency,
+    sum(nvl(br.nc_sales_amount, 0)) nc_sales_amount, sum(nvl(br.nc_sales_notax_amount, 0)) nc_sales_notax_amount,
+    sum(nvl(br.hands_sales_amount, 0)) hands_sales_amount, sum(nvl(br.hands_sales_notax_amount, 0)) hands_sales_notax_amount
+    from main_branch_company_report br
+    where br.frequency = #{params.period} and br.report_type = 1
+    group by br.main_company_no, br.main_company_name, br.branch_company_no, br.branch_company_name,
+    br.tax_no, br.vat_type, br.frequency
+    ),
+    main_vat_check as (
+    select c.company_no as main_company_no, c.vat_type, c.period as frequency,
+    sum(case when actual_tax_rate = 5 then table_tax_amount else 0 end) main_table_tax_amount_5r,
+    sum(case when actual_tax_rate = 6 then table_tax_amount else 0 end) main_table_tax_amount_6r,
+    sum(case when actual_tax_rate = 13 then table_tax_amount else 0 end) main_table_tax_amount_13r,
+    sum(case when actual_tax_rate = 5 then table_not_tax_amount else 0 end) main_table_not_tax_amount_5r,
+    sum(case when actual_tax_rate = 6 then table_not_tax_amount else 0 end) main_table_not_tax_amount_6r,
+    sum(nvl(table_not_tax_amount, 0)) main_table_not_tax_amount
+    from taxpayer_vat_check c
+    inner join branch_main_company m
+    on c.company_no = m.main_company_no
+    and c.vat_type = m.vat_type
+    and c.period = m.frequency
+    WHERE 1 = 1
+    AND period = #{params.period}
+    AND save_type = '1'
+    group by c.company_no, c.vat_type, c.period
+    ),
+    main_vat_file as (
+    SELECT f.company_no as main_company_no, f.vat_type, f.period as frequency, sum(nvl(should_tax_amount, 0)) main_should_tax_amount
+    FROM taxpayer_vat_accure f
+    inner join branch_main_company m
+    on f.company_no = m.main_company_no
+    and f.vat_type = m.vat_type
+    and f.period = m.frequency
+    WHERE 1 = 1
+    AND '${params.period}' BETWEEN f.start_period AND f.end_period
+    group by f.company_no, f.vat_type, f.period
+    )
+    select bc.*,
+    br.nc_sales_amount, br.nc_sales_notax_amount,
+    br.hands_sales_amount, br.hands_sales_notax_amount,
+    mc.main_table_tax_amount_5r, mc.main_table_tax_amount_6r,
+    mc.main_table_tax_amount_13r, mc.main_table_not_tax_amount_5r,
+    mc.main_table_not_tax_amount_6r, mc.main_table_not_tax_amount,
+    mf.main_should_tax_amount
+    from branch_company_config bc left join branch_company_sales br
+    on bc.main_company_no = br.main_company_no
+    and bc.branch_company_no = br.branch_company_no
+    and bc.vat_type = br.vat_type
+    and bc.frequency = br.frequency
+    left join main_vat_check mc on mc.main_company_no = bc.main_company_no
+    and mc.vat_type = bc.vat_type
+    and mc.frequency = bc.frequency
+    left join main_vat_file mf on mf.main_company_no = bc.main_company_no
+    and mf.vat_type = bc.vat_type
+    and mf.frequency = bc.frequency
+  </sql>
+</mapper>

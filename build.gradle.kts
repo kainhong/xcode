@@ -13,7 +13,7 @@ buildscript {
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.8.21"
-    id("org.jetbrains.intellij") version "1.13.3"
+    id("org.jetbrains.intellij") version "1.15.0"
 }
 
 group = "cn.mercury"
@@ -28,9 +28,12 @@ repositories {
 intellij {
     version.set("2023.1.2")
     type.set("IU")
-    plugins.set(listOf("DatabaseTools","java"))
+    plugins.set(listOf("DatabaseTools","java","Spring" ))
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
 
 dependencies {
     implementation("uk.com.robust-it:cloning:1.9.2")
@@ -40,6 +43,9 @@ dependencies {
     implementation("cn.hutool:hutool-core:5.8.0")
     implementation("org.dom4j:dom4j:2.1.3")
     implementation("jaxen:jaxen:1.1.1")
+
+    implementation("cn.wonhigh.mercury:mybatis-x:3.4.6.4-SNAPSHOT")
+    implementation("cn.wonhigh.mercury:mercury-mybatis-parser:3.0.10-SNAPSHOT")
 
     testImplementation("junit:junit:4.12")
     testImplementation("commons-io:commons-io:2.8.0")
@@ -59,17 +65,8 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("212")
+        sinceBuild.set("231")
         untilBuild.set("232.*")
     }
 
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
-    }
-
-    publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
-    }
 }
