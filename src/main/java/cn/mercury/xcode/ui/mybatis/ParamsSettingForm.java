@@ -10,30 +10,39 @@ import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.generate.ParamsSettingConfig;
 import cn.mercury.xcode.idea.DatasourceHelper;
 import cn.mercury.xcode.mybatis.SqlHelper;
+import cn.mercury.xcode.mybatis.language.dom.model.Mapper;
+import cn.mercury.xcode.mybatis.utils.MapperUtils;
 import cn.mercury.xcode.utils.FileUtils;
+import cn.wonhigh.ibatis.builder.SqlFragmentsLoader;
+import cn.wonhigh.ibatis.builder.xml.XMLMapperBuilder;
+import cn.wonhigh.ibatis.parsing.XNode;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.intellij.database.dataSource.LocalDataSource;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.messages.MessageDialog;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.xml.XmlFile;
+import com.intellij.util.xml.DomUtil;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class ParamsSettingForm extends DialogWrapper {
-    static final Logger logger = LoggerFactory.getLogger(ParamsSettingForm.class);
+    static final Logger logger = Logger.getInstance(ParamsSettingForm.class);
 
     private final Project project;
     private String namespace;
@@ -80,7 +89,7 @@ public class ParamsSettingForm extends DialogWrapper {
             String p = (String) tableModel.getValueAt(r, 0);
             if (p != null && jsonRegex.matcher((String) v).find()) {
                 try {
-                    if( (String) v != null && ((String) v).startsWith("["))
+                    if ((String) v != null && ((String) v).startsWith("["))
                         v = JsonUtils.fromListJson((String) v, Map.class);
                     else
                         v = JsonUtils.fromJson((String) v, Map.class);
@@ -273,7 +282,24 @@ public class ParamsSettingForm extends DialogWrapper {
             onMapperSelected();
 
         } else {
-            this.mybatisMapperAnalyzer = new MybatisMapperAnalyzer(stream, file.getName());
+            SqlFragmentsLoader loader = (configuration, refid) -> {
+                int index = refid.lastIndexOf(".");
+                String namespace = refid.substring(0, index);
+                @NonNls Optional<Mapper> mapper = MapperUtils.findFirstMapper(project, namespace);
+                if (mapper.isEmpty())
+                    return null;
+                @NotNull XmlFile vsFile = DomUtil.getFile(mapper.get());
+                String filePath = vsFile.getVirtualFile().getPath();
+                try (InputStream mapperStream = new FileInputStream(filePath)) {
+                    new XMLMapperBuilder(mapperStream, configuration, vsFile.getName(), configuration.getSqlFragments()).parse();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                return configuration.getSqlFragments().get(refid);
+            };
+
+            this.mybatisMapperAnalyzer = new MybatisMapperAnalyzer(stream, file.getName(), loader);
             cmbMappers.addItem(mybatisMapperAnalyzer.getNamespace());
             cmbMappers.setEnabled(false);
 

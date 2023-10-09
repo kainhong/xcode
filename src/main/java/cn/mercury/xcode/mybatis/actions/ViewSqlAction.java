@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 
 public class ViewSqlAction extends AnAction {
 
-    final Pattern pattern = Pattern.compile("<select[^<>]*?\\sid=['\"]?(?<id>\\w+?)['\"]?(\\s|.)*?>", Pattern.CASE_INSENSITIVE);
+    final Pattern pattern = Pattern.compile("<select[^<>]*?\\sid=['\"]?(?<id>\\w+)['\"]?(\\s|.)*?>", Pattern.CASE_INSENSITIVE);
 
     @Override
     public void actionPerformed(AnActionEvent e) {
