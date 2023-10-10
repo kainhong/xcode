@@ -4,10 +4,20 @@
     </extensions>
 
     <actions>
-        <group id="$MybatisAnalyzer" text="Mybatis Analyzer" popup="true" icon="AllIcons.CodeWithMe.CwmPermissionView">
+        <action id="cn.mercury.xcode.sql.actions.MainActionGroup"
+                class="cn.mercury.xcode.sql.actions.MainActionGroup"
+                text="X-Generator" popup="true"
+                description="X generator idea plugin">
+            <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
+        </action>
+
+        <group id="$MybatisAnalyzer" text="Mybatis Analyzer" popup="true" icon="AllIcons.CodeWithMe.CwmPermissionView" >
             <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="AnalyzeMenu"/>
-            <action id="mybatis.analyzer" class="cn.mercury.xcode.actions.project.AnalyzerAction" text="Mapper Analyzer">
+            <action id="mybatis.analyzer" class="cn.mercury.xcode.mybatis.actions.AnalyzerAction" text="Mapper Analyzer">
             </action>
+            <action id="mybatis.x1" class="cn.mercury.xcode.actions.database.DatabaseAction" text="Test">
+            </action>
+
         </group>
 
         <action id="$CopySql" class="cn.mercury.xcode.mybatis.actions.CopySqlAction" text="Copy SQL"

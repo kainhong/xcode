@@ -1,4 +1,4 @@
-package cn.mercury.xcode.generate;
+package cn.mercury.xcode.sql.generate;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;

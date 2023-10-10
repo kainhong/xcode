@@ -1,0 +1,6 @@
+{
+  "templates":[
+    "./spring",
+    "./springboot"
+  ]
+}

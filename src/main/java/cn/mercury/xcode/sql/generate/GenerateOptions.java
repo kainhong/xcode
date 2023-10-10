@@ -1,4 +1,4 @@
-package cn.mercury.xcode.generate;
+package cn.mercury.xcode.sql.generate;
 
 import lombok.Builder;
 import lombok.Data;

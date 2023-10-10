@@ -1,0 +1,177 @@
+##引入mybatis支持
+$!{mybatisSupport.vm}
+
+##设置保存名称与保存位置
+$!context.setFileName($tool.append($!{tableInfo.name}, "Mapper.xml"))
+$!context.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
+
+#set($entity = $tableInfo.savePackageName  + ".common.model." + $tableInfo.name)
+
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="$!{tableInfo.savePackageName}.dal.database.$!{tableInfo.name}Mapper">
+    <!-- auto generate -->
+    <resultMap id="baseResultMap" type="$!{entity}">
+#foreach($column in $tableInfo.fullColumn)
+        <result column="$!column.obj.name" property="$!column.name" jdbcType="$!column.ext.jdbcType"/>
+#end
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+#allSqlColumn()
+
+    </sql>
+
+    <sql id="condition">
+        <if test="null!=params.queryCondition and ''!=params.queryCondition">
+            And ${params.queryCondition}
+        </if>
+#foreach($column in $tableInfo.fullColumn)
+        <if test="params.$!column.name != null#if($column.type.equals("java.lang.String")) and ''!=params.$!column.name #end">
+            And `$!column.obj.name` = #{params.$!column.name}
+        </if>
+#end
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="baseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM $!tableInfo.obj.name
+        WHERE $!pk.obj.name = #{$!pk.name}
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) as s FROM $!tableInfo.obj.name
+        <where>
+        <include refid="condition" />
+        </where>
+    </select>
+
+    <select id="selectByPage" resultMap="baseResultMap" parameterType="map">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM $!tableInfo.obj.name WHERE 1=1
+        <include refid="condition" />
+        <if test="orderByField != null and ''!=orderByField">
+            ORDER BY ${orderByField}
+            <if test="orderByField">
+                ${orderBy}
+            </if>
+        </if>
+        LIMIT #{page.startRowNum} ,#{page.pageSize}
+    </select>
+
+    <select id="selectByParams" resultMap="baseResultMap" parameterType="map">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM $!tableInfo.obj.name WHERE 1=1
+        <include refid="condition" />
+    </select>
+
+    <delete id="deleteByPrimaryKey" >
+        DELETE FROM $!tableInfo.obj.name
+        WHERE $!pk.obj.name = #{$!pk.name}
+    </delete>
+
+    <delete id="deleteByPrimarayKeyForModel" parameterType="$!{entity}">
+        DELETE FROM $!tableInfo.obj.name
+        WHERE $!pk.obj.name = #{$!pk.name}
+    </delete>
+
+    <insert id="insert" parameterType="$!{entity}">
+        Insert Into $!{tableInfo.obj.name}
+        (
+#foreach($column in $tableInfo.fullColumn)
+            `$!column.obj.name`#if($velocityHasNext),#end
+
+#end)
+       Values (
+#foreach($column in $tableInfo.fullColumn)
+        #{$!{column.name}}#if($velocityHasNext),#end
+
+#end)
+    </insert>
+
+    <insert id="insertBatch" keyProperty="$!pk.name" useGeneratedKeys="true">
+        Insert Into `$!{tableInfo.obj.name}` (
+#foreach($column in $tableInfo.fullColumn)
+           `$!column.obj.name`#if($velocityHasNext), #end
+
+#end )
+        Values
+        <foreach collection="entities" item="entity" separator=",">
+         (
+#foreach($column in $tableInfo.fullColumn)
+            #{entity.$!{column.name}}#if($velocityHasNext),#end
+
+#end
+        )
+        </foreach>
+    </insert>
+
+    <insert id="insertSelective" parameterType="$!{entity}">
+        Insert Into `$!{tableInfo.obj.name}`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+#foreach($column in $tableInfo.fullColumn)
+            <if test="$!column.name != null#if($column.type.equals("java.lang.String")) and $!column.name != ''#end">
+                `$!column.obj.name`,
+            </if>
+#end
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+#foreach($column in $tableInfo.fullColumn)
+            <if test="$!column.name != null#if($column.type.equals("java.lang.String")) and $!column.name != ''#end">
+               #{$!column.name},
+            </if>
+#end
+        </trim>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="$!pk.name" useGeneratedKeys="true">
+        Insert Into `$!{tableInfo.obj.name}`(
+#foreach($column in $tableInfo.fullColumn)
+            `$!column.obj.name` #if($velocityHasNext),
+#end#end )
+        Values
+        <foreach collection="entities" item="entity" separator=",">
+        (
+#foreach($column in $tableInfo.fullColumn)
+            #{entity.$!{column.name}}#if($velocityHasNext),
+#end
+#end )
+        </foreach>
+        On Duplicate Key Update
+#foreach($column in $tableInfo.otherColumn)
+           `$!column.obj.name` = values($!column.obj.name) #if($velocityHasNext),
+#end#end
+
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="$!{entity}">
+        Update $!{tableInfo.obj.name}
+        <set>
+#foreach($column in $tableInfo.otherColumn)
+            <if test="$!column.name != null#if($column.type.equals("java.lang.String")) and $!column.name != ''#end">
+                `$!column.obj.name` = #{$!column.name},
+            </if>
+#end
+        </set>
+        Where $!pk.obj.name = #{$!pk.name}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="$!{entity}">
+        Update $!{tableInfo.obj.name}
+        <set>
+#foreach($column in $tableInfo.otherColumn)
+        `$!column.obj.name` = #{$!column.name},
+#end
+        </set>
+        Where $!pk.obj.name = #{$!pk.name}
+    </update>
+</mapper>

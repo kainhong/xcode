@@ -1,7 +1,7 @@
 package cn.mercury.xcode.utils;
 
 
-import cn.mercury.xcode.generate.GenerateOptions;
+import cn.mercury.xcode.sql.generate.GenerateOptions;
 import cn.mercury.xcode.model.table.TableInfo;
 import cn.mercury.xcode.model.template.Template;
 import cn.mercury.xcode.service.impl.CodeGenerateServiceImpl;

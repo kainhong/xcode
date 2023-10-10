@@ -2,12 +2,13 @@ package cn.mercury.xcode.ui.mybatis;
 
 import cn.mercury.mybatis.JsonUtils;
 import cn.mercury.mybatis.analyzer.MybatisAnalyzer;
+import cn.mercury.mybatis.analyzer.MybatisAnalyzerParser;
 import cn.mercury.mybatis.analyzer.MybatisMapperAnalyzer;
 import cn.mercury.mybatis.analyzer.MybatisMapperStatementAnalyzer;
 import cn.mercury.mybatis.analyzer.mock.ParameterMocker;
 import cn.mercury.mybatis.analyzer.model.ParameterVariable;
 import cn.mercury.xcode.GlobalDict;
-import cn.mercury.xcode.generate.ParamsSettingConfig;
+import cn.mercury.xcode.sql.generate.ParamsSettingConfig;
 import cn.mercury.xcode.idea.DatasourceHelper;
 import cn.mercury.xcode.mybatis.SqlHelper;
 import cn.mercury.xcode.mybatis.language.dom.model.Mapper;
@@ -15,11 +16,15 @@ import cn.mercury.xcode.mybatis.utils.MapperUtils;
 import cn.mercury.xcode.utils.FileUtils;
 import cn.wonhigh.ibatis.builder.SqlFragmentsLoader;
 import cn.wonhigh.ibatis.builder.xml.XMLMapperBuilder;
+import cn.wonhigh.ibatis.builder.xml.XNodeVisitor;
 import cn.wonhigh.ibatis.parsing.XNode;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.intellij.database.dataSource.LocalDataSource;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -34,11 +39,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class ParamsSettingForm extends DialogWrapper {
@@ -53,6 +56,8 @@ public class ParamsSettingForm extends DialogWrapper {
     private JComboBox cmbStatement;
     private JComboBox cmbDataSource;
     private JComboBox cmbMappers;
+    private JLabel lblInfo;
+    private JPanel panelInfo;
 
     private MybatisMapperStatementAnalyzer statement;
 
@@ -261,54 +266,79 @@ public class ParamsSettingForm extends DialogWrapper {
     MybatisMapperAnalyzer mybatisMapperAnalyzer;
     MybatisAnalyzer analyzer;
 
+    private XNodeVisitor<XNode> getVisitor() {
+        return new XNodeVisitor<XNode>() {
+            String mapper;
+
+            @Override
+            public boolean visit(XNode node) {
+                String tag = node.getName();
+                if ("mapper".equals(tag)) {
+                    String ns = node.getStringAttribute("namespace", "");
+                    if (ns != null) {
+                        int index = ns.lastIndexOf(".");
+                        if (index > 0)
+                            this.mapper = ns.substring(0, index);
+                        else
+                            this.mapper = null;
+                    }
+                    return true;
+                }
+                String id = node.getStringAttribute("id", "");
+
+                SwingUtilities.invokeLater(() -> {
+                    if (mapper != null)
+                        lblInfo.setText("正在加载:" + mapper + "," + id);
+                });
+
+                return true;
+            }
+
+            @Override
+            public void endVisit(XNode node) {
+                String tag = node.getName();
+                if ("mapper".equals(tag)) {
+                    mapper = null;
+                }
+            }
+        };
+    }
+
     private void load(VirtualFile file) throws Exception {
         String txt = FileUtils.readFile(file);
         if (StringUtils.isEmpty(txt))
             return;
+        var visitor = getVisitor();
 
-        InputStream stream = new ByteArrayInputStream(txt.getBytes(StandardCharsets.UTF_8));
-        if (txt.contains("<configuration>") && txt.contains("</configuration>")) {
-            this.analyzer = MybatisAnalyzer.fromLocalFile(file.getPath());
-            Set<String> mappers = analyzer.getMappers();
+        try (InputStream stream = new ByteArrayInputStream(txt.getBytes(StandardCharsets.UTF_8))) {
+            if (txt.contains("<configuration>") && txt.contains("</configuration>")) {
+                this.analyzer = MybatisAnalyzerParser.builder()
+                        .configurationFile(file.getPath())
+                        .ignoreError(true)
+                        .visitor(visitor)
+                        .build();
+            } else {
+                SqlFragmentsLoader loader = (configuration, refid) -> {
+                    int index = refid.lastIndexOf(".");
+                    String namespace = refid.substring(0, index);
+                    @NonNls Optional<Mapper> mapper = MapperUtils.findFirstMapper(project, namespace);
+                    if (mapper.isEmpty())
+                        return null;
+                    @NotNull XmlFile vsFile = DomUtil.getFile(mapper.get());
+                    String filePath = vsFile.getVirtualFile().getPath();
+                    try (InputStream mapperStream = new FileInputStream(filePath)) {
+                        new XMLMapperBuilder(mapperStream, configuration, vsFile.getName(), configuration.getSqlFragments()).parse();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
 
-            cmbMappers.addItem("");
+                    return configuration.getSqlFragments().get(refid);
+                };
 
-            for (String mapper : mappers) {
-                cmbMappers.addItem(mapper);
+                this.mybatisMapperAnalyzer = new MybatisMapperAnalyzer(stream, file.getName(), loader,visitor);
+
             }
-
-            cmbMappers.setEnabled(true);
-
-            onMapperSelected();
-
-        } else {
-            SqlFragmentsLoader loader = (configuration, refid) -> {
-                int index = refid.lastIndexOf(".");
-                String namespace = refid.substring(0, index);
-                @NonNls Optional<Mapper> mapper = MapperUtils.findFirstMapper(project, namespace);
-                if (mapper.isEmpty())
-                    return null;
-                @NotNull XmlFile vsFile = DomUtil.getFile(mapper.get());
-                String filePath = vsFile.getVirtualFile().getPath();
-                try (InputStream mapperStream = new FileInputStream(filePath)) {
-                    new XMLMapperBuilder(mapperStream, configuration, vsFile.getName(), configuration.getSqlFragments()).parse();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-
-                return configuration.getSqlFragments().get(refid);
-            };
-
-            this.mybatisMapperAnalyzer = new MybatisMapperAnalyzer(stream, file.getName(), loader);
-            cmbMappers.addItem(mybatisMapperAnalyzer.getNamespace());
-            cmbMappers.setEnabled(false);
-
-            loadMapper();
         }
-
-
-        //analyzer = new MybatisMapperAnalyzer(virtualFile);
-        //analyzer.analyze();
     }
 
 
@@ -337,8 +367,8 @@ public class ParamsSettingForm extends DialogWrapper {
         if (cmbStatement.getItemCount() > 0)
             cmbStatement.removeAllItems();
 
-        if (cmbDataSource.getItemCount() > 0)
-            cmbDataSource.removeAllItems();
+//        if (cmbDataSource.getItemCount() > 0)
+//            cmbDataSource.removeAllItems();
 
         List<String> lst = this.mybatisMapperAnalyzer.listStatementIds();
 
@@ -349,11 +379,6 @@ public class ParamsSettingForm extends DialogWrapper {
             int index = lst.indexOf(this.statementId);
             if (index > 0)
                 cmbStatement.setSelectedIndex(index);
-        }
-
-        List<LocalDataSource> ds = DatasourceHelper.listDatasource(project);
-        for (LocalDataSource item : ds) {
-            cmbDataSource.addItem(item.getName());
         }
 
         loadParamsInfo();
@@ -375,14 +400,74 @@ public class ParamsSettingForm extends DialogWrapper {
 
         this.initEvent();
 
-        this.load();
+        btnMock.setEnabled(false);
+        panelInfo.setVisible(true);
+        this.loadDataInBackground();
     }
 
-    public void load() {
+    private void initData() {
+        if (analyzer != null) {
+            Set<String> mappers = analyzer.getMappers();
+
+            cmbMappers.addItem("");
+            for (String mapper : mappers) {
+                cmbMappers.addItem(mapper);
+            }
+
+            cmbMappers.setEnabled(true);
+
+            onMapperSelected();
+        } else if (mybatisMapperAnalyzer != null) {
+            cmbMappers.addItem(mybatisMapperAnalyzer.getNamespace());
+            cmbMappers.setEnabled(false);
+        }
+
+        btnMock.setEnabled(true);
+    }
+
+    private void loadDataInBackground() {
+        Runnable action = () -> {
+            final boolean ok = load();
+            // 数据加载完成后更新界面
+            SwingUtilities.invokeLater(() -> {
+                panelInfo.setVisible(false);
+                if (ok) {
+                    final List<LocalDataSource> ds = DatasourceHelper.listDatasource(project);
+                    for (LocalDataSource item : ds) {
+                        cmbDataSource.addItem(item.getName());
+                    }
+                    initData();
+                    loadMapper();
+                } else {
+                    Messages.showWarningDialog("加载失败", GlobalDict.TITLE_INFO);
+                }
+            });
+        };
+
+//        ApplicationManager.getApplication().invokeAndWait(
+//                () -> ApplicationManager.getApplication().runWriteAction(() -> action.run()),
+//                NON_MODAL
+//        );
+
+        ProgressManager.getInstance().run(new Task.Backgroundable(null, "Loading Data", false) {
+            @Override
+            public void run(@org.jetbrains.annotations.NotNull ProgressIndicator indicator) {
+
+//                indicator.setFraction((double) i / 100.0);
+//                indicator.setText2("Loading... " + i + "%");
+
+                action.run();
+            }
+        });
+    }
+
+    private boolean load() {
         try {
             load(this.file);
+            return true;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+            return false;
         }
     }
 

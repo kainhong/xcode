@@ -3,7 +3,7 @@
   <grid id="cbd77" binding="contentPane" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="48" y="54" width="631" height="453"/>
+      <xy x="48" y="54" width="649" height="447"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -18,7 +18,9 @@
         <children>
           <component id="76436" class="com.intellij.openapi.ui.ComboBox" binding="moduleComboBox">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="266" height="30"/>
+              </grid>
             </constraints>
             <properties>
               <model/>
@@ -37,7 +39,7 @@
           <component id="158fc" class="javax.swing.JTextField" binding="packageField">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
+                <preferred-size width="266" height="30"/>
               </grid>
             </constraints>
             <properties/>
@@ -54,14 +56,16 @@
           <component id="ab063" class="javax.swing.JTextField" binding="pathField">
             <constraints>
               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
+                <preferred-size width="266" height="30"/>
               </grid>
             </constraints>
             <properties/>
           </component>
           <component id="7467f" class="javax.swing.JButton" binding="packageChooseButton">
             <constraints>
-              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="153" height="30"/>
+              </grid>
             </constraints>
             <properties>
               <text resource-bundle="string" key="label.choose"/>
@@ -69,7 +73,9 @@
           </component>
           <component id="fba1b" class="javax.swing.JButton" binding="pathChooseButton">
             <constraints>
-              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="153" height="30"/>
+              </grid>
             </constraints>
             <properties>
               <text resource-bundle="string" key="label.choose"/>
@@ -77,7 +83,9 @@
           </component>
           <grid id="7831c" binding="templatePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
-              <grid row="5" column="1" row-span="5" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="5" column="1" row-span="5" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="266" height="0"/>
+              </grid>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -93,7 +101,9 @@
           </component>
           <vspacer id="98aa7">
             <constraints>
-              <grid row="9" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <grid row="9" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+                <preferred-size width="153" height="14"/>
+              </grid>
             </constraints>
           </vspacer>
           <component id="caddc" class="javax.swing.JLabel">
@@ -108,7 +118,7 @@
           <component id="81a34" class="javax.swing.JTextField" binding="preField">
             <constraints>
               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
+                <preferred-size width="266" height="30"/>
               </grid>
             </constraints>
             <properties/>
@@ -124,7 +134,9 @@
           </component>
           <component id="5e5a1" class="javax.swing.JCheckBox" binding="unifiedConfigCheckBox">
             <constraints>
-              <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <preferred-size width="153" height="21"/>
+              </grid>
             </constraints>
             <properties>
               <text resource-bundle="string" key="label.unified.config"/>
@@ -134,7 +146,7 @@
           <component id="af94e" class="javax.swing.JCheckBox" binding="titleSureCheckBox">
             <constraints>
               <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                <preferred-size width="79" height="71"/>
+                <preferred-size width="153" height="71"/>
               </grid>
             </constraints>
             <properties>
@@ -145,7 +157,7 @@
           <component id="53e7" class="javax.swing.JCheckBox" binding="reFormatCheckBox">
             <constraints>
               <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                <preferred-size width="78" height="18"/>
+                <preferred-size width="153" height="18"/>
               </grid>
             </constraints>
             <properties>
@@ -155,7 +167,9 @@
           </component>
           <component id="846f2" class="javax.swing.JCheckBox" binding="titleRefuseCheckBox">
             <constraints>
-              <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <preferred-size width="153" height="21"/>
+              </grid>
             </constraints>
             <properties>
               <text value="弹框选否"/>
@@ -175,7 +189,7 @@
           <component id="19cab" class="javax.swing.JTextField" binding="txtExtendTemplate">
             <constraints>
               <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="97"/>
+                <preferred-size width="266" height="97"/>
               </grid>
             </constraints>
             <properties/>
@@ -183,7 +197,7 @@
           <component id="5a255" class="javax.swing.JButton" binding="btnSelectExtendTemplate">
             <constraints>
               <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="92" height="97"/>
+                <preferred-size width="153" height="97"/>
               </grid>
             </constraints>
             <properties>

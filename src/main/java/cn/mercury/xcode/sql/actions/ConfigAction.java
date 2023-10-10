@@ -1,5 +1,6 @@
-package cn.mercury.xcode.actions;
+package cn.mercury.xcode.sql.actions;
 
+import cn.mercury.xcode.sql.actions.Icons;
 import cn.mercury.xcode.ui.base.ConfigTableDialog;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -20,7 +21,7 @@ public class ConfigAction extends AnAction {
      *
      * @param text 菜单名称
      */
-    ConfigAction(@Nullable String text) {
+    public ConfigAction(@Nullable String text) {
         super(text, text, Icons.load("icons/config.svg"));
     }
 

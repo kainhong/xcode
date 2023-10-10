@@ -1,4 +1,4 @@
-package cn.mercury.xcode.actions;
+package cn.mercury.xcode.sql.actions;
 
 import com.intellij.ui.IconManager;
 

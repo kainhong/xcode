@@ -1,4 +1,4 @@
-package cn.mercury.xcode.generate;
+package cn.mercury.xcode.sql.generate;
 
 import java.util.HashMap;
 import java.util.Map;

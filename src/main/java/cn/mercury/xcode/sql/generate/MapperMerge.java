@@ -1,4 +1,4 @@
-package cn.mercury.xcode.generate;
+package cn.mercury.xcode.sql.generate;
 
 import cn.mercury.xcode.model.table.TableInfo;
 import cn.mercury.xcode.utils.NameUtils;

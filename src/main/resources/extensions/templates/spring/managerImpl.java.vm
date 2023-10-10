@@ -1,0 +1,41 @@
+##定义初始变量
+#set($tableName = $tool.append($tableInfo.name, "ManagerImpl"))
+##设置回调
+$!context.setFileName($tool.append($tableName, ".java"))
+$!context.setSavePath($tool.append($sourcePath, ""))
+
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}manager;
+
+import javax.annotation.Resource;
+
+import $!{tableInfo.savePackageName}.common.model.$!{tableInfo.name};
+import $!{tableInfo.savePackageName}.service.$!{tableInfo.name}Service;
+import $!{tableInfo.savePackageName}.manager.$!{tableInfo.name}Manager;
+import com.yougou.logistics.base.manager.BaseCrudManagerImpl;
+import com.yougou.logistics.base.service.BaseCrudService;
+import org.springframework.stereotype.Service;
+
+/**
+ * $!{tableInfo.comment}($!{tableInfo.name})
+ *
+ * @author $!author
+ * @since $!time.currTime()
+ */
+@Service("$!tool.firstLowerCase($!{tableInfo.name})Manager")
+public class $!{tableName} extends BaseCrudManagerImpl implements $!{tableInfo.name}Manager {
+
+    @Resource
+    private $!{tableInfo.name}Service service;
+
+    @Override
+    public BaseCrudService init() {
+        return service;
+    }
+
+
+}

@@ -1,4 +1,4 @@
-package cn.mercury.xcode.actions.project;
+package cn.mercury.xcode.mybatis.actions;
 
 import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.idea.DatasourceHelper;

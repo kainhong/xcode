@@ -3,7 +3,7 @@ package cn.mercury.xcode.ui;
 import cn.hutool.core.io.FileUtil;
 import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.StrState;
-import cn.mercury.xcode.generate.GenerateOptions;
+import cn.mercury.xcode.sql.generate.GenerateOptions;
 import cn.mercury.xcode.model.SettingsStorage;
 import cn.mercury.xcode.model.table.TableInfo;
 import cn.mercury.xcode.model.template.Template;

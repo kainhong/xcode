@@ -1,7 +1,6 @@
-package cn.mercury.xcode.actions;
+package cn.mercury.xcode.sql.actions;
 
 import cn.mercury.xcode.GlobalDict;
-import cn.mercury.xcode.idea.DatasourceHelper;
 import cn.mercury.xcode.model.type.MatchType;
 import cn.mercury.xcode.model.type.TypeMapper;
 import cn.mercury.xcode.ui.SelectSavePath;

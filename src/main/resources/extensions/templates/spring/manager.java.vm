@@ -1,0 +1,29 @@
+##定义初始变量
+#set($tableName = $tool.append($tableInfo.name, "Manager"))
+##设置回调
+$!context.setFileName($tool.append($tableName, ".java"))
+$!context.setSavePath($tool.append($sourcePath, ""))
+
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}manager;
+
+import $!{tableInfo.savePackageName}.model.$!{tableInfo.name};
+
+import java.util.List;
+import java.util.Map;
+import com.yougou.logistics.base.common.exception.ManagerException;
+import com.yougou.logistics.base.manager.BaseCrudManager;
+
+/**
+ * $!{tableInfo.comment}($!{tableInfo.name})
+ *
+ * @author $!author
+ * @since $!time.currTime()
+ */
+public interface I$!{tableName} extends BaseCrudManager{
+
+}
