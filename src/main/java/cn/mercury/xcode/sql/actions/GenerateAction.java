@@ -36,14 +36,14 @@ import java.util.regex.PatternSyntaxException;
  * @version 1.0.0
  * @since 2018/07/17 13:10
  */
-public class MainAction extends AnAction {
+public class GenerateAction extends AnAction {
 
     /**
      * 构造方法
      *
      * @param text 菜单名称
      */
-    MainAction(@Nullable String text) {
+    GenerateAction(@Nullable String text) {
         super(text, text, Icons.load("icons/run.svg"));
     }
 
@@ -63,8 +63,8 @@ public class MainAction extends AnAction {
         }
         //new DatasourceHelper().execute(event);
         //开始处理
-        new SelectSavePath(event.getProject()).show();
-        //new GenerateCodeForm(event.getProject()).show();
+
+        new GenerateCodeForm(event.getProject()).show();
     }
 
     private Set<String> getAllColumnsDataType(List<DbTable> dbTables) {

@@ -1,0 +1,39 @@
+##定义初始变量
+#set($tableName = $serverImplClassName)
+##设置回调
+$!context.setFileName($tool.append($tableName, ".java"))
+$!context.setSavePath($tool.append($sourcePath, ""))
+
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+package $!{serviceImplPackageName};
+
+import $!{modelPackageName}.$!{modelClassName};
+import $!{repositoryPackageName}.$!{repositoryClassName};
+import $!{servicePackageName}.$!{serviceClassName};
+
+import org.springframework.stereotype.Service;
+import javax.annotation.Resource;
+import com.yougou.logistics.base.common.exception.ServiceException;
+import com.yougou.logistics.base.service.BaseCrudServiceImpl;
+import com.yougou.logistics.base.dal.database.BaseCrudMapper;
+/**
+ * $!{tableInfo.comment}($!{tableInfo.name})表服务实现类
+ *
+ * @author $!author
+ * @since $!time.currTime()
+ */
+@Service("$!tool.firstLowerCase($!{tableInfo.name})Service")
+public class $!{tableName} extends BaseCrudServiceImpl implements $!{serviceClassName} {
+
+    @Resource
+    private $!{tableInfo.name}Mapper repository;
+
+    public BaseCrudMapper init(){
+        return repository;
+    }
+
+}

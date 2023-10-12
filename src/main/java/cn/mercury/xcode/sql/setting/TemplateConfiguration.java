@@ -7,34 +7,54 @@ import cn.mercury.xcode.setting.GlobalSetting;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TemplateConfiguration {
     public static final String TEMPLATES = "templates";
 
-    public List<TemplateDesc> getTemplateList() {
-        List<TemplateDesc> list = new ArrayList<>();
+    public static File getTemplatePath() {
+        try {
+            return GlobalSetting.getScratchPath(TEMPLATES);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+    List<TemplateGroup> templateList;
 
+    public TemplateGroup getTemplateGroup(String name ){
+        return getTemplateList().stream().filter(item->item.getName().equals(name)).findFirst().orElse(null);
+    }
+
+
+    public List<TemplateGroup> getTemplateList() {
         File resourceDirectory = null;
+
         try {
             resourceDirectory = GlobalSetting.getScratchPath(TEMPLATES);
         } catch (IOException e) {
-            return list;
+            return Collections.emptyList();
+        }
+
+        if( templateList != null ) {
+            return templateList;
         }
 
         if (!resourceDirectory.exists()) {
-            return list;
+            return Collections.emptyList();
         }
+
+        List<TemplateGroup> list = new ArrayList<>();
         //File metaFile = new File(resourceDirectory, ".meta.xml");
 
         for (File file : resourceDirectory.listFiles()) {
-            File metaFile = new File(file, ".meta.xml");
+            File metaFile = new File(file, ".meta.json");
             if (!metaFile.exists())
                 continue;
 
-            TemplateDesc meta = null;
+            TemplateGroup meta = null;
             try {
-                meta = JsonUtils.fromJson(FileUtil.readUtf8String(metaFile), TemplateDesc.class);
+                meta = JsonUtils.fromJson(FileUtil.readUtf8String(metaFile), TemplateGroup.class);
             } catch (IOException e) {
                 return list;
             }
@@ -44,9 +64,10 @@ public class TemplateConfiguration {
             list.add(meta);
         }
 
+        //templateList = list;
+
         return list;
     }
-
 
 
     static TemplateConfiguration inc = new TemplateConfiguration();

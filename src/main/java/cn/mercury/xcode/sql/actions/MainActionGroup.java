@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * 操作按钮分组
  *
-
  * @version 1.0.0
  * @since 2018/07/17 13:10
  */
@@ -101,11 +100,19 @@ public class MainActionGroup extends ActionGroup {
         String configActionId = "cn.mercury.xcode.config";
         ActionManager actionManager = ActionManager.getInstance();
         // 代码生成菜单
-        AnAction mainAction = actionManager.getAction(mainActionId);
+        AnAction mainAction;
+
+        mainAction = actionManager.getAction(mainActionId);
         if (mainAction == null) {
-            mainAction = new MainAction("Generate Code");
+            mainAction = new GenerateAction("Generate CodeX");
             actionManager.registerAction(mainActionId, mainAction);
         }
+//
+//        mainAction = actionManager.getAction(mainActionId + "1");
+//        if (mainAction == null) {
+//            mainAction = new MainAction("Generate Code2");
+//            actionManager.registerAction(mainActionId + "1", mainAction);
+//        }
 
         // 表配置菜单
         AnAction configAction = actionManager.getAction(configActionId);
@@ -114,7 +121,7 @@ public class MainActionGroup extends ActionGroup {
             actionManager.registerAction(configActionId, configAction);
         }
 
-        AnAction clearConfigAction = new AnAction("Clear Config","Clear Config" ,Icons.load("icons/clear.svg")) {
+        AnAction clearConfigAction = new AnAction("Clear Config", "Clear Config", Icons.load("icons/clear.svg")) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 List<DbTable> dbTables = CacheDataUtils.getInstance().getDbTableList();

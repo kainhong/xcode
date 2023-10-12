@@ -1,0 +1,70 @@
+{
+  "name": "Spring",
+  "description": "老版本SSM模板.",
+  "version": "1.0.0",
+  "author": "Kain",
+  "templates": [
+    {
+      "name": "model",
+      "path": "",
+      "file": "model.java.vm",
+      "nameFormat": "%s",
+      "group": "model"
+    },
+    {
+      "name": "mapper",
+      "path": "",
+      "file": "mapper.xml.vm",
+      "nameFormat": "%sMapper",
+      "group": "repository"
+    },
+    {
+      "name": "repository",
+      "path": "",
+      "file": "repository.java.vm",
+      "group": "repository",
+      "nameFormat": "%sMapper",
+      "packageFormat": "%s.dal"
+    },
+    {
+      "name": "service",
+      "path": "",
+      "file": "service.java.vm",
+      "group": "service",
+      "nameFormat": "%sService",
+      "packageFormat": "%s.service"
+    },
+    {
+      "name": "serviceImpl",
+      "path": "",
+      "file": "serviceImpl.java.vm",
+      "group": "service",
+      "nameFormat": "%sServiceImpl",
+      "packageFormat": "%s.service"
+    },
+    {
+      "name": "manager",
+      "path": "",
+      "file": "manager.java.vm",
+      "group": "manager",
+      "nameFormat": "%sManager",
+      "packageFormat": "%s.manager"
+    },
+    {
+      "name": "managerImpl",
+      "path": "",
+      "file": "managerImpl.java.vm",
+      "group": "manager",
+      "nameFormat": "%sManagerImpl",
+      "packageFormat": "%s.manager"
+    },
+    {
+      "name": "controller",
+      "path": "",
+      "packageFormat": "%s.web.controller",
+      "file": "controller.java.vm",
+      "group": "controller",
+      "nameFormat": "%sController"
+    }
+  ]
+}

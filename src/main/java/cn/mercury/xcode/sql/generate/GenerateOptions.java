@@ -34,6 +34,7 @@ public class GenerateOptions {
      */
     private Boolean titleRefuse;
 
+
     private String savePath;
 
     private String moduleName;
@@ -43,4 +44,12 @@ public class GenerateOptions {
     private boolean mixed;
 
     private String packageName;
+
+    private String mapperFolder;
+
+    private String mybatisConfiguration;
+
+    private String templateGroupName;
+
+
 }

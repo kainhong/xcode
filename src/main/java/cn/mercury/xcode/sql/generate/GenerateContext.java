@@ -1,6 +1,9 @@
 package cn.mercury.xcode.sql.generate;
 
+import cn.mercury.xcode.sql.setting.Template;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * 回调实体类
@@ -27,4 +30,10 @@ public class GenerateContext {
      * 是否写入文件，部分模块不需要写入文件。例如debug.json模板
      */
     private Boolean writeFile;
+
+    private List<Template> templates;
+
+    public String getPackageName(String module){
+        return templates.stream().filter(t->t.getName().equalsIgnoreCase(module)).map(t->t.getPackageName()).findFirst().orElse(null);
+    }
 }

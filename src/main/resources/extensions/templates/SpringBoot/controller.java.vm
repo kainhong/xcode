@@ -1,0 +1,40 @@
+##定义初始变量
+#set($tableName = $controllerClassName)
+##设置回调
+$!context.setFileName($tool.append($tableName, ".java"))
+$!context.setSavePath($tool.append($sourcePath, ""))
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+package $!{controllerPackageName};
+
+import $!{modelPackageName}.$!{modelClassName};
+import $!{managerPackageName}.$!{managerClassName};
+
+import org.springframework.web.bind.annotation.*;
+import topmall.framework.web.controller.ApiController;
+import cn.mercury.manager.IManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+/**
+ * $!{tableInfo.comment}($!{tableInfo.name})表控制层
+ *
+ * @author $!author
+ * @since $!time.currTime()
+ */
+@RestController
+@RequestMapping("$!{tableInfo.obj.name}")
+public class $!{tableName}  extends ApiController<$!{modelClassName},$!{tool.getClsNameByFullName($pk.type)}> {
+    /**
+     * 服务对象
+     */
+    @Resource
+    private $!{managerClassName} manager;
+
+    protected IManager<$!{modelClassName},$!{tool.getClsNameByFullName($pk.type)}> getManager(){
+        return manager;
+    }
+
+}

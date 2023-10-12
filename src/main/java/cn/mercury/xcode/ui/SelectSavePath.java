@@ -348,6 +348,7 @@ public class SelectSavePath extends DialogWrapper {
         tableInfo.setSavePackageName(packageField.getText());
         tableInfo.setPreName(preField.getText());
         tableInfo.setTemplateGroupName(templateSelectComponent.getselectedGroupName());
+
         Module module = getSelectModule();
         if (module != null) {
             tableInfo.setSaveModelName(module.getName());

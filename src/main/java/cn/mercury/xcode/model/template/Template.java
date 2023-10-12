@@ -15,20 +15,39 @@ public class Template implements AbstractEditorItem<Template> {
      * 模板名称
      */
     private String name;
+
     /**
-     * 模板代码
+     * 代码
      */
     private String code;
 
+    /**
+     * 模板路径
+     * classpath:/template/springboot/controller.java.vm
+     */
     private String uri;
 
     private String type;
 
+    /**
+     * package 路径
+     * %s-web
+     */
     private String path;
 
+    private String packageName;
+
+    /**
+     * 包名后缀
+     */
     private String packageSuffix;
 
+    /**
+     * 模板内容
+     */
     private String value;
+
+    private String modulePath;
 
     public Template(){
 
@@ -42,7 +61,7 @@ public class Template implements AbstractEditorItem<Template> {
 
     @Override
     public Template defaultVal() {
-        return new Template("demo", "template");
+        return new Template("demo", "template__");
     }
 
     @Override

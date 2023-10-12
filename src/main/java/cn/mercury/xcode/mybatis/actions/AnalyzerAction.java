@@ -11,6 +11,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.xml.XmlFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +22,7 @@ public class AnalyzerAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         Project project = event.getProject();
+
         if (!validate(project)) {
             Messages.showInfoMessage("请先配置数据源", GlobalDict.TITLE_INFO);
             return;
@@ -31,6 +33,9 @@ public class AnalyzerAction extends AnAction {
         //new ParamsSettingForm(event.getProject()).show();
         @Nullable VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(event.getDataContext());
 
+        if( file instanceof XmlFile == false)
+            return;
+
         ParamsSettingForm dialog = new ParamsSettingForm(event.getProject(),file);
 
         dialog.show();
@@ -38,9 +43,15 @@ public class AnalyzerAction extends AnAction {
 
     @Override
     public void update(@NotNull AnActionEvent event) {
-        String ext = FileUtils.getFileExtension(event.getDataContext());
+        @Nullable VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(event.getDataContext());
 
-        event.getPresentation().setEnabledAndVisible("xml".equals(ext));
+        boolean enable = (file instanceof XmlFile == false);
+
+        event.getPresentation().setEnabledAndVisible(enable);
+
+//        String ext = FileUtils.getFileExtension(event.getDataContext());
+//
+//        event.getPresentation().setEnabledAndVisible("xml".equals(ext));
     }
 
     private boolean validate(Project project) {

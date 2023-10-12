@@ -57,7 +57,7 @@ public class TableInfoDTO {
         }
     }
 
-    private TableInfoDTO(DbTable dbTable) {
+    public TableInfoDTO(DbTable dbTable) {
         this.name = NameUtils.getInstance().getClassName(dbTable.getName());
         this.preName = "";
         this.comment = dbTable.getComment();
@@ -250,6 +250,7 @@ public class TableInfoDTO {
             columnInfo.setObj(nameToObj.get(dto.getName()));
             columnInfo.setName(dto.getName());
             columnInfo.setType(dto.getType());
+            columnInfo.setJdbcType(getJdbcType(dto.getType()));
             // 最后一节为短类型
             String[] split = dto.getType().split("\\.");
             columnInfo.setShortType(split[split.length - 1]);
@@ -264,6 +265,36 @@ public class TableInfoDTO {
             }
         }
         return tableInfo;
+    }
+
+    private String getJdbcType(String javaType) {
+        switch (javaType) {
+            case "java.lang.Integer":
+                return "INTEGER";
+            case "java.lang.Short":
+                return "TINYINT";
+            case "java.lang.Long":
+                return "BIGINT";
+            case "java.lang.Double":
+                return "DOUBLE";
+            case "java.lang.Float":
+                return "FLOAT";
+            case "java.lang.Boolean":
+                return "BIT";
+            case "java.math.BigDecimal":
+                return "DECIMAL";
+            case "java.util.Date":
+            case "java.sql.Timestamp":
+            case "java.time.Instant":
+            case "java.time.LocalDateTime":
+            case "java.time.OffsetDateTime":
+            case "java.time.ZonedDateTime":
+            case "java.sql.Date":
+            case "java.time.LocalDate":
+                return "TIMESTAMP";
+            default:
+                return "VARCHAR";
+        }
     }
 
     public static TableInfoDTO valueOf(TableInfo tableInfo) {

@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "cn.mercury"
-version = "1.2.0-2022.1"
+version = "1.2.7"
 
 repositories {
     mavenLocal()
@@ -37,7 +37,7 @@ intellij {
             "SpringBoot",
         )
     )
-    updateSinceUntilBuild.set(false)
+    updateSinceUntilBuild.set(true)
     downloadSources.set(true)
 }
 
