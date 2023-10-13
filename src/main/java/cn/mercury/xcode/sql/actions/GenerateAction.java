@@ -64,7 +64,16 @@ public class GenerateAction extends AnAction {
         //new DatasourceHelper().execute(event);
         //开始处理
 
-        new GenerateCodeForm(event.getProject()).show();
+        GenerateCodeForm form = new GenerateCodeForm(event.getProject());
+        form.show();
+
+        int flag = form.getReturnFlag();
+
+        //重启
+        if(flag == 9 ){
+            form = new GenerateCodeForm(event.getProject());
+            form.show();
+        }
     }
 
     private Set<String> getAllColumnsDataType(List<DbTable> dbTables) {

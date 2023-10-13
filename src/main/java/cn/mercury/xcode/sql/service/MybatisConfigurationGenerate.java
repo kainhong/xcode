@@ -25,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class MybatisConfigurationGenerate {
 
@@ -41,11 +43,22 @@ public class MybatisConfigurationGenerate {
     }
 
     public void update() {
+        CountDownLatch countDownLatch = new CountDownLatch(1);
         WriteCommandAction.runWriteCommandAction(this.project, () -> {
             // 在此处进行文件修改
-            this.updateMybatisConfiguration();
+            try {
+                this.updateMybatisConfiguration();
+            } catch (Exception e) {
+
+            }
+            countDownLatch.countDown();
         });
 
+        try {
+            countDownLatch.await(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+
+        }
     }
 
     private void updateMybatisConfiguration() {

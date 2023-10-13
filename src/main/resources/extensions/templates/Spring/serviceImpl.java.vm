@@ -1,5 +1,5 @@
 ##定义初始变量
-#set($tableName = $serverImplClassName)
+#set($tableName = $serviceImplClassName)
 ##设置回调
 $!context.setFileName($tool.append($tableName, ".java"))
 $!context.setSavePath($tool.append($sourcePath, ""))

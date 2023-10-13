@@ -1,14 +1,16 @@
 package cn.mercury.xcode.sql.ui;
 
 import cn.hutool.core.io.FileUtil;
+import cn.mercury.mybatis.JsonUtils;
 import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.model.table.TableInfo;
 import cn.mercury.xcode.mybatis.language.dom.model.Configuration;
-import cn.mercury.xcode.mybatis.utils.DomUtils;
 import cn.mercury.xcode.mybatis.utils.MapperUtils;
 import cn.mercury.xcode.service.TableInfoSettingsService;
 import cn.mercury.xcode.sql.generate.GenerateOptions;
 import cn.mercury.xcode.sql.service.CodeGenerateService;
+import cn.mercury.xcode.sql.service.storage.GenerateStateStorage;
+import cn.mercury.xcode.sql.service.storage.IGenerateStorageService;
 import cn.mercury.xcode.sql.setting.Template;
 import cn.mercury.xcode.sql.setting.TemplateConfiguration;
 import cn.mercury.xcode.sql.setting.TemplateGroup;
@@ -19,10 +21,6 @@ import com.intellij.ide.util.PackageChooserDialog;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ChooseModulesDialog;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -37,6 +35,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -80,6 +79,8 @@ public class GenerateCodeForm extends DialogWrapper {
     private JCheckBox chekManager;
     private JCheckBox chekController;
     private JComboBox cmbConfiguration;
+    private JCheckBox chkAllNo;
+    private JButton btnReset;
 
     private Project project;
 
@@ -104,16 +105,41 @@ public class GenerateCodeForm extends DialogWrapper {
 
     Collection<Configuration> configurations;
 
+    private int returnFlag = 0;
+
+    public int getReturnFlag() {
+        return returnFlag;
+    }
+
     public GenerateCodeForm(@Nullable Project project) {
         super(project);
 
         this.project = project;
 
-        this.init();
-
         this.tableInfoService = TableInfoSettingsService.getInstance();
 
+        this.init();
+    }
 
+
+    @Override
+    protected @Nullable JComponent createCenterPanel() {
+        return panel1;
+    }
+
+    protected void init() {
+        super.init();
+
+        initEvent();
+
+        initData();
+
+        loadState();
+
+        this.panel1.setPreferredSize(new Dimension(800, 600));
+    }
+
+    private void initData() {
         packageTextFields.put("model", txtModelPackage);
         packageTextFields.put("repository", txtRepositoryPackge);
         packageTextFields.put("service", txtServicePackage);
@@ -132,24 +158,7 @@ public class GenerateCodeForm extends DialogWrapper {
         moduleCheckboxes.put("service", chkService);
         moduleCheckboxes.put("manager", chekManager);
         moduleCheckboxes.put("controller", chekController);
-    }
 
-    @Override
-    protected @Nullable JComponent createCenterPanel() {
-        return panel1;
-    }
-
-    protected void init() {
-        super.init();
-
-        initEvent();
-
-        initData();
-
-        this.panel1.setPreferredSize(new Dimension(800, 600));
-    }
-
-    private void initData() {
         var temps = TemplateConfiguration.instance().getTemplateList();
 
         for (var temp : temps) {
@@ -172,6 +181,10 @@ public class GenerateCodeForm extends DialogWrapper {
 
         cmbTemplate.addActionListener(e -> {
             action.run();
+            String prePackage = txtBaiscPackage.getText();
+
+            if (StringUtils.isNotEmpty(prePackage))
+                reSetPackageName(prePackage, prePackage);
         });
 
         this.modules = Arrays.stream(ModuleManager.getInstance(project).getModules())
@@ -179,17 +192,122 @@ public class GenerateCodeForm extends DialogWrapper {
 
         configurations = MapperUtils.getMybatisConfigurations(this.project);
 
-        if (configurations != null) {
-            for (Configuration configuration : configurations) {
-                PsiFile vsfile = configuration.getXmlTag().getContainingFile();
 
-                String name = vsfile.getVirtualFile().getName();
+    }
+    private void resetState(){
+        IGenerateStorageService storageService = IGenerateStorageService.getInstance();
 
-                //Module psModule = ModuleUtilCore.findModuleForPsiElement(vsfile);
+        @Nullable GenerateStateStorage state = storageService.getState();
 
-                cmbConfiguration.addItem(name);
+        if (state == null)
+            return;
+
+        state.setTemplateGroup("");
+        state.setPrefix("");
+        state.setBasePackage("");
+        state.setBaseModule("");
+        state.setModelModule("");
+        state.setModelPackage("");
+        state.setModelEnable(false);
+        state.setRepositoryModule("");
+        state.setRepositoryPackage("");
+        state.setRepositoryEnable(false);
+        state.setServiceModule("");
+        state.setServicePackage("");
+        state.setServiceEnable(false);
+        state.setManagerModule("");
+        state.setManagerPackage("");
+        state.setManagerEnable(false);
+        state.setControllerModule("");
+        state.setControllerPackage("");
+        state.setControllerEnable(false);
+        state.setMybatisConfigurationFile("");
+        state.setMybatisMapperFile("");
+    }
+    private void loadState() {
+        IGenerateStorageService storageService = IGenerateStorageService.getInstance();
+
+        @Nullable GenerateStateStorage state = storageService.getState();
+
+        if (state == null)
+            return;
+        if(StringUtils.isNotEmpty(state.getTemplateGroup()))
+            cmbTemplate.setSelectedItem(state.getTemplateGroup());
+
+        if (StringUtils.isEmpty(state.getBasePackage()))
+            return;
+        txtBaiscPackage.setText(state.getBasePackage());
+
+        txtModule.setText(state.getBaseModule());
+        Module basicModule = getModule(state.getBaseModule());
+
+        loadMybatisConfigurationFiles(basicModule);
+
+        if (StringUtils.isNotEmpty(state.getPrefix()))
+            this.txtPrefix.setText(state.getPrefix());
+
+        try {
+            Map<String, Object> params = JsonUtils.fromJson(JsonUtils.toJson(state), Map.class);
+            for (String name : moduleNames) {
+                loadState(name, params);
             }
+
+        } catch (IOException e) {
+
         }
+    }
+
+    private void loadState(String name, Map<String, Object> state) {
+        String moduleName = (String) state.get(name + "Module");
+        if (moduleName == null)
+            return;
+
+        Module module = getModule(moduleName);
+        if (module == null)
+            return;
+
+        var chk = moduleCheckboxes.get(name);
+        chk.setSelected((Boolean) state.get(name + "Enable"));
+
+        var txtModule = moduleTextFields.get(name);
+        txtModule.setText(module.getName());
+
+        cachedValue.put(txtModule, module);
+
+        var txtPackage = packageTextFields.get(name);
+        txtPackage.setText((String) state.get(name + "Package"));
+
+
+    }
+
+    private void saveState() {
+        IGenerateStorageService storageService = IGenerateStorageService.getInstance();
+
+        @Nullable GenerateStateStorage state = storageService.getState();
+
+        if (state == null)
+            return;
+
+        state.setTemplateGroup((String) cmbTemplate.getSelectedItem());
+        state.setPrefix(txtPrefix.getText());
+
+        state.setBasePackage(txtBaiscPackage.getText());
+        state.setBaseModule(txtModule.getText());
+        state.setModelModule(txtModelModule.getText());
+        state.setModelPackage(txtModelPackage.getText());
+        state.setModelEnable(chkModel.isSelected());
+        state.setRepositoryModule(txtRepositoryModule.getText());
+        state.setRepositoryPackage(txtRepositoryPackge.getText());
+        state.setRepositoryEnable(chkRepository.isSelected());
+        state.setServiceModule(txtServiceModule.getText());
+        state.setServicePackage(txtServicePackage.getText());
+        state.setServiceEnable(chkService.isSelected());
+        state.setControllerModule(txtControllerModule.getText());
+        state.setControllerPackage(txtControllerPackage.getText());
+        state.setControllerEnable(chekController.isSelected());
+        state.setMybatisConfigurationFile((String) cmbConfiguration.getSelectedItem());
+        state.setMybatisMapperFile(txtMapperFolder.getText());
+
     }
 
     Map<Object, Object> cachedValue = new HashMap<>();
@@ -212,31 +330,91 @@ public class GenerateCodeForm extends DialogWrapper {
             } catch (Exception ex) {
 
             }
-
         });
 
+
         btnSelectModule.addActionListener(e -> {
-            Module module = selectModule(txtModule);
-            if (module != null) {
-                this.rootOutputPath = getModulePath(module, null);
-                setModule(module.getName());
-            }
+            Module module = selectModule(txtModule, "");
+            if (module == null)
+                return;
+
+            this.rootOutputPath = getModulePath(module, null);
+
+            setModule(module.getName());
+
+            loadMybatisConfigurationFiles(module);
         });
 
         btnModelPackage.addActionListener(e -> {
-            selectModule(txtModelModule);
+            selectModule(txtModelModule, "model");
         });
         btnRepsitoryPackage.addActionListener(e -> {
-            selectModule(txtRepositoryModule);
+            selectModule(txtRepositoryModule, "repository");
         });
         btnServicePackage.addActionListener(e -> {
-            selectModule(txtServiceModule);
+            selectModule(txtServiceModule, "service");
         });
-        btnManagerPackage.addActionListener(e -> selectModule(txtManagerModule));
+
+        btnManagerPackage.addActionListener(e -> selectModule(txtManagerModule, "manager"));
+
         btnControllerPackage.addActionListener(e -> {
-            selectModule(txtControllerModule);
+            selectModule(txtControllerModule, "controller");
+        });
+
+        this.btnReset.addActionListener((e)->{
+            int flag = Messages.showYesNoDialog("Do you want to continue?", "Confirmation", Messages.getQuestionIcon());
+            if (flag == Messages.NO) {
+                return;
+            }
+
+            this.resetState();
+
+            this.returnFlag = 9;
+            this.close(0);
+        });
+
+        txtRepositoryModule.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                //System.out.println(txtRepositoryModule.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
         });
     }
+
+    private void loadMybatisConfigurationFiles(final Module module) {
+        if (module == null)
+            return;
+
+        List<Configuration> items = configurations.stream().filter(r -> {
+            String filePath = r.getXmlTag().getContainingFile().getVirtualFile().getPath();
+            String modulePath = getModulePath(module, null);
+            filePath = filePath.replace("\\", "/");
+            modulePath = modulePath.replace("\\", "/");
+
+            return filePath.contains(modulePath);
+        }).collect(Collectors.toList());
+
+        cmbConfiguration.removeAllItems();
+
+        for (Configuration configuration : items) {
+            PsiFile vsfile = configuration.getXmlTag().getContainingFile();
+            String name = vsfile.getVirtualFile().getName();
+            //Module psModule = ModuleUtilCore.findModuleForPsiElement(vsfile);
+
+            cmbConfiguration.addItem(name);
+        }
+    }
+
 
     @Override
     protected void doOKAction() {
@@ -255,6 +433,8 @@ public class GenerateCodeForm extends DialogWrapper {
         } finally {
             // 设置光标
             this.panel1.setCursor(Cursor.getDefaultCursor());
+
+            this.close(0);
         }
     }
 
@@ -284,14 +464,14 @@ public class GenerateCodeForm extends DialogWrapper {
         GenerateOptions options = GenerateOptions.builder()
                 .reFormat(chkFormat.isSelected())
                 .titleSure(chkAllYes.isSelected())
-                .titleRefuse(!chkAllYes.isSelected())
-                .unifiedConfig(false)
+                .titleRefuse(chkAllNo.isSelected())
+                .unifiedConfig(true)
                 .moduleName(txtModule.getText())
                 .savePath(this.rootOutputPath)
                 .mapperFolder(mapperFolder)
                 .packageName(txtBaiscPackage.getText())
                 .mixed(true)
-                .templateGroupName((String)cmbTemplate.getSelectedItem())
+                .templateGroupName((String) cmbTemplate.getSelectedItem())
                 .mybatisConfiguration((String) cmbConfiguration.getSelectedItem())
                 .build();
 
@@ -300,6 +480,8 @@ public class GenerateCodeForm extends DialogWrapper {
         CodeGenerateService service = new CodeGenerateService(project, templates, options, tables);
 
         try {
+            saveState();
+
             service.generate(null);
 
             notify(this.project, false);
@@ -315,28 +497,29 @@ public class GenerateCodeForm extends DialogWrapper {
     }
 
     private void notifyUI() {
-        Messages.showInfoMessage("generate finished", GlobalDict.TITLE_INFO);
+        Messages.showInfoMessage("Generate finished.", GlobalDict.TITLE_INFO);
 
         VirtualFileManager.getInstance().syncRefresh();
     }
 
     private void reSetPackageName(String oldPackageName, String packageName) {
 
-        if(cmbTemplate.getSelectedItem() == null)
+        if (cmbTemplate.getSelectedItem() == null)
             return;
 
         TemplateGroup templateGroup = TemplateConfiguration.instance().getTemplateGroup((String) cmbTemplate.getSelectedItem());
 
-        if(templateGroup == null)
+        if (templateGroup == null)
             return;
 
         for (String name : packageTextFields.keySet()) {
             JTextField txtField = packageTextFields.get(name);
             Template template = templateGroup.getTemplate(name);
 
-            reSetPackageName(template,oldPackageName, packageName, name, txtField);
+            reSetPackageName(template, oldPackageName, packageName, name, txtField);
         }
     }
+
 
     private void setModule(String moduleName) {
         for (String name : moduleNames) {
@@ -356,7 +539,7 @@ public class GenerateCodeForm extends DialogWrapper {
         if (this.isOldVersion) {
             if ("model".equals(name)) {
                 fullName = moduleName + "-" + name;
-                module = getSelectModule(fullName);
+                module = getModule(fullName);
                 if (module == null)
                     fullName = moduleName + "-common";
             } else if ("repository".equalsIgnoreCase(name)) {
@@ -368,14 +551,15 @@ public class GenerateCodeForm extends DialogWrapper {
         } else {
             if ("model".equals(name)) {
                 fullName = moduleName + "-" + name;
-            } else if ("controller".equalsIgnoreCase(name)) {
-                fullName = moduleName + "-web";
             } else {
                 fullName = moduleName + "-domain";
             }
         }
 
-        module = getSelectModule(fullName);
+        if ("controller".equalsIgnoreCase(name))
+            fullName = moduleName + "-web";
+
+        module = getModule(fullName);
 
         if (module != null) {
             textField.setText(module.getName());
@@ -415,8 +599,8 @@ public class GenerateCodeForm extends DialogWrapper {
         }
         String format = template.getPackageFormat();
 
-        if(StringUtils.isEmpty(format))
-            format = "%s"+ "." + module;
+        if (StringUtils.isEmpty(format))
+            format = "%s" + "." + module;
 
         String newValue = String.format(format, packageName);
 
@@ -426,13 +610,13 @@ public class GenerateCodeForm extends DialogWrapper {
         }
 
         String oldValue = oldPackageName + "." + module;
-        if (oldValue.equals(textField.getText())) {
+        if (StringUtils.isEmpty(textField.getText()) || oldValue.equals(textField.getText())) {
             textField.setText(newValue);
         }
 
     }
 
-    private Module getSelectModule(String name) {
+    private Module getModule(String name) {
         if (StringUtils.isEmpty(name)) {
             return null;
         }
@@ -440,7 +624,7 @@ public class GenerateCodeForm extends DialogWrapper {
                 .findModuleByName(name);
     }
 
-    private Module selectModule(JTextField textField) {
+    private Module selectModule(JTextField textField, String name) {
         ChooseModulesDialog dialog = new ChooseModulesDialog(this.project, this.modules, "选择模块", "请选择一个模块");
         dialog.setSingleSelectionMode();
         dialog.show();
@@ -450,6 +634,17 @@ public class GenerateCodeForm extends DialogWrapper {
         //module.getModuleNioFile().getParent().toFile().getPath()
         if (module != null && module != before) {
             textField.setText(module.getName());
+
+            if (!StringUtils.isEmpty(name)) {
+                JTextField txt = packageTextFields.get(name);
+                if (StringUtils.isEmpty(txt.getText()) && StringUtils.isNotEmpty(txtBaiscPackage.getText())) {
+                    TemplateGroup templateGroup = TemplateConfiguration.instance().getTemplateGroup((String) cmbTemplate.getSelectedItem());
+                    Template template = templateGroup.getTemplate(name);
+                    if (template != null)
+                        txt.setText(String.format(template.getPackageFormat(), txtBaiscPackage.getText()));
+                }
+            }
+
             cachedValue.put(textField, module);
         }
         return module;

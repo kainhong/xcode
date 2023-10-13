@@ -14,13 +14,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import $!{modelPackageName}.$!{modelClassName};
 import $!{managerPackageName}.$!{managerClassName};
@@ -36,7 +36,6 @@ import com.yougou.logistics.base.web.controller.BaseCrudController;
  * @author $!author
  * @since $!time.currTime()
  */
-@RestController
 @RequestMapping("$!{tableInfo.obj.name}")
 public class $!{tableName}  extends BaseCrudController<$!{modelClassName}> {
     /**
