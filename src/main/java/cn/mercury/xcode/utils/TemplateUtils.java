@@ -71,6 +71,7 @@ public final class TemplateUtils {
         return addGlobalConfig(val + "\n", globalConfigs);
     }
 
+
     public static String getTemplateContent(Template template){
         if(StringUtils.isNotEmpty(template.getValue()))
             return template.getValue();
@@ -82,6 +83,10 @@ public final class TemplateUtils {
      * @param template 单个模板
      */
     public static String addGlobalConfig(Template template) {
+        return addGlobalConfig(template, CurrGroupUtils.getCurrGlobalConfigGroup().getElementList());
+    }
+
+    public static String parseTemplate(String template) {
         return addGlobalConfig(template, CurrGroupUtils.getCurrGlobalConfigGroup().getElementList());
     }
 }

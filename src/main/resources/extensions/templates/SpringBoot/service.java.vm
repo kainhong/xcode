@@ -1,0 +1,26 @@
+##定义初始变量
+#set($tableName = $serviceClassName)
+##设置回调
+$!context.setFileName($tool.append($tableName, ".java"))
+$!context.setSavePath($tool.append($sourcePath, ""))
+
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+package $!{servicePackageName};
+
+import $!{modelPackageName}.$!{modelClassName};
+
+import topmall.framework.service.IService;
+
+/**
+ * $!{tableInfo.comment}($!{tableInfo.name})表服务接口
+ *
+ * @author $!author
+ * @since $!time.currTime()
+ */
+public interface $!{serviceClassName} extends IService<$!{modelClassName},$!{tool.getClsNameByFullName($pk.type)}>{
+
+}

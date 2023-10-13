@@ -1,0 +1,70 @@
+{
+  "name": "SpringBoot",
+  "description":"Topmall Spring Boot 模板",
+  "version": "1.0.0",
+  "author": "Kain",
+  "templates": [
+    {
+      "name": "model",
+      "path": "",
+      "file": "model.java.vm",
+      "group": "model",
+      "nameFormat": "%s"
+    },
+    {
+      "name": "mapper",
+      "path": "",
+      "file": "mapper.xml.vm",
+      "nameFormat": "%sMapper",
+      "group": "repository"
+    },
+    {
+      "name": "repository",
+      "path": "",
+      "file": "repository.java.vm",
+      "group": "repository",
+      "nameFormat": "%sRepository",
+      "packageFormat": "%s.repository"
+    },
+    {
+      "name": "service",
+      "path": "",
+      "file": "service.java.vm",
+      "group": "service",
+      "nameFormat": "I%sService",
+      "packageFormat": "%s.service"
+    },
+    {
+      "name": "serviceImpl",
+      "path": "impl",
+      "file": "serviceImpl.java.vm",
+      "group": "service",
+      "nameFormat": "%sServiceImpl",
+      "packageFormat": "%s.service.impl"
+    },
+    {
+      "name": "manager",
+      "path": "",
+      "file": "manager.java.vm",
+      "group": "manager",
+      "nameFormat": "I%sManager",
+      "packageFormat": "%s.manager"
+    },
+    {
+      "name": "managerImpl",
+      "path": "impl",
+      "file": "managerImpl.java.vm",
+      "group": "manager",
+      "nameFormat": "%sManager",
+      "packageFormat": "%s.manager.impl"
+    },
+    {
+      "name": "controller",
+      "path": "",
+      "packageFormat": "%s.web.controller",
+      "file": "controller.java.vm",
+      "group": "controller",
+      "nameFormat": "%sController"
+    }
+  ]
+}

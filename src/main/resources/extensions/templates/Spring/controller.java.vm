@@ -1,0 +1,52 @@
+##定义初始变量
+#set($tableName = $controllerClassName)
+##设置回调
+$!context.setFileName($tool.append($tableName, ".java"))
+$!context.setSavePath($tool.append($sourcePath, ""))
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+package $!{controllerPackageName};
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import $!{modelPackageName}.$!{modelClassName};
+import $!{managerPackageName}.$!{managerClassName};
+
+
+import com.yougou.logistics.base.common.exception.ManagerException;
+import com.yougou.logistics.base.web.controller.BaseCrudController;
+
+
+/**
+ * $!{tableInfo.comment}($!{tableInfo.name})表控制层
+ *
+ * @author $!author
+ * @since $!time.currTime()
+ */
+@RequestMapping("$!{tableInfo.obj.name}")
+public class $!{tableName}  extends BaseCrudController<$!{modelClassName}> {
+    /**
+     * 服务对象
+     */
+    @Autowired
+    private $!{managerClassName} $!tool.firstLowerCase($tableInfo.name)Manager;
+
+    @Override
+    public CrudInfo init() {
+        return new CrudInfo("$!tool.firstLowerCase($tableInfo.name)/",$!tool.firstLowerCase($tableInfo.name)Manager);
+    }
+
+}

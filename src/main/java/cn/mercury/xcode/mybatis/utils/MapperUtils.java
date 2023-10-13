@@ -378,7 +378,7 @@ public final class MapperUtils {
         }
     }
 
-    private static Collection<Configuration> getMybatisConfigurations(Project project) {
+    public static Collection<Configuration> getMybatisConfigurations(Project project) {
         return DomUtils.findDomElements(project, Configuration.class);
     }
 

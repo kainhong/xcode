@@ -30,6 +30,9 @@ public class ColumnInfo {
      * 全类型
      */
     private String type;
+
+    private String jdbcType;
+
     /**
      * 短类型
      */
@@ -97,5 +100,13 @@ public class ColumnInfo {
 
     public void setExt(Map<String, Object> ext) {
         this.ext = ext;
+    }
+
+    public String getJdbcType() {
+        return jdbcType;
+    }
+
+    public void setJdbcType(String jdbcType) {
+        this.jdbcType = jdbcType;
     }
 }

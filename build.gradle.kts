@@ -17,7 +17,7 @@ plugins {
 }
 
 group = "cn.mercury"
-version = "idea2023"
+version = "2023.1.2"
 
 repositories {
     mavenLocal()
@@ -44,8 +44,7 @@ dependencies {
     implementation("org.dom4j:dom4j:2.1.3")
     implementation("jaxen:jaxen:1.1.1")
 
-    implementation("cn.wonhigh.mercury:mybatis-x:3.4.6.4-SNAPSHOT")
-    implementation("cn.wonhigh.mercury:mercury-mybatis-parser:3.0.10-SNAPSHOT")
+    implementation("cn.wonhigh.mercury:mercury-mybatis-parser:3.1.5-SNAPSHOT")
 
     testImplementation("junit:junit:4.12")
     testImplementation("commons-io:commons-io:2.8.0")

@@ -1,6 +1,6 @@
 package cn.mercury.xcode.service;
 
-import cn.mercury.xcode.generate.GenerateOptions;
+import cn.mercury.xcode.sql.generate.GenerateOptions;
 import cn.mercury.xcode.model.table.TableInfo;
 import cn.mercury.xcode.model.template.Template;
 import com.intellij.database.psi.DbTable;

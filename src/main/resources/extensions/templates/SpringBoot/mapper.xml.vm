@@ -1,0 +1,173 @@
+##引入mybatis支持
+$!{mybatisSupport.vm}
+
+##设置保存名称与保存位置
+$!context.setFileName($tool.append($!{tableInfo.name}, "Mapper.xml"))
+$!context.setSavePath($tool.append($modulePath, "/src/main/resources/",$mapperFolder))
+
+#set($entity = $tool.append($!modelPackageName ,"." , $modelClassName))
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="$!{repositoryPackageName}.$!{repositoryClassName}">
+    <!-- auto generate -->
+    <resultMap id="baseResultMap" type="$!{entity}" >
+#foreach($column in $tableInfo.fullColumn)
+        <result  column="$!column.obj.name" property="$!column.name" jdbcType="$!column.ext.jdbcType"/>
+#end
+    </resultMap>
+
+    <sql id="column_list">
+#allSqlColumn()
+
+    </sql>
+
+    <sql id="condition">
+        <if test="null!=params.queryCondition and ''!=params.queryCondition">
+            And ${params.queryCondition}
+        </if>
+#foreach($column in $tableInfo.fullColumn)
+        <if test="params.$!column.name != null#if($column.type.equals("java.lang.String")) and ''!=params.$!column.name #end">
+            And `$!column.obj.name` = #{params.$!column.name}
+        </if>
+#end
+    </sql>
+    <!--查询单个-->
+    <select id="findByPrimaryKey" resultMap="baseResultMap" >
+        Select
+        <include refid="column_list" />
+        From $!tableInfo.obj.name
+        Where $!pk.obj.name = #{$!pk.name}
+
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="findByParam" resultMap="baseResultMap" parameterType="map">
+        Select
+        <include refid="column_list" />
+        From $!tableInfo.obj.name
+        <where>
+            <include refid="condition" />
+        </where>
+        Limit 1
+    </select>
+
+    <!--统计总行数-->
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="map">
+        Select Count(1)
+        From $!tableInfo.obj.name
+        <where>
+            <include refid="condition" />
+        </where>
+    </select>
+
+    <select id="selectByPage" resultMap="baseResultMap" parameterType="map">
+        Select
+        <include refid="column_list" />
+        From $!tableInfo.obj.name
+        <where>
+            <include refid="condition" />
+        </where>
+        <if test="orderby != null and ''!=orderby">
+            Order By ${orderby}
+        </if>
+        Limit ${page.startRowNum},${page.pageSize}
+
+    </select>
+
+    <select id="selectByParams" resultMap="baseResultMap" parameterType="map">
+        Select
+        <include refid="column_list" />
+        From `$!tableInfo.obj.name`
+        <where>
+            <include refid="condition" />
+        </where>
+        <if test="orderby != null and ''!=orderby">
+            Order By ${orderby}
+        </if>
+    </select>
+
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="$!pk.name" useGeneratedKeys="false">
+        Insert Into `$!{tableInfo.obj.name}` (
+#foreach($column in $tableInfo.fullColumn)
+         `$!column.obj.name` #if($velocityHasNext),
+#end#end )
+        Values (
+#foreach($column in $tableInfo.otherColumn)
+        #{$!{column.name}} #if($velocityHasNext),
+#end#end
+        )
+    </insert>
+
+    <insert id="insertBatch" keyProperty="$!pk.name" useGeneratedKeys="false">
+        Insert Into `$!{tableInfo.obj.name}` (
+#foreach($column in $tableInfo.fullColumn)
+           `$!column.obj.name`#if($velocityHasNext),
+#end#end
+        ) Values
+        <foreach collection="list" item="entity" separator=",">
+        (
+#foreach($column in $tableInfo.fullColumn)
+            #{entity.$!{column.name}}#if($velocityHasNext),
+#end#end
+        )
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="$!pk.name" useGeneratedKeys="false">
+        Insert Into `$!{tableInfo.obj.name}` (
+#foreach($column in $tableInfo.fullColumn)
+        `$!column.obj.name` #if($velocityHasNext),
+#end#end
+       )Values
+        <foreach collection="list" item="entity" separator=",">
+         (
+#foreach($column in $tableInfo.fullColumn)
+         #{entity.$!{column.name}}#if($velocityHasNext),
+#end#end )
+        </foreach>
+        On Duplicate Key Update
+#foreach($column in $tableInfo.otherColumn)
+        `$!column.obj.name` = values($!column.obj.name) #if($velocityHasNext),
+#end#end
+
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        Update $!{tableInfo.obj.name}
+        <set>
+#foreach($column in $tableInfo.otherColumn)
+            <if test="$!column.name != null#if($column.type.equals("java.lang.String")) and $!column.name != ''#end">
+                `$!column.obj.name` = #{$!column.name},
+            </if>
+#end
+        </set>
+        Where $!pk.obj.name = #{$!pk.name}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteByPrimaryKey">
+        Delete From $!{tableInfo.obj.name} Where $!pk.obj.name = #{$!pk.name}
+    </delete>
+
+    <delete id="deleteByParams" parameterType="map">
+        Delete
+        From $!{tableInfo.obj.name}
+        <where>
+            <include refid="condition" />
+            <if test="params.ids!=null and ''!=params.ids ">
+                And In ( ${params.ids} )
+            </if>
+        </where>
+    </delete>
+
+    <!-- auto generate end -->
+
+</mapper>

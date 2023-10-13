@@ -1,0 +1,38 @@
+##定义初始变量
+#set($tableName = $serviceImplClassName)
+##设置回调
+$!context.setFileName($tool.append($tableName, ".java"))
+$!context.setSavePath($tool.append($tableName, "/impl"))
+
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+package $!{serviceImplPackageName}.impl;
+
+import $!{modelPackageName}.$!{modelClassName};
+import $!{repositoryPackageName}.$!{repositoryClassName};
+import $!{servicePackageName}.$!{serviceClassName};
+
+import org.springframework.stereotype.Service;
+import topmall.framework.repository.IRepository;
+import topmall.framework.service.BaseService;
+import javax.annotation.Resource;
+
+/**
+ * $!{tableInfo.comment}($!{tableInfo.name})表服务实现类
+ *
+ * @author $!author
+ * @since $!time.currTime()
+ */
+@Service("$!tool.firstLowerCase($!{tableInfo.name})Service")
+public class $!{tableName} extends BaseService<$!{modelClassName},$!{tool.getClsNameByFullName($pk.type)}> implements $!{serviceClassName} {
+    @Resource
+    private $!{repositoryClassName} repository;
+
+    protected IRepository<$!{modelClassName},$!{tool.getClsNameByFullName($pk.type)}> getRepository(){
+        return repository;
+    }
+
+}

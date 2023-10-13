@@ -63,8 +63,8 @@ public class LocalFileExportImportSettingsServiceImpl implements ExportImportSet
                 // 发起通知
                 Notification notification = new Notification(
                         Notifications.SYSTEM_MESSAGES_GROUP_ID,
-                        "Easy code notify",
-                        "Easy code config file export to",
+                        "xCode notify",
+                        "xCode config file export to",
                         NotificationType.INFORMATION);
                 notification.addAction(new AnAction(file.getName()) {
                     @Override

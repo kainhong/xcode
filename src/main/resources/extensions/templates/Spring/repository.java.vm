@@ -1,0 +1,29 @@
+##定义初始变量
+#set($tableName = $repositoryClassName)
+##设置回调
+$!context.setFileName($tool.append($tableName, ".java"))
+$!context.setSavePath($sourcePath)
+
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+package $!{repositoryPackageName};
+
+import $!{modelPackageName}.$!{modelClassName};
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Mapper;
+import java.util.List;
+import com.yougou.logistics.base.dal.database.BaseCrudMapper;
+
+/**
+ * $!{tableInfo.comment}($!{tableInfo.name})表数据库访问层
+ *
+ * @author $!author
+ * @since $!time.currTime()
+ */
+@Mapper
+public interface $!{repositoryClassName} extends BaseCrudMapper {
+
+}

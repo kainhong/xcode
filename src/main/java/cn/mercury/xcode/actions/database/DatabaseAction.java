@@ -1,9 +1,11 @@
 package cn.mercury.xcode.actions.database;
 
+import cn.mercury.xcode.sql.ui.GenerateCodeForm;
 import com.intellij.database.psi.DbTable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,8 +15,15 @@ import java.util.List;
 public class DatabaseAction extends AnAction {
 
     @Override
-    public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
+    public void actionPerformed(@NotNull AnActionEvent event) {
+        Project project = event.getProject();
+        if (project == null) {
+            return;
+        }
 
+        GenerateCodeForm form = new GenerateCodeForm(project);
+
+        form.show();
     }
 
 

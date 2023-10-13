@@ -129,7 +129,7 @@ public class SettingsStorage {
     /**
      * 模板组
      */
-    @JsonProperty("template")
+    @JsonProperty("template__")
     private Map<String, TemplateGroup> templateGroupMap;
     /**
      * 当前配置表组名

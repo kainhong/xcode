@@ -1,12 +1,13 @@
 package cn.mercury.xcode;
 
-import cn.mercury.xcode.generate.GenerateContext;
-import cn.mercury.xcode.generate.GenerateOptions;
-import cn.mercury.xcode.generate.MapperMerge;
+import cn.mercury.xcode.sql.generate.GenerateContext;
+import cn.mercury.xcode.sql.generate.GenerateOptions;
+import cn.mercury.xcode.sql.generate.MapperMerge;
 import cn.mercury.xcode.utils.CompareFileUtils;
 import cn.mercury.xcode.utils.FileUtils;
 import cn.mercury.xcode.utils.MessageDialogUtils;
 import cn.mercury.xcode.utils.ProjectUtils;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -119,6 +120,12 @@ public class SaveFile {
         return lowerCase ? path.toLowerCase() : path;
     }
 
+    public void asyncWrite(){
+        WriteCommandAction.runWriteCommandAction(this.project, () -> {
+            // 在此处进行文件修改
+            this.write();
+        });
+    }
     /**
      * 通过IDEA自带的Psi文件方式写入
      */

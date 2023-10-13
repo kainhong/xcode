@@ -48,7 +48,11 @@ public class VelocityUtils {
     public static String generate(Template template, Map<String, Object> map) {
         // 处理模板，注入全局变量
         String content = TemplateUtils.addGlobalConfig(template);
+        return generate(content, map);
+    }
 
+
+    public static String generate(String template, Map<String, Object> map) {
         // 每次创建一个新实例，防止velocity缓存宏定义
         VelocityEngine velocityEngine = new VelocityEngine(INIT_PROP);
         // 创建上下文对象
@@ -59,7 +63,7 @@ public class VelocityUtils {
         StringWriter stringWriter = new StringWriter();
         try {
             // 生成代码
-            velocityEngine.evaluate(velocityContext, stringWriter, "Velocity Code Generate", content);
+            velocityEngine.evaluate(velocityContext, stringWriter, "Velocity Code Generate", template);
         } catch (Exception e) {
             // 将异常全部捕获，直接返回，用于写入模板
             StringBuilder builder = new StringBuilder("在生成代码时，模板发生了如下语法错误：\n");
@@ -77,5 +81,4 @@ public class VelocityUtils {
         // 返回结果
         return sb.toString();
     }
-
 }

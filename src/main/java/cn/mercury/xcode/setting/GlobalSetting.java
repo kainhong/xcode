@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class GlobalSetting {
 
-    private static File getScratchPath(@NotNull String pathParam) throws IOException {
+    public static File getScratchPath(@NotNull String pathParam) throws IOException {
         @NotNull PluginId id = Objects.requireNonNull(PluginId.findId("cn.mercury.xcode"));
 
         final ScratchFileService scratchFileService = ScratchFileService.getInstance();
@@ -25,9 +25,11 @@ public class GlobalSetting {
 
         final File file = new File(path);
 
-        if (!file.exists()) {
-            extensionsRootType.extractBundledResources(id, "");
-        }
+        extensionsRootType.extractBundledResources(id, "");
+
+//        if (!file.exists()) {
+//            extensionsRootType.extractBundledResources(id, "");
+//        }
 
         return file;
     }

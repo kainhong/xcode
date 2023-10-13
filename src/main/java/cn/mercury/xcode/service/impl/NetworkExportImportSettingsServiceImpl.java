@@ -39,7 +39,7 @@ public class NetworkExportImportSettingsServiceImpl implements ExportImportSetti
     @Override
     public void exportConfig(SettingsStorage settingsStorage) {
         // 上传数据
-        String result = HttpUtils.postJson("/template", settingsStorage);
+        String result = HttpUtils.postJson("/template__", settingsStorage);
         if (result != null) {
             // 利用正则提取token值
             String token = "error";
@@ -79,7 +79,7 @@ public class NetworkExportImportSettingsServiceImpl implements ExportImportSetti
         if (token == null) {
             return null;
         }
-        String result = HttpUtils.get(String.format("/template?token=%s", token));
+        String result = HttpUtils.get(String.format("/template__", token));
         if (result == null) {
             return null;
         }
