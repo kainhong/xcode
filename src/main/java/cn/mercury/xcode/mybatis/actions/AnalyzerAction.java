@@ -33,10 +33,10 @@ public class AnalyzerAction extends AnAction {
         //new ParamsSettingForm(event.getProject()).show();
         @Nullable VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(event.getDataContext());
 
-        if( file instanceof XmlFile == false)
+        if (!file.getName().endsWith(".xml"))
             return;
 
-        ParamsSettingForm dialog = new ParamsSettingForm(event.getProject(),file);
+        ParamsSettingForm dialog = new ParamsSettingForm(event.getProject(), file);
 
         dialog.show();
     }
