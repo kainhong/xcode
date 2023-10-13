@@ -1,7 +1,7 @@
 package cn.mercury.xcode.mybatis.actions;
 
 import cn.mercury.xcode.idea.DatasourceHelper;
-import cn.mercury.xcode.ui.mybatis.ParamsSettingForm;
+import cn.mercury.xcode.mybatis.ui.ParamsSettingForm;
 import com.intellij.database.dataSource.LocalDataSource;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -12,16 +12,10 @@ import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.xml.XmlFile;
-import com.intellij.psi.xml.XmlTag;
-import com.intellij.util.xml.DomElement;
-import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

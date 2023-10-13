@@ -2,8 +2,7 @@ package cn.mercury.xcode.mybatis.actions;
 
 import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.idea.DatasourceHelper;
-import cn.mercury.xcode.ui.mybatis.ParamsSettingForm;
-import cn.mercury.xcode.utils.FileUtils;
+import cn.mercury.xcode.mybatis.ui.ParamsSettingForm;
 import com.intellij.database.dataSource.LocalDataSource;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -33,7 +32,7 @@ public class AnalyzerAction extends AnAction {
         //new ParamsSettingForm(event.getProject()).show();
         @Nullable VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(event.getDataContext());
 
-        if( file instanceof XmlFile == false)
+        if( !file.getName().endsWith(".xml"))
             return;
 
         ParamsSettingForm dialog = new ParamsSettingForm(event.getProject(),file);

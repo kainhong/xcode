@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "cn.mercury"
-version = "1.2.8"
+version = "1.2.9"
 
 repositories {
     mavenLocal()
@@ -51,6 +51,8 @@ dependencies {
     implementation("org.dom4j:dom4j:2.1.3")
     implementation("org.slf4j:slf4j-nop:1.7.25")
     implementation("jaxen:jaxen:1.1.1")
+    implementation("commons-lang:commons-lang:2.6")
+
     testImplementation("junit:junit:4.12")
     testImplementation("commons-io:commons-io:2.8.0")
 

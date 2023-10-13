@@ -1,4 +1,4 @@
-package cn.mercury.xcode.ui.mybatis;
+package cn.mercury.xcode.mybatis.ui;
 
 import cn.mercury.mybatis.JsonUtils;
 import cn.mercury.mybatis.analyzer.MybatisAnalyzer;
@@ -7,7 +7,9 @@ import cn.mercury.mybatis.analyzer.MybatisMapperAnalyzer;
 import cn.mercury.mybatis.analyzer.MybatisMapperStatementAnalyzer;
 import cn.mercury.mybatis.analyzer.mock.ParameterMocker;
 import cn.mercury.mybatis.analyzer.model.ParameterVariable;
+import cn.mercury.mybatis.parser.DefaultDataAccessStatementProcessor;
 import cn.mercury.xcode.GlobalDict;
+import cn.mercury.xcode.mybatis.extend.dataaccess.DataAccessStatementProcessor;
 import cn.mercury.xcode.sql.generate.ParamsSettingConfig;
 import cn.mercury.xcode.idea.DatasourceHelper;
 import cn.mercury.xcode.mybatis.SqlHelper;
@@ -58,6 +60,8 @@ public class ParamsSettingForm extends DialogWrapper {
     private JComboBox cmbMappers;
     private JLabel lblInfo;
     private JPanel panelInfo;
+    private JCheckBox chkAccess;
+    private JCheckBox chkNewSecurity;
 
     private MybatisMapperStatementAnalyzer statement;
 
@@ -118,7 +122,12 @@ public class ParamsSettingForm extends DialogWrapper {
 
         values.put("params.queryCondition", "");
 
-        return this.statement.parse(values, false).getSql();
+        String sql =  this.statement.parse(values, false).getSql();
+
+        if(!chkAccess.isSelected())
+            return sql;
+
+        return new DataAccessStatementProcessor(false,chkNewSecurity.isSelected()).Process(sql);
     }
 
     protected boolean createSqlFile() {

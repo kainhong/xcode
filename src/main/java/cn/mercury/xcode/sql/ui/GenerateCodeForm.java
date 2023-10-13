@@ -302,6 +302,9 @@ public class GenerateCodeForm extends DialogWrapper {
         state.setServiceModule(txtServiceModule.getText());
         state.setServicePackage(txtServicePackage.getText());
         state.setServiceEnable(chkService.isSelected());
+        state.setManagerModule(txtManagerModule.getText());
+        state.setManagerPackage(txtManagerPackage.getText());
+        state.setManagerEnable(chekManager.isSelected());
         state.setControllerModule(txtControllerModule.getText());
         state.setControllerPackage(txtControllerPackage.getText());
         state.setControllerEnable(chekController.isSelected());

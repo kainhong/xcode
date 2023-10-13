@@ -13,7 +13,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/",$mapperFo
 
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="$!{repositoryPackageName}.$!{modelClassName}">
+<mapper namespace="$!{repositoryPackageName}.$!{repositoryClassName}">
     <!-- auto generate -->
     <resultMap id="baseResultMap" type="$!{entity}" >
 #foreach($column in $tableInfo.fullColumn)
