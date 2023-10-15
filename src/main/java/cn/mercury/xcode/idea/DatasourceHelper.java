@@ -9,6 +9,7 @@ import com.intellij.database.editor.DatabaseEditorHelper;
 import com.intellij.database.model.DasNamespace;
 import com.intellij.database.model.basic.BasicNode;
 import com.intellij.database.psi.DbDataSource;
+import com.intellij.database.psi.DbTable;
 import com.intellij.database.remote.jdbc.RemoteConnection;
 import com.intellij.database.remote.jdbc.RemoteResultSet;
 import com.intellij.database.remote.jdbc.RemoteResultSetMetaData;
@@ -112,6 +113,21 @@ public class DatasourceHelper {
         }
     }
 
+    public static String getDataSourceDriver(DataSourceNode dataSourceNode){
+        return dataSourceNode.getLocalDataSource().getDriverClass();
+    }
+
+    public static LocalDataSource getTableDataSource(DbTable table){
+         DbDataSource datasource = (DbDataSource) table.getParent().getParent();
+         return (LocalDataSource) datasource.getDelegate();
+    }
+
+    public static boolean isOracle(DbTable table){
+        String driver = getTableDataSource(table).getDriverClass();
+        if(driver.contains("oracle"))
+            return true;
+        return false;
+    }
 
     public static List<Object> execute(Project project, AbstractDataSource realDataSource, String sql) {
         RemoteResultSet rs = null;
