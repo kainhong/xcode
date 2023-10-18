@@ -6,8 +6,10 @@ import cn.mercury.xcode.sql.setting.TemplateGroup;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class UtilsTest {
 
@@ -17,5 +19,12 @@ public class UtilsTest {
         TemplateGroup group = JsonUtils.fromJson(json, TemplateGroup.class);
 
         assertNotNull(group);
+    }
+
+    @Test
+    public void regex_test(){
+        Pattern regex = Pattern.compile("varchar", Pattern.CASE_INSENSITIVE);
+        boolean b = regex.matcher("varchar(20)").find();
+        assertTrue(b);
     }
 }

@@ -2,7 +2,7 @@
 #set($tableName = $managerImplClassName)
 ##设置回调
 $!context.setFileName($tool.append($tableName, ".java"))
-$!context.setSavePath($tool.append($tableName, "/impl"))
+$!context.setSavePath($tool.append($sourcePath, "/impl"))
 ##拿到主键
 #if(!$tableInfo.pkColumn.isEmpty())
     #set($pk = $tableInfo.pkColumn.get(0))

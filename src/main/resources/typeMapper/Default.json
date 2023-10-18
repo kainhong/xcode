@@ -1,7 +1,7 @@
 [
   {
     "matchType": "REGEX",
-    "columnType": "varchar(\\(\\d+\\))?",
+    "columnType": "varchar\\w?",
     "javaType": "java.lang.String"
   },
   {
@@ -43,6 +43,21 @@
     "matchType": "REGEX",
     "columnType": "bigint(\\(\\d+\\))?",
     "javaType": "java.lang.Long"
+  },
+  {
+    "matchType": "REGEX",
+    "columnType": "number(\\(\\d+\\))?",
+    "javaType": "java.lang.Integer"
+  },
+  {
+    "matchType": "REGEX",
+    "columnType": "tinyint",
+    "javaType": "java.lang.Integer"
+  },
+  {
+    "matchType": "REGEX",
+    "columnType": "(number|decimal)(\\(\\d+\\.\\d+\\))?",
+    "javaType": "java.math.BigDecimal"
   },
   {
     "matchType": "ORDINARY",

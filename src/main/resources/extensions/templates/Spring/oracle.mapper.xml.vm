@@ -52,18 +52,19 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/",$mapperFo
     </select>
 
     <select id="selectByPage" resultMap="baseResultMap" parameterType="map">
-       Select * From (
         SELECT
-        <include refid="Base_Column_List" />,rownum  rn
-        FROM $!tableInfo.obj.name WHERE 1=1
+        <include refid="Base_Column_List" />
+        FROM $!tableInfo.obj.name
+        <where>
         <include refid="condition" />
+        AND rownum between #{page.startRowNum} AND #{page.startRowNum} + #{page.pageSize}
+        </where>
         <if test="orderByField != null and ''!=orderByField">
             ORDER BY ${orderByField}
             <if test="orderByField">
                 ${orderBy}
             </if>
         </if>
-    )  where rn between #{page.startRowNum}  and #{page.startRowNum} + #{page.pageSize}
     </select>
 
     <select id="selectByParams" resultMap="baseResultMap" parameterType="map">

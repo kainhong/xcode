@@ -4,12 +4,14 @@ import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.model.SettingsStorage;
 import cn.mercury.xcode.model.template.Template;
 import cn.mercury.xcode.model.template.TemplateGroup;
+import cn.mercury.xcode.mybatis.utils.StringUtil;
 import cn.mercury.xcode.ui.component.*;
 import cn.mercury.xcode.utils.CloneUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.intellij.ide.fileTemplates.impl.UrlUtil;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.util.ExceptionUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -131,13 +133,16 @@ public class TemplateSettingForm implements Configurable, BaseSettings {
         // 复制配置，防止篡改
         this.templateGroupMap = CloneUtils.cloneByJson(settingsStorage.getTemplateGroupMap(), new TypeReference<Map<String, TemplateGroup>>() {
         });
-        this.currTemplateGroup = this.templateGroupMap.get(settingsStorage.getCurrTemplateGroupName());
-        if (this.currTemplateGroup == null) {
-            this.currTemplateGroup = this.templateGroupMap.get(GlobalDict.DEFAULT_TEMPLATE_NAME);
-        }
-        // 解决reset后编辑框未清空BUG
-        if (this.editorComponent != null) {
-            this.editorComponent.setFile(null);
+
+        if(this.templateGroupMap != null && StringUtils.isNotBlank(settingsStorage.getCurrTemplateGroupName())) {
+            this.currTemplateGroup = this.templateGroupMap.get(settingsStorage.getCurrTemplateGroupName());
+            if (this.currTemplateGroup == null) {
+                this.currTemplateGroup = this.templateGroupMap.get(GlobalDict.DEFAULT_TEMPLATE_NAME);
+            }
+            // 解决reset后编辑框未清空BUG
+            if (this.editorComponent != null) {
+                this.editorComponent.setFile(null);
+            }
         }
         this.refreshUiVal();
     }

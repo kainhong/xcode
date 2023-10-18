@@ -59,7 +59,7 @@ public class SettingsStorage {
 //        TemplateGroup templateGroup = new TemplateGroup();
 //        templateGroup.setName(GlobalDict.DEFAULT_TEMPLATE_NAME);
 //        templateGroup.setElementList(Arrays.asList(new Template("demo", "template"), new Template("entity.java", "public")));
-//        storage.templateGroupMap = new HashMap<>(16);
+        storage.templateGroupMap = new HashMap<>(16);
 //        storage.templateGroupMap.put(GlobalDict.DEFAULT_TEMPLATE_NAME, templateGroup);
 
         GlobalConfigGroup globalConfigGroup = new GlobalConfigGroup();
@@ -171,6 +171,9 @@ public class SettingsStorage {
         if (CollectionUtil.isEmpty(this.templateGroupMap)) {
             this.templateGroupMap = defaultVal.getTemplateGroupMap();
         }
+        if(this.templateGroupMap == null )
+            this.templateGroupMap = new HashMap<>();
+
         if (!this.templateGroupMap.containsKey(GlobalDict.DEFAULT_TEMPLATE_NAME)) {
             this.templateGroupMap.put(GlobalDict.DEFAULT_TEMPLATE_NAME, defaultVal.getTemplateGroupMap().get(GlobalDict.DEFAULT_TEMPLATE_NAME));
         }

@@ -59,7 +59,7 @@ public class TypeMapper implements AbstractItem<TypeMapper> {
             }
         } else {
             // 不区分大小写的正则匹配模式
-            if (getRegex().matcher(value).matches()) {
+            if (getRegex().matcher(value).find()) {
                 return true;
             }
         }

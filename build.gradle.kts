@@ -14,13 +14,18 @@ buildscript {
     }
 }
 
+configurations.all{
+    // check for updates every build
+    resolutionStrategy.cacheChangingModulesFor(0, "seconds")
+}
+
 plugins {
     id("java")
     id("org.jetbrains.intellij") version "1.5.2"
 }
 
 group = "cn.mercury"
-version = "1.2.9"
+version = "1.3.1"
 
 repositories {
     mavenLocal()
@@ -57,7 +62,7 @@ dependencies {
     testImplementation("commons-io:commons-io:2.8.0")
 
     //implementation("cn.wonhigh.mercury:mybatis-x:3.4.6.6-SNAPSHOT")
-    implementation("cn.wonhigh.mercury:mercury-mybatis-parser:3.1.5-SNAPSHOT")
+    implementation("cn.wonhigh.mercury:mercury-mybatis-parser:3.2.1-SNAPSHOT")
 
 
     compileOnly("org.projectlombok:lombok:1.18.24")
