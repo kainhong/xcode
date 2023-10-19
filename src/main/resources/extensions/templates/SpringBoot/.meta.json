@@ -39,7 +39,7 @@
       "path": "impl",
       "file": "serviceImpl.java.vm",
       "group": "service",
-      "nameFormat": "%sServiceImpl",
+      "nameFormat": "%sService",
       "packageFormat": "%s.service.impl"
     },
     {

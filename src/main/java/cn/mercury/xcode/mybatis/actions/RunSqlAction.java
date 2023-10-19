@@ -5,7 +5,7 @@ import cn.mercury.xcode.idea.DatasourceHelper;
 import cn.mercury.xcode.mybatis.SqlHelper;
 import cn.mercury.xcode.mybatis.utils.LogUtil;
 import cn.mercury.xcode.mybatis.utils.StringUtil;
-import cn.mercury.xcode.ui.mybatis.SelectDataSourceForm;
+import cn.mercury.xcode.mybatis.ui.SelectDataSourceForm;
 import com.intellij.database.view.DataSourceNode;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;

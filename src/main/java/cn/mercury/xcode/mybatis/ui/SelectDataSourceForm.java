@@ -1,4 +1,4 @@
-package cn.mercury.xcode.ui.mybatis;
+package cn.mercury.xcode.mybatis.ui;
 
 import cn.mercury.xcode.idea.DatasourceHelper;
 import com.intellij.database.view.DataSourceNode;

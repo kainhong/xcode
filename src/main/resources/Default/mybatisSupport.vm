@@ -30,3 +30,8 @@
 `$column.obj.name`#if($velocityHasNext),
     #end
 #end#end
+
+#macro(allOracleSqlColumn)#foreach($column in $tableInfo.fullColumn)
+$column.obj.name#if($velocityHasNext),
+    #end
+#end#end

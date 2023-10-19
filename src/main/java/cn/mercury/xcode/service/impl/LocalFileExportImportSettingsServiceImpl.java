@@ -62,7 +62,7 @@ public class LocalFileExportImportSettingsServiceImpl implements ExportImportSet
 
                 // 发起通知
                 Notification notification = new Notification(
-                        Notifications.SYSTEM_MESSAGES_GROUP_ID,
+                        GlobalDict.ID,
                         "xCode notify",
                         "xCode config file export to",
                         NotificationType.INFORMATION);

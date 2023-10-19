@@ -1,18 +1,21 @@
-package cn.mercury.xcode.ui.mybatis;
+package cn.mercury.xcode.mybatis.ui;
 
 import cn.mercury.mybatis.JsonUtils;
 import cn.mercury.mybatis.analyzer.MybatisAnalyzer;
 import cn.mercury.mybatis.analyzer.MybatisAnalyzerParser;
 import cn.mercury.mybatis.analyzer.MybatisMapperAnalyzer;
 import cn.mercury.mybatis.analyzer.MybatisMapperStatementAnalyzer;
+import cn.mercury.mybatis.analyzer.extend.dataaccess.DataAccessStatementProcessor;
 import cn.mercury.mybatis.analyzer.mock.ParameterMocker;
 import cn.mercury.mybatis.analyzer.model.ParameterVariable;
 import cn.mercury.xcode.GlobalDict;
-import cn.mercury.xcode.sql.generate.ParamsSettingConfig;
 import cn.mercury.xcode.idea.DatasourceHelper;
 import cn.mercury.xcode.mybatis.SqlHelper;
 import cn.mercury.xcode.mybatis.language.dom.model.Mapper;
+import cn.mercury.xcode.mybatis.settings.ISqlParameterStorageService;
+import cn.mercury.xcode.mybatis.settings.SqlParameterStorage;
 import cn.mercury.xcode.mybatis.utils.MapperUtils;
+import cn.mercury.xcode.sql.generate.ParamsSettingConfig;
 import cn.mercury.xcode.utils.FileUtils;
 import cn.wonhigh.ibatis.builder.SqlFragmentsLoader;
 import cn.wonhigh.ibatis.builder.xml.XMLMapperBuilder;
@@ -58,6 +61,10 @@ public class ParamsSettingForm extends DialogWrapper {
     private JComboBox cmbMappers;
     private JLabel lblInfo;
     private JPanel panelInfo;
+    private JCheckBox chkAccess;
+    private JCheckBox chkNewSecurity;
+    private JButton btnSaveParams;
+    private JComboBox cmbParams;
 
     private MybatisMapperStatementAnalyzer statement;
 
@@ -66,6 +73,7 @@ public class ParamsSettingForm extends DialogWrapper {
         return this.mainPanel;
     }
 
+    List<SqlParameterStorage.ParameterGroup> parameterGroups;
 
     @Override
     protected void doOKAction() {
@@ -118,7 +126,12 @@ public class ParamsSettingForm extends DialogWrapper {
 
         values.put("params.queryCondition", "");
 
-        return this.statement.parse(values, false).getSql();
+        String sql = this.statement.parse(values, false).getSql();
+
+        if (!chkAccess.isSelected())
+            return sql;
+
+        return new DataAccessStatementProcessor(false, chkNewSecurity.isSelected()).Process(sql);
     }
 
     protected boolean createSqlFile() {
@@ -160,6 +173,8 @@ public class ParamsSettingForm extends DialogWrapper {
 
         cmbStatement.addActionListener((e) -> {
             loadParamsInfo();
+
+            loadParameterSetting();
         });
     }
 
@@ -230,12 +245,13 @@ public class ParamsSettingForm extends DialogWrapper {
             return;
 
         DefaultTableModel tableModel = (DefaultTableModel) table1.getModel();
-        int rowCount = tableModel.getRowCount();
 
         Map<String, Object> values = new HashMap<>();
 
         ParameterMocker mocker = ParameterMocker.builder().values(values)
                 .conditions(this.statement.getStatement().getConditions()).build();
+
+        int rowCount = tableModel.getRowCount();
 
         for (int r = 0; r < rowCount; r++) {
             String p = (String) tableModel.getValueAt(r, 0);
@@ -335,7 +351,7 @@ public class ParamsSettingForm extends DialogWrapper {
                     return configuration.getSqlFragments().get(refid);
                 };
 
-                this.mybatisMapperAnalyzer = new MybatisMapperAnalyzer(stream, file.getName(), loader,visitor);
+                this.mybatisMapperAnalyzer = new MybatisMapperAnalyzer(stream, file.getName(), loader, visitor);
 
             }
         }
@@ -423,6 +439,65 @@ public class ParamsSettingForm extends DialogWrapper {
         }
 
         btnMock.setEnabled(true);
+
+        cmbParams.addActionListener((e) -> {
+            String groupName = (String) cmbParams.getSelectedItem();
+            loadParameter(groupName);
+        });
+    }
+
+    private void loadParameter(String groupName) {
+        DefaultTableModel tableModel = (DefaultTableModel) table1.getModel();
+        int rowCount = tableModel.getRowCount();
+
+        if (StringUtils.isEmpty(groupName)) {
+            for (int i = 0; i < rowCount; i++) {
+                String value = "";
+                tableModel.setValueAt(value, i, 2);
+            }
+            return;
+        }
+
+        if (parameterGroups == null || parameterGroups.size() == 0)
+            return;
+
+        SqlParameterStorage.ParameterGroup group = this.parameterGroups.stream().filter(g -> g.getName().equals(groupName)).findFirst().orElse(null);
+        if (group == null)
+            return;
+
+        for (int i = 0; i < rowCount; i++) {
+            String value = "";
+            String key = (String) tableModel.getValueAt(i, 0);
+
+            if (group.getParams().containsKey(key))
+                value = group.getParams().get(key);
+
+            tableModel.setValueAt(value, i, 2);
+        }
+
+    }
+
+    private void loadParameterSetting() {
+        cmbParams.removeAllItems();
+
+        String namespace = (String) cmbMappers.getSelectedItem();
+
+        String id = (String) cmbStatement.getSelectedItem();
+
+        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(namespace))
+            return;
+
+        SqlParameterStorage storage = ISqlParameterStorageService.getStorage();
+
+        parameterGroups = storage.findGroups(namespace, id);
+
+        if (parameterGroups != null && parameterGroups.size() > 0) {
+            cmbParams.addItem(" ");
+
+            for (SqlParameterStorage.ParameterGroup group : parameterGroups) {
+                cmbParams.addItem(group.getName());
+            }
+        }
     }
 
     private void loadDataInBackground() {

@@ -3,6 +3,7 @@ package cn.mercury.xcode.sql.ui;
 import cn.hutool.core.io.FileUtil;
 import cn.mercury.mybatis.JsonUtils;
 import cn.mercury.xcode.GlobalDict;
+import cn.mercury.xcode.idea.DatasourceHelper;
 import cn.mercury.xcode.model.table.TableInfo;
 import cn.mercury.xcode.mybatis.language.dom.model.Configuration;
 import cn.mercury.xcode.mybatis.utils.MapperUtils;
@@ -36,6 +37,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +47,8 @@ public class GenerateCodeForm extends DialogWrapper {
     static final Logger logger = Logger.getInstance(GenerateCodeForm.class);
 
     private final TableInfoSettingsService tableInfoService;
+
+    private final List<DbTable> tables;
     private JPanel panel1;
     private JTextField txtPrefix;
     private JTextField txtModelParentClass;
@@ -107,12 +111,16 @@ public class GenerateCodeForm extends DialogWrapper {
 
     private int returnFlag = 0;
 
+    private boolean isOracleDataSource = false;
+
     public int getReturnFlag() {
         return returnFlag;
     }
 
     public GenerateCodeForm(@Nullable Project project) {
         super(project);
+
+        this.tables = cacheDataUtils.getDbTableList();
 
         this.project = project;
 
@@ -192,9 +200,13 @@ public class GenerateCodeForm extends DialogWrapper {
 
         configurations = MapperUtils.getMybatisConfigurations(this.project);
 
+        if (this.tables != null && this.tables.size() > 0) {
+            this.isOracleDataSource = DatasourceHelper.isOracle(this.tables.get(0));
+        }
 
     }
-    private void resetState(){
+
+    private void resetState() {
         IGenerateStorageService storageService = IGenerateStorageService.getInstance();
 
         @Nullable GenerateStateStorage state = storageService.getState();
@@ -224,6 +236,7 @@ public class GenerateCodeForm extends DialogWrapper {
         state.setMybatisConfigurationFile("");
         state.setMybatisMapperFile("");
     }
+
     private void loadState() {
         IGenerateStorageService storageService = IGenerateStorageService.getInstance();
 
@@ -231,7 +244,7 @@ public class GenerateCodeForm extends DialogWrapper {
 
         if (state == null)
             return;
-        if(StringUtils.isNotEmpty(state.getTemplateGroup()))
+        if (StringUtils.isNotEmpty(state.getTemplateGroup()))
             cmbTemplate.setSelectedItem(state.getTemplateGroup());
 
         if (StringUtils.isEmpty(state.getBasePackage()))
@@ -364,7 +377,7 @@ public class GenerateCodeForm extends DialogWrapper {
             selectModule(txtControllerModule, "controller");
         });
 
-        this.btnReset.addActionListener((e)->{
+        this.btnReset.addActionListener((e) -> {
             int flag = Messages.showYesNoDialog("Do you want to continue?", "Confirmation", Messages.getQuestionIcon());
             if (flag == Messages.NO) {
                 return;
@@ -478,7 +491,6 @@ public class GenerateCodeForm extends DialogWrapper {
                 .mybatisConfiguration((String) cmbConfiguration.getSelectedItem())
                 .build();
 
-        List<DbTable> tables = cacheDataUtils.getDbTableList();
 
         CodeGenerateService service = new CodeGenerateService(project, templates, options, tables);
 
@@ -726,12 +738,14 @@ public class GenerateCodeForm extends DialogWrapper {
 
         List<Template> ary = new ArrayList<>();
 
-        List<Template> items = this.templateGroup.getTemplates().stream().filter(r -> r.getGroup().equals(moduleGroup)).collect(Collectors.toList());
+        List<Template> items = this.templateGroup.getTemplates()
+                .stream()
+                .filter(r -> r.getGroup().equals(moduleGroup))
+                .collect(Collectors.toList());
 
         for (var item : items) {
             Template template = item.clone();
-            String templateFile = templateRootPath + "/" + templateGroup.getName() + "/" + template.getFile();
-            String content = FileUtil.readUtf8String(templateFile);
+            String content = getTemplateContent(templateRootPath, template);
             template.setContent(content);
             template.setPath(packageName);
             template.setPackageName(packageName);
@@ -741,6 +755,19 @@ public class GenerateCodeForm extends DialogWrapper {
         }
 
         return ary;
+    }
+
+    private String getTemplateContent(String resourcePath, Template template) {
+
+        String templateFile = resourcePath + "/" + templateGroup.getName() + "/";
+        if (template.getName().equals("mapper") && this.isOracleDataSource) {
+            templateFile += "oracle." + template.getFile();
+            if (!new File(templateFile).exists())
+                templateFile += template.getFile();
+        } else {
+            templateFile += template.getFile();
+        }
+        return FileUtil.readUtf8String(templateFile);
     }
 
     private void notify(Project project, boolean hasError) {

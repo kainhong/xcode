@@ -94,7 +94,7 @@ public class ProjectUtils {
     public static Module getSelectedModule(Project project){
         ProjectView projectView = ProjectView.getInstance(project);
         AbstractProjectViewPane selectedPane = projectView.getProjectViewPaneById( projectView.getCurrentViewId() );
-        Object selectedElement = selectedPane.getSelectedElement();
+        Object selectedElement = selectedPane.getSelectedPath().getLastPathComponent();
         if( selectedElement instanceof  Module)
             return (Module)selectedElement;
         return null;
