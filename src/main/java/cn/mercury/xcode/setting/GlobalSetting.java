@@ -1,5 +1,6 @@
 package cn.mercury.xcode.setting;
 
+import cn.mercury.xcode.GlobalDict;
 import com.intellij.ide.extensionResources.ExtensionsRootType;
 import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.openapi.extensions.PluginId;
@@ -13,7 +14,7 @@ import java.util.Objects;
 public class GlobalSetting {
 
     public static File getScratchPath(@NotNull String pathParam) throws IOException {
-        @NotNull PluginId id = Objects.requireNonNull(PluginId.findId("cn.mercury.xcode"));
+        @NotNull PluginId id = Objects.requireNonNull(PluginId.findId(GlobalDict.ID));
 
         final ScratchFileService scratchFileService = ScratchFileService.getInstance();
 

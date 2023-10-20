@@ -44,6 +44,7 @@ import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -96,8 +97,7 @@ public class ParamsSettingForm extends DialogWrapper {
             Object v = tableModel.getValueAt(r, 2);
             if (v == null || StringUtils.isEmpty(v.toString()))
                 continue;
-
-            String type = (String) tableModel.getValueAt(r, 1);
+            //String type = (String) tableModel.getValueAt(r, 1);
 
             String p = (String) tableModel.getValueAt(r, 0);
             if (p != null && jsonRegex.matcher((String) v).find()) {
@@ -176,6 +176,74 @@ public class ParamsSettingForm extends DialogWrapper {
 
             loadParameterSetting();
         });
+
+        btnSaveParams.addActionListener(e -> {
+            if (cmbMappers.getSelectedItem() == null || cmbStatement.getSelectedItem() == null)
+                return;
+
+            String txt = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+            InputDialog dialog = new InputDialog(project, "请输入参数组名称", txt);
+
+            dialog.showAndGet();
+
+            String groupName = dialog.getValue();
+
+            if (StringUtils.isEmpty(groupName))
+                return;
+
+            this.saveParamsSetting(groupName);
+        });
+    }
+
+    private void saveParamsSetting(String groupName) {
+        String namespace = (String) cmbStatement.getSelectedItem();
+        String id = (String) cmbMappers.getSelectedItem();
+
+        if (StringUtils.isEmpty(namespace) || StringUtils.isEmpty(id))
+            return;
+
+        DefaultTableModel tableModel = (DefaultTableModel) table1.getModel();
+        int rowCount = tableModel.getRowCount();
+
+        HashMap<String, String> values = new HashMap<>();
+
+        for (int r = 0; r < rowCount; r++) {
+            String v = (String)tableModel.getValueAt(r, 2);
+            if (v == null || StringUtils.isEmpty(v))
+                continue;
+            String p = (String) tableModel.getValueAt(r, 0);
+            values.put(p,v);
+        }
+
+        if( values.size() == 0 )
+            return;
+
+        SqlParameterStorage storage = ISqlParameterStorageService.getStorage();
+
+        SqlParameterStorage.ParameterGroup group = null;
+
+        if (this.parameterGroups != null) {
+            group = storage.getParameterGroups()
+                    .stream()
+                    .filter(g -> g.getName().equals(groupName) && g.getNamespace().equals(namespace) && g.getId().equals(id))
+                    .findFirst().orElse(null);
+        }
+
+        if( group == null){
+            group = new SqlParameterStorage.ParameterGroup();
+            group.setName(groupName);
+            group.setNamespace(namespace);
+            group.setId(id);
+            group.setTimestamp(new Date());
+            storage.add(group);
+        }
+
+        group.setParams(values);
+
+        loadParameterSetting();
+
+        Messages.showInfoMessage("Save success.", GlobalDict.TITLE_INFO);
     }
 
     public static final int TABLE_ROW_HEIGHT = 20;

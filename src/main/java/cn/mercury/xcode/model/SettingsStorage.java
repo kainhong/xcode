@@ -171,7 +171,7 @@ public class SettingsStorage {
         if (CollectionUtil.isEmpty(this.templateGroupMap)) {
             this.templateGroupMap = defaultVal.getTemplateGroupMap();
         }
-        if(this.templateGroupMap == null )
+        if (this.templateGroupMap == null)
             this.templateGroupMap = new HashMap<>();
 
         if (!this.templateGroupMap.containsKey(GlobalDict.DEFAULT_TEMPLATE_NAME)) {
@@ -257,6 +257,9 @@ public class SettingsStorage {
     }
 
     public Map<String, TemplateGroup> getTemplateGroupMap() {
+        if (templateGroupMap == null)
+            templateGroupMap = new HashMap<>();
+
         return templateGroupMap;
     }
 
