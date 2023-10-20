@@ -25,7 +25,7 @@ plugins {
 }
 
 group = "cn.mercury"
-version = "1.3.2"
+version = "1.3.3"
 
 repositories {
     mavenLocal()
@@ -81,9 +81,9 @@ tasks {
 
     patchPluginXml {
         sinceBuild.set("212")
-        untilBuild.set("222.*")
+        untilBuild.set("232.*")
     }
-
+    //perm:a2Fpbmhvbmc=.OTItODkxMg==.8D5cBBcclh5jWm21HkcdZc2zCpEgg1
     signPlugin {
         certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
         privateKey.set(System.getenv("PRIVATE_KEY"))

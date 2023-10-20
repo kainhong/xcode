@@ -25,6 +25,7 @@
         <applicationService serviceImplementation="cn.mercury.xcode.service.impl.SettingsStorageServiceImpl"/>
         <applicationService serviceImplementation="cn.mercury.xcode.sql.service.storage.GenerateStorageService"/>
         <applicationService serviceImplementation="cn.mercury.xcode.mybatis.settings.LogGlobalConfigState"/>
+        <applicationService serviceImplementation="cn.mercury.xcode.mybatis.settings.SqlParameterStorageService"/>
 
         <projectService serviceImplementation="cn.mercury.xcode.mybatis.settings.LogSettingState"/>
         <projectService id="xcode.JavaService"

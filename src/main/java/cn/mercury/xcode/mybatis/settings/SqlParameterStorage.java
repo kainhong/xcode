@@ -2,15 +2,24 @@ package cn.mercury.xcode.mybatis.settings;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
+
 public class SqlParameterStorage {
 
-    List<ParameterGroup> parameterGroups;
+    List<ParameterGroup> parameterGroups = new ArrayList<>();
+
+    public List<ParameterGroup> getParameterGroups() {
+        return parameterGroups;
+    }
+
+    public void setParameterGroups(List<ParameterGroup> parameterGroups) {
+        this.parameterGroups = parameterGroups;
+    }
 
     public void add(ParameterGroup group) {
         parameterGroups.add(group);

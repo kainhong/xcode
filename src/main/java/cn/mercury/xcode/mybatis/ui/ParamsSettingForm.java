@@ -131,7 +131,11 @@ public class ParamsSettingForm extends DialogWrapper {
         if (!chkAccess.isSelected())
             return sql;
 
-        return new DataAccessStatementProcessor(false, chkNewSecurity.isSelected()).Process(sql);
+        String newSql = new DataAccessStatementProcessor(false, chkNewSecurity.isSelected()).Process(sql);
+        if (StringUtils.isEmpty(newSql))
+            return sql;
+
+        return newSql;
     }
 
     protected boolean createSqlFile() {
@@ -197,8 +201,8 @@ public class ParamsSettingForm extends DialogWrapper {
     }
 
     private void saveParamsSetting(String groupName) {
-        String namespace = (String) cmbStatement.getSelectedItem();
-        String id = (String) cmbMappers.getSelectedItem();
+        String id = (String) cmbStatement.getSelectedItem();
+        String namespace = (String) cmbMappers.getSelectedItem();
 
         if (StringUtils.isEmpty(namespace) || StringUtils.isEmpty(id))
             return;
@@ -209,14 +213,14 @@ public class ParamsSettingForm extends DialogWrapper {
         HashMap<String, String> values = new HashMap<>();
 
         for (int r = 0; r < rowCount; r++) {
-            String v = (String)tableModel.getValueAt(r, 2);
+            String v = (String) tableModel.getValueAt(r, 2);
             if (v == null || StringUtils.isEmpty(v))
                 continue;
             String p = (String) tableModel.getValueAt(r, 0);
-            values.put(p,v);
+            values.put(p, v);
         }
 
-        if( values.size() == 0 )
+        if (values.size() == 0)
             return;
 
         SqlParameterStorage storage = ISqlParameterStorageService.getStorage();
@@ -230,7 +234,7 @@ public class ParamsSettingForm extends DialogWrapper {
                     .findFirst().orElse(null);
         }
 
-        if( group == null){
+        if (group == null) {
             group = new SqlParameterStorage.ParameterGroup();
             group.setName(groupName);
             group.setNamespace(namespace);
@@ -489,7 +493,23 @@ public class ParamsSettingForm extends DialogWrapper {
         this.loadDataInBackground();
     }
 
+    private void initDataSource() {
+        try {
+            List<LocalDataSource> ds = DatasourceHelper.listDatasource(project);
+            if (ds == null || ds.size() == 0)
+                return;
+
+            for (LocalDataSource d : ds) {
+                cmbDataSource.addItem(d.getName());
+            }
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        }
+
+    }
+
     private void initData() {
+
         if (analyzer != null) {
             Set<String> mappers = analyzer.getMappers();
 
@@ -525,20 +545,22 @@ public class ParamsSettingForm extends DialogWrapper {
             }
             return;
         }
+        Map<String, String> datas = null;
+        if (parameterGroups != null && parameterGroups.size() == 0) {
 
-        if (parameterGroups == null || parameterGroups.size() == 0)
-            return;
-
-        SqlParameterStorage.ParameterGroup group = this.parameterGroups.stream().filter(g -> g.getName().equals(groupName)).findFirst().orElse(null);
-        if (group == null)
-            return;
+            SqlParameterStorage.ParameterGroup group = this.parameterGroups.stream().filter(g -> g.getName().equals(groupName)).findFirst().orElse(null);
+            if (group != null)
+                datas = group.getParams();
+        }
+        if (datas == null)
+            datas = new HashMap<>();
 
         for (int i = 0; i < rowCount; i++) {
             String value = "";
             String key = (String) tableModel.getValueAt(i, 0);
 
-            if (group.getParams().containsKey(key))
-                value = group.getParams().get(key);
+            if (datas.containsKey(key))
+                value = datas.get(key);
 
             tableModel.setValueAt(value, i, 2);
         }
@@ -575,12 +597,12 @@ public class ParamsSettingForm extends DialogWrapper {
             SwingUtilities.invokeLater(() -> {
                 panelInfo.setVisible(false);
                 if (ok) {
-                    final List<LocalDataSource> ds = DatasourceHelper.listDatasource(project);
-                    for (LocalDataSource item : ds) {
-                        cmbDataSource.addItem(item.getName());
-                    }
+                    initDataSource();
+
                     initData();
+
                     loadMapper();
+
                 } else {
                     Messages.showWarningDialog("加载失败", GlobalDict.TITLE_INFO);
                 }

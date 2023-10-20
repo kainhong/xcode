@@ -15,6 +15,7 @@ import com.intellij.database.remote.jdbc.RemoteResultSet;
 import com.intellij.database.remote.jdbc.RemoteResultSetMetaData;
 import com.intellij.database.remote.jdbc.RemoteStatement;
 import com.intellij.database.util.GuardedRef;
+
 import com.intellij.database.view.DataSourceNode;
 import com.intellij.database.view.DatabaseView;
 import com.intellij.database.view.structure.DvRootDsGroup;
@@ -23,47 +24,61 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import javax.swing.tree.TreeModel;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class DatasourceHelper {
 
-    //private static final Logger logger = LoggerFactory.getLogger(DatasourceHelper.class);
+    //private static final Logger logger = Logger.getInstance(DatasourceHelper.class);
+    // TreeModel model = databaseView.getTree().getModel();
+    private static TreeModel getTreeModel(Project project) {
 
-    public static List<DataSourceNode> listDataSourceNode(Project project) {
         DatabaseView databaseView = DatabaseView.getDatabaseView(project);
 
-        TreeModel model = databaseView.getTree().getModel();
+        Class<DatabaseView> clzz = DatabaseView.class;
 
-        DvRootDsGroup group = (DvRootDsGroup) model.getRoot();
+        Method method = Arrays.stream(clzz.getMethods()).filter(m -> "getPanel".equals(m.getName()) || "getTree".equals(m.getName())).findFirst().orElse(null);
 
-        TreeSet<BasicNode> children = (TreeSet<BasicNode>) ReflectUtil.getFieldValue(group, "children");
+        if (method == null)
+            return null;
 
-        if (children == null) {
-            return Collections.emptyList();
+        Object val = ReflectUtil.invoke(databaseView, method);
+
+        TreeModel model = null;
+
+        if ("getTree".equals(method.getName())) {
+            model = ReflectUtil.invoke(val, "getModel");
+        } else {
+            model = ReflectUtil.invoke(val, "getAsyncModel");
         }
 
-        return children.stream().map(n -> (DataSourceNode) n).collect(Collectors.toList());
+        return model;
+    }
+
+
+    public static List<DataSourceNode> listDataSourceNode(Project project) {
+
+        TreeModel model = getTreeModel(project);
+        if (model == null)
+            return Collections.emptyList();
+
+        DvRootDsGroup group = (DvRootDsGroup) model.getRoot();
+        List<DataSourceNode> lst = new ArrayList<>();
+        int count = model.getChildCount(group);
+        for (int i = 0; i < count; i++) {
+            var node = model.getChild(group, i);
+            if (node instanceof DataSourceNode) {
+                lst.add((DataSourceNode) node);
+            }
+        }
+
+        return lst;
     }
 
     public static List<LocalDataSource> listDatasource(Project project) {
         return listDataSourceNode(project).stream().map(n -> n.getLocalDataSource()).collect(Collectors.toList());
 
-//        List<LocalDataSource> lst = new ArrayList<>();
-//        if (children == null)
-//            return lst;
-//
-//        for (BasicNode node : children) {
-//            String name = node.getDisplayName();
-//            //System.out.println(name);
-//            DataSourceNode dataSourceNode = (DataSourceNode) node;
-//
-//            LocalDataSource ds = dataSourceNode.getLocalDataSource();
-//
-//            lst.add(ds);
-//        }
-//
-//        return lst;
     }
 
     public static Optional<DataSourceNode> getDatasourceNode(Project project, String name) {
@@ -72,9 +87,10 @@ public class DatasourceHelper {
 
 
     public static void openSqlConsole(Project project, String dsName, VirtualFile file) {
-        DatabaseView databaseView = DatabaseView.getDatabaseView(project);
 
-        TreeModel model = databaseView.getTree().getModel();
+        TreeModel model = getTreeModel(project);
+        if (model == null)
+            return;
 
         DvRootDsGroup group = (DvRootDsGroup) model.getRoot();
 
@@ -113,18 +129,18 @@ public class DatasourceHelper {
         }
     }
 
-    public static String getDataSourceDriver(DataSourceNode dataSourceNode){
+    public static String getDataSourceDriver(DataSourceNode dataSourceNode) {
         return dataSourceNode.getLocalDataSource().getDriverClass();
     }
 
-    public static LocalDataSource getTableDataSource(DbTable table){
-         DbDataSource datasource = (DbDataSource) table.getParent().getParent();
-         return (LocalDataSource) datasource.getDelegate();
+    public static LocalDataSource getTableDataSource(DbTable table) {
+        DbDataSource datasource = (DbDataSource) table.getParent().getParent();
+        return (LocalDataSource) datasource.getDelegate();
     }
 
-    public static boolean isOracle(DbTable table){
+    public static boolean isOracle(DbTable table) {
         String driver = getTableDataSource(table).getDriverClass();
-        if(driver.contains("oracle"))
+        if (driver.contains("oracle"))
             return true;
         return false;
     }
