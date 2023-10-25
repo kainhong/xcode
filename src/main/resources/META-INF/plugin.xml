@@ -37,6 +37,8 @@
         <projectService id="xcode.AliasFacade"
                         serviceImplementation="cn.mercury.xcode.mybatis.language.alias.AliasFacade"/>
 
+        <projectService id="CodeShellSideWindowService"
+                        serviceImplementation="cn.mercury.xcode.window.SideWindowService"/>
 
         <!--文件描述-->
         <!-- mapper.xml文件属性提示 -->
@@ -72,8 +74,8 @@
         <projectService serviceImplementation="cn.mercury.xcode.service.impl.TableInfoSettingsServiceImpl"/>
         <projectService serviceInterface="cn.mercury.xcode.service.CodeGenerateService"
                         serviceImplementation="cn.mercury.xcode.service.impl.CodeGenerateServiceImpl"/>
-        <!--系统设置面板 -->
-        <applicationConfigurable dynamic="true" instance="cn.mercury.xcode.ui.MainSettingForm"/>
+
+        <toolWindow id="CodeShell" anchor="right" icon="cn.mercury.xcode.XCodeIcons.PROJECT_ICON" factoryClass="cn.mercury.xcode.window.WebSideWindowFactory"/>
     </extensions>
 
     <actions>
