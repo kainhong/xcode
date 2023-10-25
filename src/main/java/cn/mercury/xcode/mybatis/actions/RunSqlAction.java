@@ -1,6 +1,7 @@
 package cn.mercury.xcode.mybatis.actions;
 
 import cn.hutool.core.lang.UUID;
+import cn.mercury.xcode.GlobalDict;
 import cn.mercury.xcode.idea.DatasourceHelper;
 import cn.mercury.xcode.mybatis.SqlHelper;
 import cn.mercury.xcode.mybatis.utils.LogUtil;
@@ -9,6 +10,8 @@ import cn.mercury.xcode.mybatis.ui.SelectDataSourceForm;
 import com.intellij.database.view.DataSourceNode;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.psi.xml.XmlFile;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,16 +32,26 @@ public class RunSqlAction extends AnAction {
     }
 
     @Override
+    public void update(@NotNull AnActionEvent e) {
+        List<DataSourceNode> lst = DatasourceHelper.listDataSourceNode(e.getProject());
+
+        boolean enable = (lst != null && lst.size() > 0);
+
+        e.getPresentation().setEnabledAndVisible(enable);
+    }
+
+    @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         String sql = LogUtil.copySql(e);
         if (StringUtil.isEmpty(sql))
             return;
 
         List<DataSourceNode> lst = DatasourceHelper.listDataSourceNode(e.getProject());
-//        if (lst == null || lst.size() == 0) {
-//            Messages.showInfoMessage("请先配置数据源", GlobalDict.TITLE_INFO);
-//            return;
-//        }
+        if (lst == null || lst.size() == 0) {
+            Messages.showInfoMessage("请先配置数据源", GlobalDict.TITLE_INFO);
+            return;
+        }
+
         DataSourceNode ds = null;
 
         if (lst.size() > 1) {

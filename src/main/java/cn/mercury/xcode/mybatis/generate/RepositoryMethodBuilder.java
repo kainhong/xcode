@@ -103,7 +103,7 @@ public class RepositoryMethodBuilder {
 
         PsiMethod targetMethod = factory.createMethodFromText(sb.toString(), clazz);
 
-        WriteCommandAction.runWriteCommandAction(clazz.getProject(), () -> {
+        WriteCommandAction.runWriteCommandAction(clazz.getProject(), "generateCode","repository",  () -> {
             clazz.add(targetMethod);
 
             VirtualFile file = clazz.getContainingFile().getVirtualFile();

@@ -139,9 +139,13 @@ public class DatasourceHelper {
     }
 
     public static boolean isOracle(DbTable table) {
-        String driver = getTableDataSource(table).getDriverClass();
-        if (driver.contains("oracle"))
-            return true;
+        try {
+            String driver = getTableDataSource(table).getDriverClass();
+            if (driver.contains("oracle"))
+                return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return false;
     }
 

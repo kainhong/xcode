@@ -244,7 +244,7 @@ public abstract class AbstractClassMethodBuilder {
 
         PsiMethod newMethod = factory.createMethodFromText(methodText, clazz);
 
-        WriteCommandAction.runWriteCommandAction(clazz.getProject(), () -> {
+        WriteCommandAction.runWriteCommandAction(clazz.getProject(), beanName, method.getName(), () -> {
             clazz.add(newMethod);
             OpenFileAction.openFile(clazz.getContainingFile().getVirtualFile(), project);
         });
