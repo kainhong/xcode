@@ -52,7 +52,7 @@ public class AliasFacade {
             Class.forName("com.intellij.spring.model.utils.SpringModelUtils");
             this.registerResolver(AliasResolverFactory.createBeanResolver(project));
             // support springboot alias
-            this.registerResolver(AliasResolverFactory.createSpringBootResolver(project));
+            //this.registerResolver(AliasResolverFactory.createSpringBootResolver(project));
         } catch (ClassNotFoundException e) {
         }
         this.registerResolver(AliasResolverFactory.createSingleAliasResolver(project));
