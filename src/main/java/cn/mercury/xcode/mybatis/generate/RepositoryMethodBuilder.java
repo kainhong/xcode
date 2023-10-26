@@ -5,6 +5,7 @@ import cn.mercury.xcode.mybatis.language.dom.model.Mapper;
 import cn.mercury.xcode.mybatis.language.dom.model.ResultMap;
 import cn.mercury.xcode.mybatis.language.dom.model.Select;
 import cn.mercury.xcode.mybatis.utils.StringUtil;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
@@ -103,7 +104,7 @@ public class RepositoryMethodBuilder {
 
         PsiMethod targetMethod = factory.createMethodFromText(sb.toString(), clazz);
 
-        WriteCommandAction.runWriteCommandAction(clazz.getProject(), "generateCode","repository",  () -> {
+        ApplicationManager.getApplication().invokeLater(() -> WriteCommandAction.runWriteCommandAction(clazz.getProject(), "generateCode","repository",  () -> {
             clazz.add(targetMethod);
 
             VirtualFile file = clazz.getContainingFile().getVirtualFile();
@@ -116,6 +117,6 @@ public class RepositoryMethodBuilder {
                 }
             }
             //OpenFileAction.openFile(clazz.getContainingFile().getVirtualFile(), project);
-        });
+        }));
     }
 }

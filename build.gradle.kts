@@ -25,7 +25,7 @@ plugins {
 }
 
 group = "cn.mercury"
-version = "2.0.2"
+version = "2.0.3"
 
 repositories {
     mavenLocal()
@@ -63,7 +63,6 @@ dependencies {
 
     //implementation("cn.wonhigh.mercury:mybatis-x:3.4.6.6-SNAPSHOT")
     implementation("cn.wonhigh.mercury:mercury-mybatis-parser:3.2.1-SNAPSHOT")
-
 
     compileOnly("org.projectlombok:lombok:1.18.24")
     annotationProcessor("org.projectlombok:lombok:1.18.24")

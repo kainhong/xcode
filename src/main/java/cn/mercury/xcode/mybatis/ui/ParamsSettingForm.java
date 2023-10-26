@@ -24,6 +24,7 @@ import cn.wonhigh.ibatis.parsing.XNode;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.intellij.database.dataSource.LocalDataSource;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -425,6 +426,8 @@ public class ParamsSettingForm extends DialogWrapper {
 
                 this.mybatisMapperAnalyzer = new MybatisMapperAnalyzer(stream, file.getName(), loader, visitor);
 
+                if(StringUtils.isNotEmpty(this.namespace))
+                    this.mybatisMapperAnalyzer.setNamespace(this.namespace);
             }
         }
     }
@@ -613,17 +616,7 @@ public class ParamsSettingForm extends DialogWrapper {
 //                () -> ApplicationManager.getApplication().runWriteAction(() -> action.run()),
 //                NON_MODAL
 //        );
-
-        ProgressManager.getInstance().run(new Task.Backgroundable(null, "Loading Data", false) {
-            @Override
-            public void run(@org.jetbrains.annotations.NotNull ProgressIndicator indicator) {
-
-//                indicator.setFraction((double) i / 100.0);
-//                indicator.setText2("Loading... " + i + "%");
-
-                action.run();
-            }
-        });
+        ApplicationManager.getApplication().runReadAction(action);
     }
 
     private boolean load() {

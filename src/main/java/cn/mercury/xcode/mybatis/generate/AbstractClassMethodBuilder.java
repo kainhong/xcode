@@ -2,6 +2,7 @@ package cn.mercury.xcode.mybatis.generate;
 
 import cn.mercury.xcode.mybatis.utils.JavaUtils;
 import com.intellij.ide.actions.OpenFileAction;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -244,9 +245,10 @@ public abstract class AbstractClassMethodBuilder {
 
         PsiMethod newMethod = factory.createMethodFromText(methodText, clazz);
 
-        WriteCommandAction.runWriteCommandAction(clazz.getProject(), beanName, method.getName(), () -> {
+        ApplicationManager.getApplication().invokeLater(() -> WriteCommandAction.runWriteCommandAction(clazz.getProject(), beanName, method.getName(), () -> {
             clazz.add(newMethod);
             OpenFileAction.openFile(clazz.getContainingFile().getVirtualFile(), project);
-        });
+        }));
+
     }
 }

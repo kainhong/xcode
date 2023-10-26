@@ -1,6 +1,7 @@
 package cn.mercury.xcode.mybatis.actions;
 
 import cn.mercury.xcode.idea.DatasourceHelper;
+import cn.mercury.xcode.mybatis.language.dom.model.Mapper;
 import cn.mercury.xcode.mybatis.ui.ParamsSettingForm;
 import com.intellij.database.dataSource.LocalDataSource;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -9,9 +10,14 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.xml.XmlDocument;
+import com.intellij.psi.xml.XmlFile;
+import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +25,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ViewSqlAction extends AnAction {
+public class ViewSqlAction extends DumbAwareAction {
 
     final Pattern pattern = Pattern.compile("<select[^<>]*?\\sid=['\"]?(?<id>\\w+)['\"]?(\\s|.)*?>", Pattern.CASE_INSENSITIVE);
 
@@ -32,10 +38,20 @@ public class ViewSqlAction extends AnAction {
 //        }
 
         @Nullable VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+        @Nullable PsiFile psFile = CommonDataKeys.PSI_FILE.getData(e.getDataContext());
+
+        if(!file.getName().endsWith(".xml"))
+            return;
 
         String id = getId(e);
+        String namespace = null;
 
-        ParamsSettingForm dialog = new ParamsSettingForm(project, file, null, id);
+        if( psFile instanceof XmlFile) {
+            XmlTag rootTag = ((XmlFile) psFile).getRootTag();
+            namespace = rootTag.getAttributeValue("namespace");
+        }
+
+        ParamsSettingForm dialog = new ParamsSettingForm(project, file, namespace, id);
 
         dialog.show();
     }
@@ -46,11 +62,12 @@ public class ViewSqlAction extends AnAction {
         // Get required data keys
         final Project project = e.getProject();
         final Editor editor = e.getData(CommonDataKeys.EDITOR);
-
-
+        VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
 
         boolean enable = editor != null && project != null
                 && getId(e) != null;
+
+        enable = enable && file.getName().endsWith(".xml");
 
         e.getPresentation().setEnabledAndVisible(enable);
     }
