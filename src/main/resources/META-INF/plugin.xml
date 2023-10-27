@@ -22,8 +22,7 @@
     <depends optional="true" config-file="project.xml">com.intellij.database</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="cn.mercury.xcode.service.impl.SettingsStorageServiceImpl"/>
-        <applicationService serviceImplementation="cn.mercury.xcode.sql.service.storage.GenerateStorageService"/>
+        <applicationService serviceImplementation="cn.mercury.xcode.code.service.storage.GenerateStorageService"/>
         <applicationService serviceImplementation="cn.mercury.xcode.mybatis.settings.LogGlobalConfigState"/>
         <applicationService serviceImplementation="cn.mercury.xcode.mybatis.settings.SqlParameterStorageService"/>
 
@@ -68,12 +67,6 @@
         <intentionAction order="first" id="xcode.MybatisMapperIntention">
             <className>cn.mercury.xcode.intention.MybatisMapperIntention</className>
         </intentionAction>
-
-
-        <!--项目服务-->
-        <projectService serviceImplementation="cn.mercury.xcode.service.impl.TableInfoSettingsServiceImpl"/>
-        <projectService serviceInterface="cn.mercury.xcode.service.CodeGenerateService"
-                        serviceImplementation="cn.mercury.xcode.service.impl.CodeGenerateServiceImpl"/>
 
         <toolWindow id="CodeShell" anchor="right" icon="cn.mercury.xcode.XCodeIcons.PROJECT_ICON" factoryClass="cn.mercury.xcode.window.WebSideWindowFactory"/>
     </extensions>

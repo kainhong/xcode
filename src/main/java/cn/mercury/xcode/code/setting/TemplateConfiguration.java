@@ -2,7 +2,10 @@ package cn.mercury.xcode.code.setting;
 
 import cn.hutool.core.io.FileUtil;
 import cn.mercury.mybatis.JsonUtils;
+import cn.mercury.xcode.code.service.storage.IGenerateStorageService;
+import cn.mercury.xcode.mybatis.utils.StringUtil;
 import cn.mercury.xcode.setting.GlobalSetting;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,10 +23,11 @@ public class TemplateConfiguration {
             return null;
         }
     }
+
     List<TemplateGroup> templateList;
 
-    public TemplateGroup getTemplateGroup(String name ){
-        return getTemplateList().stream().filter(item->item.getName().equals(name)).findFirst().orElse(null);
+    public TemplateGroup getTemplateGroup(String name) {
+        return getTemplateList().stream().filter(item -> item.getName().equals(name)).findFirst().orElse(null);
     }
 
 
@@ -36,18 +40,36 @@ public class TemplateConfiguration {
             return Collections.emptyList();
         }
 
-        if( templateList != null ) {
+        if (templateList != null) {
             return templateList;
         }
 
-        if (!resourceDirectory.exists()) {
+        templateList = loadTemplate(resourceDirectory);
+
+        templateList.addAll(loadExtendFolder());
+
+        return templateList;
+    }
+
+    private List<TemplateGroup> loadExtendFolder() {
+        String fileName = IGenerateStorageService.getInstance().getState().getExtendTemplateGroup();
+
+        if (StringUtil.isEmpty(fileName))
+            return Collections.emptyList();
+
+        return loadTemplate(new File(fileName));
+    }
+
+    @VisibleForTesting
+    List<TemplateGroup> loadTemplate(File folder) {
+        if (!folder.exists()) {
             return Collections.emptyList();
         }
 
         List<TemplateGroup> list = new ArrayList<>();
         //File metaFile = new File(resourceDirectory, ".meta.xml");
 
-        for (File file : resourceDirectory.listFiles()) {
+        for (File file : folder.listFiles()) {
             File metaFile = new File(file, ".meta.json");
             if (!metaFile.exists())
                 continue;

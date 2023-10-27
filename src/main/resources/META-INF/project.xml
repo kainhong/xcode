@@ -4,19 +4,21 @@
     </extensions>
 
     <actions>
-        <action id="cn.mercury.xcode.sql.actions.MainActionGroup"
-                class="cn.mercury.xcode.sql.actions.MainActionGroup"
-                text="X-Generator" popup="true"
+        <action id="cn.mercury.xcode.code.actions.GenerateAction"
+                class="cn.mercury.xcode.code.actions.GenerateAction"
+                text="X-Generator" popup="true" icon="cn.mercury.xcode.XCodeIcons.RUN"
                 description="X generator idea plugin">
             <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
         </action>
 
-        <group id="$MybatisAnalyzer" text="Mybatis Analyzer" popup="true" icon="AllIcons.CodeWithMe.CwmPermissionView" >
+        <group id="$MybatisAnalyzer" text="Mybatis Analyzer" popup="true"
+               icon="AllIcons.CodeWithMe.CwmPermissionView">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="AnalyzeMenu"/>
-            <action id="mybatis.analyzer" class="cn.mercury.xcode.mybatis.actions.AnalyzerAction" text="Mapper Analyzer">
+            <action id="mybatis.analyzer" class="cn.mercury.xcode.mybatis.actions.AnalyzerAction"
+                    text="Mapper Analyzer">
             </action>
-            <action id="mybatis.x1" class="cn.mercury.xcode.actions.database.DatabaseAction" text="Test">
-            </action>
+            <!--            <action id="mybatis.x1" class="cn.mercury.xcode.actions.database.DatabaseAction" text="Test">-->
+            <!--            </action>-->
 
         </group>
 
@@ -30,7 +32,7 @@
         <action id="$RunSql" class="cn.mercury.xcode.mybatis.actions.RunSqlAction" text="Run SQL"
                 icon="cn.mercury.xcode.mybatis.Icons.COPY_LOG"
                 description="直接选中SQL和参数复制到控制台">
-            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="after" relative-to-action="$CopySql" />
+            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="after" relative-to-action="$CopySql"/>
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt R"/>
         </action>
 
