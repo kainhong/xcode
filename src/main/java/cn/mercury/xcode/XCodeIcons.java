@@ -15,4 +15,6 @@ public class XCodeIcons {
 
     public static final Icon MAPPER_LINE_MARKER_ICON =SPRING_INJECTION_ICON;
 
+
+    public static final Icon RUN = IconLoader.getIcon("/icons/run.svg", XCodeIcons.class);
 }

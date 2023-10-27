@@ -1,0 +1,21 @@
+{
+  "name":"Default",
+  "elementList":[
+    {
+      "name":"autoImport.vm",
+      "uri":"classpath:/Default/autoImport.vm"
+    },
+    {
+      "name":"define.vm",
+      "uri":"classpath:/Default/define.vm"
+    },
+    {
+      "name":"init.vm",
+      "uri":"classpath:/Default/init.vm"
+    },
+    {
+      "name":"mybatisSupport.vm",
+      "uri":"classpath:/Default/mybatisSupport.vm"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 package cn.mercury.xcode.model.template;
 
-import cn.mercury.xcode.model.AbstractItem;
+import cn.mercury.xcode.code.setting.AbstractItem;
 
 /**
  * 抽象的可编辑元素

@@ -1,5 +1,6 @@
 package cn.mercury.xcode.model;
 
+import cn.mercury.xcode.code.setting.AbstractGroup;
 import lombok.Data;
 
 import java.util.List;

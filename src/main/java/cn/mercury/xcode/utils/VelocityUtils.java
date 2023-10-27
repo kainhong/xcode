@@ -1,6 +1,5 @@
 package cn.mercury.xcode.utils;
 
-import cn.mercury.xcode.model.template.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -39,18 +38,12 @@ public class VelocityUtils {
     }
 
     /**
-     * 渲染模板
-     *
-     * @param template 模板字符串
-     * @param map      参数集合
-     * @return 渲染结果
-     */
-    public static String generate(Template template, Map<String, Object> map) {
-        // 处理模板，注入全局变量
-        String content = TemplateUtils.addGlobalConfig(template);
-        return generate(content, map);
-    }
-
+      * 生成代码
+      *
+      * @param template 模板
+      * @param map      参数
+      * @return 生成的代码
+      */
 
     public static String generate(String template, Map<String, Object> map) {
         // 每次创建一个新实例，防止velocity缓存宏定义

@@ -1,8 +1,8 @@
 package cn.mercury.xcode;
 
-import cn.mercury.xcode.sql.generate.GenerateContext;
-import cn.mercury.xcode.sql.generate.GenerateOptions;
-import cn.mercury.xcode.sql.generate.MapperMerge;
+import cn.mercury.xcode.code.generate.GenerateContext;
+import cn.mercury.xcode.code.generate.GenerateOptions;
+import cn.mercury.xcode.code.generate.MapperMerge;
 import cn.mercury.xcode.utils.CompareFileUtils;
 import cn.mercury.xcode.utils.FileUtils;
 import cn.mercury.xcode.utils.MessageDialogUtils;

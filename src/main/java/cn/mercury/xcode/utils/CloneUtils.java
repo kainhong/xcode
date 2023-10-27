@@ -1,8 +1,8 @@
 package cn.mercury.xcode.utils;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.mercury.xcode.model.table.ColumnInfo;
-import cn.mercury.xcode.model.table.TableInfo;
+import cn.mercury.xcode.code.model.table.ColumnInfo;
+import cn.mercury.xcode.code.model.table.TableInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.intellij.util.ExceptionUtil;

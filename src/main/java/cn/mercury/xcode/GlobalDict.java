@@ -1,12 +1,20 @@
 package cn.mercury.xcode;
 
+import java.util.Properties;
+
 public class GlobalDict {
 
     public static final String TITLE_INFO = "xCode";
 
     public static final String ID = "cn.mercury.xcode";
 
-    public static final String AUTHOR = "Kain";
+    public static String getSystemUsername() {
+        Properties properties = System.getProperties();
+        return properties.getProperty("user.name");
+    }
+
+    public static final String AUTHOR = getSystemUsername();
+
     public static final String VERSION = "1.0";
     public static final String DEFAULT_GROUP_NAME = "Default";
 
