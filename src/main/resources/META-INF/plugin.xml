@@ -69,6 +69,11 @@
         </intentionAction>
 
         <toolWindow id="CodeShell" anchor="right" icon="cn.mercury.xcode.XCodeIcons.PROJECT_ICON" factoryClass="cn.mercury.xcode.window.WebSideWindowFactory"/>
+
+
+        <!--系统设置面板
+        <applicationConfigurable dynamic="true" instance="cn.mercury.xcode.setting.ui.SettingForm"/>
+         -->
     </extensions>
 
     <actions>

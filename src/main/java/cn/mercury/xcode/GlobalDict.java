@@ -15,10 +15,6 @@ public class GlobalDict {
 
     public static final String AUTHOR = getSystemUsername();
 
-    public static final String VERSION = "1.0";
-    public static final String DEFAULT_GROUP_NAME = "Default";
-
-    public static final String DEFAULT_TEMPLATE_NAME = "SpringBoot";
 
     public static final String[] DEFAULT_JAVA_TYPE_LIST = new String[]{
             "java.lang.String",
