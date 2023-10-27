@@ -25,7 +25,7 @@ plugins {
 }
 
 group = "cn.mercury"
-version = "2.0.3"
+version = "2.0.5"
 
 repositories {
     mavenLocal()
@@ -48,14 +48,12 @@ intellij {
 
 
 dependencies {
-    implementation("uk.com.robust-it:cloning:1.9.2")
-    implementation("org.mybatis.generator:mybatis-generator-core:1.4.0")
-    implementation("org.freemarker:freemarker:2.3.29")
-    implementation("com.itranswarp:compiler:1.0")
+    //implementation("uk.com.robust-it:cloning:1.9.2")
+    //implementation("com.itranswarp:compiler:1.0")
     implementation("cn.hutool:hutool-core:5.8.0")
-    implementation("org.dom4j:dom4j:2.1.3")
     implementation("org.slf4j:slf4j-nop:1.7.25")
-    implementation("jaxen:jaxen:1.1.1")
+    implementation("org.dom4j:dom4j:2.1.3")
+    //implementation("jaxen:jaxen:1.1.1")
     implementation("commons-lang:commons-lang:2.6")
 
     testImplementation("junit:junit:4.12")

@@ -19,7 +19,7 @@ import com.intellij.util.xml.DomUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
@@ -44,7 +44,7 @@ public class CompositeHashMarkTip {
         this.project = project;
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(CompositeHashMarkTip.class);
+    private static final Logger logger = Logger.getInstance(CompositeHashMarkTip.class);
 
     private static List<HashMarkTip> hashMarkTips = new ArrayList<HashMarkTip>() {
         {

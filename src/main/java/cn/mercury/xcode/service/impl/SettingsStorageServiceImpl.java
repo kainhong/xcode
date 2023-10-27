@@ -15,8 +15,7 @@ import com.intellij.openapi.components.Storage;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.intellij.openapi.diagnostic.Logger;
 
 import java.io.File;
 import java.util.List;
@@ -32,7 +31,7 @@ import java.util.stream.Collectors;
  */
 @State(name = "xCodeSetting", storages = @Storage("x-code-setting.xml"))
 public class SettingsStorageServiceImpl implements SettingsStorageService {
-    private static final Logger logger = LoggerFactory.getLogger(SettingsStorageServiceImpl.class);
+    private static final Logger logger = Logger.getInstance(SettingsStorageServiceImpl.class);
 
     private SettingsStorage settingsStorage = SettingsStorage.defaultVal();
 
@@ -76,15 +75,15 @@ public class SettingsStorageServiceImpl implements SettingsStorageService {
 
     private void loadContext(boolean force) {
         Map<String, TemplateGroup> groups = this.settingsStorage.getTemplateGroupMap();
-        for (TemplateGroup group : groups.values()) {
-            for (Template template : group.getElementList()) {
-                if (StringUtils.isNotEmpty(template.getValue()) && !force)
-                    continue;
-
-                String content = ResourcesUtils.readText(template.getUri());
-                template.setValue(content);
-            }
-        }
+//        for (TemplateGroup group : groups.values()) {
+//            for (Template template : group.getElementList()) {
+//                if (StringUtils.isNotEmpty(template.getValue()) && !force)
+//                    continue;
+//
+//                String content = ResourcesUtils.readText(template.getUri());
+//                template.setValue(content);
+//            }
+//        }
         Map<String, GlobalConfigGroup> configGroups = this.settingsStorage.getGlobalConfigGroupMap();
         for (GlobalConfigGroup value : configGroups.values()) {
             for (GlobalConfig globalConfig : value.getElementList()) {

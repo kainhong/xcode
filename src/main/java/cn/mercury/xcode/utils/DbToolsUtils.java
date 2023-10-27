@@ -1,72 +1,64 @@
 package cn.mercury.xcode.utils;
 
 import cn.mercury.xcode.model.IntellijColumnInfo;
-import cn.mercury.xcode.model.IntellijTableInfo;
 import com.intellij.database.model.DasColumn;
-import com.intellij.database.model.DasTableKey;
-import com.intellij.database.model.DasTypedObject;
-import com.intellij.database.model.MultiRef;
 import com.intellij.database.psi.DbTable;
 import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.JBIterable;
-import com.rits.cloning.Cloner;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The type Db tools utils.
  */
 public class DbToolsUtils {
-    private static final Cloner MY_CLONER = new Cloner();
 
-    /**
-     * Build intellij table info intellij table info.
-     *
-     * @param currentTable the current table
-     * @return the intellij table info
-     */
-    public static IntellijTableInfo buildIntellijTableInfo(DbTable currentTable) {
-        IntellijTableInfo tableInfo = new IntellijTableInfo();
-        tableInfo.setTableName(currentTable.getName());
-        tableInfo.setDatabaseType(extractDatabaseTypeFromUrl(currentTable));
-        tableInfo.setTableRemark(currentTable.getComment());
-        tableInfo.setTableType(currentTable.getTypeName());
-        List<IntellijColumnInfo> intellijColumnInfos = new ArrayList<>();
-        JBIterable<? extends DasColumn> columns = DasUtil.getColumns(currentTable);
-        for (DasColumn column : columns) {
-            IntellijColumnInfo columnInfo = convertColumnToIntellijColumnInfo(column, tableInfo.getDatabaseType());
-            intellijColumnInfos.add(columnInfo);
-        }
 
-        tableInfo.setColumnInfos(intellijColumnInfos);
-        List<IntellijColumnInfo> primaryColumnInfos = new ArrayList<>();
-        DasTableKey primaryKey = DasUtil.getPrimaryKey(currentTable);
-        if (primaryKey != null) {
-            MultiRef<? extends DasTypedObject> columnsRef = primaryKey.getColumnsRef();
-            MultiRef.It<? extends DasTypedObject> iterate = columnsRef.iterate();
-            short s = 0;
-            while (iterate.hasNext()) {
-                String columnName = iterate.next();
-                for (IntellijColumnInfo intellijColumnInfo : intellijColumnInfos) {
-                    if (columnName.equals(intellijColumnInfo.getName())) {
-                        IntellijColumnInfo info = MY_CLONER.deepClone(intellijColumnInfo);
-                        info.setKeySeq(s);
-                        primaryColumnInfos.add(info);
-                        s++;
-                        break;
-                    }
-                }
-            }
-
-        }
-
-        tableInfo.setPrimaryKeyColumns(primaryColumnInfos);
-        return tableInfo;
-    }
+//    /**
+//     * Build intellij table info intellij table info.
+//     *
+//     * @param currentTable the current table
+//     * @return the intellij table info
+//     */
+//    public static IntellijTableInfo buildIntellijTableInfo(DbTable currentTable) {
+//        IntellijTableInfo tableInfo = new IntellijTableInfo();
+//        tableInfo.setTableName(currentTable.getName());
+//        tableInfo.setDatabaseType(extractDatabaseTypeFromUrl(currentTable));
+//        tableInfo.setTableRemark(currentTable.getComment());
+//        tableInfo.setTableType(currentTable.getTypeName());
+//        List<IntellijColumnInfo> intellijColumnInfos = new ArrayList<>();
+//        JBIterable<? extends DasColumn> columns = DasUtil.getColumns(currentTable);
+//        for (DasColumn column : columns) {
+//            IntellijColumnInfo columnInfo = convertColumnToIntellijColumnInfo(column, tableInfo.getDatabaseType());
+//            intellijColumnInfos.add(columnInfo);
+//        }
+//
+//        tableInfo.setColumnInfos(intellijColumnInfos);
+//        List<IntellijColumnInfo> primaryColumnInfos = new ArrayList<>();
+//        DasTableKey primaryKey = DasUtil.getPrimaryKey(currentTable);
+//        if (primaryKey != null) {
+//            MultiRef<? extends DasTypedObject> columnsRef = primaryKey.getColumnsRef();
+//            MultiRef.It<? extends DasTypedObject> iterate = columnsRef.iterate();
+//            short s = 0;
+//            while (iterate.hasNext()) {
+//                String columnName = iterate.next();
+//                for (IntellijColumnInfo intellijColumnInfo : intellijColumnInfos) {
+//                    if (columnName.equals(intellijColumnInfo.getName())) {
+//                        IntellijColumnInfo info = MY_CLONER.deepClone(intellijColumnInfo);
+//                        info.setKeySeq(s);
+//                        primaryColumnInfos.add(info);
+//                        s++;
+//                        break;
+//                    }
+//                }
+//            }
+//
+//        }
+//
+//        tableInfo.setPrimaryKeyColumns(primaryColumnInfos);
+//        return tableInfo;
+//    }
 
 
     private static String extractDatabaseTypeFromUrl(DbTable currentTable) {

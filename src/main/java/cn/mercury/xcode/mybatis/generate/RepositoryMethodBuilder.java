@@ -16,13 +16,13 @@ import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiMethod;
 import com.intellij.util.xml.DomUtil;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
+import com.intellij.openapi.diagnostic.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
 public class RepositoryMethodBuilder {
-    static final Logger logger = LoggerFactory.getLogger(RepositoryMethodBuilder.class);
+    static final Logger logger = Logger.getInstance(RepositoryMethodBuilder.class);
 
     private final Project project;
     private final PsiClass clazz;

@@ -15,7 +15,7 @@
 //import org.apache.commons.lang3.StringUtils;
 //import org.jetbrains.annotations.NotNull;
 //import org.jetbrains.annotations.Nullable;
-//import org.slf4j.Logger;
+//import com.intellij.openapi.diagnostic.Logger;
 //import org.slf4j.LoggerFactory;
 //import org.yaml.snakeyaml.Yaml;
 //import org.yaml.snakeyaml.scanner.ScannerException;
@@ -39,7 +39,7 @@
 //     * spring boot 扩展点
 //     */
 //    public static final String SPRING_BOOT_MODEL_CONFIG_FILE_CONTRIBUTOR = "com.intellij.spring.boot.modelConfigFileContributor";
-//    private static final Logger logger = LoggerFactory.getLogger(SpringBootPackageResolver.class);
+//    private static final Logger logger = Logger.getInstance(SpringBootPackageResolver.class);
 //    public static final String UTF_8 = "UTF-8";
 //
 //    /**

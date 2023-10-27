@@ -1,9 +1,9 @@
 package cn.mercury.xcode.mybatis.logger;
 
 
-import cn.mercury.xcode.mybatis.model.LogConstant;
 import cn.mercury.xcode.mybatis.model.DbType;
 import cn.mercury.xcode.mybatis.model.KeyWordsConstant;
+import cn.mercury.xcode.mybatis.model.LogConstant;
 import cn.mercury.xcode.mybatis.settings.LogConfig;
 import cn.mercury.xcode.mybatis.settings.LogSettingState;
 import cn.mercury.xcode.mybatis.utils.ColoringUtil;
@@ -12,13 +12,12 @@ import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.util.JdbcConstants;
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.ui.ConsoleViewContentType;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -26,7 +25,7 @@ import static cn.mercury.xcode.mybatis.model.LogConstant.*;
 
 public class SqlFormatUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(SqlFormatUtil.class);
+    private static final Logger log = Logger.getInstance(SqlFormatUtil.class);
 
 
     private static Set<String> keywords;

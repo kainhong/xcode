@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ViewSqlAction extends DumbAwareAction {
+public class ViewSqlAction extends AnAction {
 
     final Pattern pattern = Pattern.compile("<select[^<>]*?\\sid=['\"]?(?<id>\\w+)['\"]?(\\s|.)*?>", Pattern.CASE_INSENSITIVE);
 
