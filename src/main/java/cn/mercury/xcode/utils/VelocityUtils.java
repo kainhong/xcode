@@ -1,5 +1,7 @@
 package cn.mercury.xcode.utils;
 
+import cn.mercury.xcode.code.setting.Template;
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -35,6 +37,22 @@ public class VelocityUtils {
      */
     private VelocityUtils() {
         throw new UnsupportedOperationException();
+    }
+
+
+    public static String generate(Template template, Map<String, Object> map) {
+
+        // 处理模板，注入全局变量
+        String content = TemplateUtils.parseTemplate(template.getContent());
+
+        return generate(content, map);
+    }
+
+
+    public static String getTemplateContent(Template template){
+        if(StringUtils.isNotEmpty(template.getFile()))
+            return "";
+        return  ResourcesUtils.readText(template.getFile());
     }
 
     /**

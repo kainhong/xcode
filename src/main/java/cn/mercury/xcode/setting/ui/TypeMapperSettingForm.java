@@ -1,10 +1,17 @@
 //package cn.mercury.xcode.setting.ui;
 //
 //import cn.mercury.xcode.GlobalDict;
-//import cn.mercury.xcode.code.setting.type.DbTypeMapping;
-//import cn.mercury.xcode.code.setting.type.DbTypeMappingGroup;
-//import cn.mercury.xcode.code.setting.type.MatchType;
+//import cn.mercury.xcode.code.service.storage.GenerateStateStorage;
+//import cn.mercury.xcode.factory.CellEditorFactory;
+//import cn.mercury.xcode.model.SettingsStorage;
+//import cn.mercury.xcode.model.type.MatchType;
+//import cn.mercury.xcode.model.type.TypeMapper;
+//import cn.mercury.xcode.model.type.TypeMapperGroup;
+//import cn.mercury.xcode.ui.component.GroupNameComponent;
+//import cn.mercury.xcode.ui.component.TableComponent;
 //import cn.mercury.xcode.utils.CloneUtils;
+//import com.fasterxml.jackson.core.type.TypeReference;
+//import com.fasterxml.jackson.databind.cfg.BaseSettings;
 //import com.intellij.openapi.ui.ComboBoxTableRenderer;
 //import org.jetbrains.annotations.Nullable;
 //
@@ -13,64 +20,71 @@
 //import javax.swing.table.TableCellRenderer;
 //import java.awt.*;
 //import java.util.Arrays;
+//import java.util.List;
 //import java.util.Map;
+//import java.util.function.Consumer;
 //import java.util.stream.Stream;
 //
-//public class TypeMapperSettingForm implements  BaseSettingsFrom<DbTypeMappingGroup>
+///**
+//
+// * @version 1.0.0
+// * @date 2021/08/07 15:33
+// */
+//public class TypeMapperSettingForm implements BaseSettingsFrom<GenerateStateStorage>{
 //    private final JPanel mainPanel;
 //    /**
 //     * 类型映射配置
 //     */
-//    private Map<String, DbTypeMappingGroup> typeMapperGroupMap;
+//    private Map<String, TypeMapperGroup> typeMapperGroupMap;
 //    /**
 //     * 当前分组名
 //     */
-//    private DbTypeMappingGroup currTypeMapperGroup;
+//    private TypeMapperGroup currTypeMapperGroup;
 //    /**
 //     * 表格组件
 //     */
-//    private TableComponent<DbTypeMapping> tableComponent;
+//    private TableComponent<TypeMapper> tableComponent;
 //    /**
 //     * 分组操作组件
 //     */
-//    private GroupNameComponent<DbTypeMapping, DbTypeMappingGroup> groupNameComponent;
+//    private GroupNameComponent<TypeMapper, TypeMapperGroup> groupNameComponent;
 //
 //    public TypeMapperSettingForm() {
 //        this.mainPanel = new JPanel(new BorderLayout());
 //    }
 //
 //    private void initTable() {
-////        // 第一列仅适用下拉框
-////        String[] matchTypeNames = Stream.of(MatchType.values()).map(MatchType::name).toArray(String[]::new);
-////        TableCellEditor matchTypeEditor = CellEditorFactory.createComboBoxEditor(false, matchTypeNames);
-////        TableCellRenderer matchTypeRenderer = new ComboBoxTableRenderer<>(matchTypeNames);
-////        TableComponent.Column<TypeMapper> matchTypeColumn = new TableComponent.Column<>("matchType",
-////                item -> item.getMatchType() != null ? item.getMatchType().name() : MatchType.REGEX.name(),
-////                (entity, val) -> entity.setMatchType(MatchType.valueOf(val)),
-////                matchTypeEditor,
-////                matchTypeRenderer
-////        );
-////        // 第二列监听输入状态，及时修改属性值
-////        TableCellEditor columnTypeEditor = CellEditorFactory.createTextFieldEditor();
-////        TableComponent.Column<TypeMapper> columnTypeColumn = new TableComponent.Column<>("columnType", TypeMapper::getColumnType, TypeMapper::setColumnType, columnTypeEditor, null);
-////        // 第三列支持下拉框
-////        TableCellEditor javaTypeEditor = CellEditorFactory.createComboBoxEditor(true, GlobalDict.DEFAULT_JAVA_TYPE_LIST);
-////        TableCellRenderer javaTypeRenderer = new ComboBoxTableRenderer<>(GlobalDict.DEFAULT_JAVA_TYPE_LIST);
-////        TableComponent.Column<TypeMapper> javaTypeColumn = new TableComponent.Column<>("javaType", TypeMapper::getJavaType, TypeMapper::setJavaType, javaTypeEditor, javaTypeRenderer);
-////        List<TableComponent.Column<TypeMapper>> columns = Arrays.asList(matchTypeColumn, columnTypeColumn, javaTypeColumn);
-////        // 表格初始化
-////        this.tableComponent = new TableComponent<>(columns, this.currTypeMapperGroup.getElementList(), TypeMapper.class);
-////        this.mainPanel.add(this.tableComponent.createPanel(), BorderLayout.CENTER);
+//        // 第一列仅适用下拉框
+//        String[] matchTypeNames = Stream.of(MatchType.values()).map(MatchType::name).toArray(String[]::new);
+//        TableCellEditor matchTypeEditor = CellEditorFactory.createComboBoxEditor(false, matchTypeNames);
+//        TableCellRenderer matchTypeRenderer = new ComboBoxTableRenderer<>(matchTypeNames);
+//        TableComponent.Column<TypeMapper> matchTypeColumn = new TableComponent.Column<>("matchType",
+//                item -> item.getMatchType() != null ? item.getMatchType().name() : MatchType.REGEX.name(),
+//                (entity, val) -> entity.setMatchType(MatchType.valueOf(val)),
+//                matchTypeEditor,
+//                matchTypeRenderer
+//        );
+//        // 第二列监听输入状态，及时修改属性值
+//        TableCellEditor columnTypeEditor = CellEditorFactory.createTextFieldEditor();
+//        TableComponent.Column<TypeMapper> columnTypeColumn = new TableComponent.Column<>("columnType", TypeMapper::getColumnType, TypeMapper::setColumnType, columnTypeEditor, null);
+//        // 第三列支持下拉框
+//        TableCellEditor javaTypeEditor = CellEditorFactory.createComboBoxEditor(true, GlobalDict.DEFAULT_JAVA_TYPE_LIST);
+//        TableCellRenderer javaTypeRenderer = new ComboBoxTableRenderer<>(GlobalDict.DEFAULT_JAVA_TYPE_LIST);
+//        TableComponent.Column<TypeMapper> javaTypeColumn = new TableComponent.Column<>("javaType", TypeMapper::getJavaType, TypeMapper::setJavaType, javaTypeEditor, javaTypeRenderer);
+//        List<TableComponent.Column<TypeMapper>> columns = Arrays.asList(matchTypeColumn, columnTypeColumn, javaTypeColumn);
+//        // 表格初始化
+//        this.tableComponent = new TableComponent<>(columns, this.currTypeMapperGroup.getElementList(), TypeMapper.class);
+//        this.mainPanel.add(this.tableComponent.createPanel(), BorderLayout.CENTER);
 //    }
 //
 //    private void initGroupName() {
 //        // 切换分组操作
-////        Consumer<TypeMapperGroup> switchGroupOperator = typeMapperGroupMap -> {
-////            this.currTypeMapperGroup = typeMapperGroupMap;
-////            refreshUiVal();
-////        };
-////        this.groupNameComponent = new GroupNameComponent<>(switchGroupOperator, this.typeMapperGroupMap);
-////        this.mainPanel.add(groupNameComponent.getPanel(), BorderLayout.NORTH);
+//        Consumer<TypeMapperGroup> switchGroupOperator = typeMapperGroupMap -> {
+//            this.currTypeMapperGroup = typeMapperGroupMap;
+//            refreshUiVal();
+//        };
+//        this.groupNameComponent = new GroupNameComponent<>(switchGroupOperator, this.typeMapperGroupMap);
+//        this.mainPanel.add(groupNameComponent.getPanel(), BorderLayout.NORTH);
 //    }
 //
 //    private void initPanel() {

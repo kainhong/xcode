@@ -1,5 +1,6 @@
 package cn.mercury.xcode.code.model.table;
 
+import cn.mercury.xcode.code.dto.TableInfoDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.intellij.database.psi.DbTable;
 
@@ -163,5 +164,10 @@ public class TableInfo {
 
     public void setSaveModelName(String saveModelName) {
         this.saveModelName = saveModelName;
+    }
+
+    public static TableInfo from(DbTable table){
+        TableInfoDTO dto = new TableInfoDTO(table);
+        return dto.toTableInfo(table);
     }
 }
