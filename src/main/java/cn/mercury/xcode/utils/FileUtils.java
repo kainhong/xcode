@@ -61,6 +61,10 @@ public class FileUtils {
         return LoadTextUtil.loadText(virtualFile).toString();
     }
 
+    public static String readFile(String filePath){
+        return readFile(VfsUtil.findFileByIoFile(new java.io.File(filePath), true));
+    }
+
     /**
      * 单例模式
      */

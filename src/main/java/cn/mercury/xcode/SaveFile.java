@@ -29,7 +29,6 @@ import java.io.File;
  * <p>
  * 如果文件保存在项目路径下，则使用idea提供的psi对象操作。如果文件保存在非项目路径下，则使用java原始IO流操作。
  *
-
  * @version 1.0.0
  * @since 2020/04/20 22:54
  */
@@ -120,12 +119,13 @@ public class SaveFile {
         return lowerCase ? path.toLowerCase() : path;
     }
 
-    public void asyncWrite(){
+    public void asyncWrite() {
         WriteCommandAction.runWriteCommandAction(this.project, () -> {
             // 在此处进行文件修改
             this.write();
         });
     }
+
     /**
      * 通过IDEA自带的Psi文件方式写入
      */
@@ -198,20 +198,21 @@ public class SaveFile {
 
     /**
      * 合并mapper，保留由原有mapper文件格式
+     *
      * @param content
      * @param oldText
      * @return
      */
-    private String mergeMapper( String content,String oldText){
-        if(!oldText.contains("\"http://mybatis.org/dtd/mybatis-3-mapper.dtd\""))
+    private String mergeMapper(String content, String oldText) {
+        if (!oldText.contains("\"http://mybatis.org/dtd/mybatis-3-mapper.dtd\""))
             return content;
 
-        MapperMerge merge = new MapperMerge(oldText,content,null);
+        MapperMerge merge = new MapperMerge(oldText, content, null);
 
         try {
             return merge.merge();
-        }catch (Exception ex){
-            LOG.warn(ex.getMessage(),ex);
+        } catch (Exception ex) {
+            LOG.warn(ex.getMessage(), ex);
             return content;
         }
     }
@@ -225,9 +226,13 @@ public class SaveFile {
     private void saveOrReplaceFile(VirtualFile file, VirtualFile directory) {
         PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
         Document document;
+
+        String fileName = callback.getFileName();
+        boolean isJavaFile = fileName.endsWith(".java");
+
         // 文件不存在直接创建
         if (file == null) {
-            file = fileUtils.createChildFile(project, directory, callback.getFileName());
+            file = fileUtils.createChildFile(project, directory, fileName);
             if (file == null) {
                 return;
             }
@@ -235,7 +240,6 @@ public class SaveFile {
         } else {
             String oldText = getFileText(file);
 
-            String newText = mergeMapper(content,oldText);
 
             // 提示覆盖文件
             if (generateOptions.getTitleSure()) {
@@ -253,8 +257,12 @@ public class SaveFile {
                         document = coverFile(file);
                         break;
                     case Messages.NO:
+                        String newText = oldText;
                         // 对比代码时也格式化代码
                         if (Boolean.TRUE.equals(callback.getReformat())) {
+                            if (fileName.endsWith(".xml"))
+                                newText = mergeMapper(content, oldText);
+
                             // 保留旧文件内容，用新文件覆盖旧文件执行格式化，然后再还原旧文件内容
                             Document tmpDoc = coverFile(file);
                             // 格式化代码
@@ -276,7 +284,7 @@ public class SaveFile {
             }
         }
         // 执行代码格式化操作
-        if (Boolean.TRUE.equals(callback.getReformat())) {
+        if (isJavaFile && Boolean.TRUE.equals(callback.getReformat())) {
             FileUtils.getInstance().reformatFile(project, file);
         }
         // 提交文档改动，并非VCS中的提交文件

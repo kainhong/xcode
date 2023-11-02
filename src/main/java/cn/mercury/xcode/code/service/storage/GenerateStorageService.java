@@ -13,11 +13,14 @@ import org.jetbrains.annotations.Nullable;
 @State(name = "xCodeGenerateSetting", storages = @Storage("x-code-generate.xml"))
 public class GenerateStorageService implements IGenerateStorageService {
 
-    GenerateStateStorage stateStorage = new GenerateStateStorage();
+    GenerateStateStorage stateStorage;
 
     @Override
     public @Nullable GenerateStateStorage getState() {
-
+        if( stateStorage == null ){
+            stateStorage = new  GenerateStateStorage();
+            load(stateStorage);
+        }
         return stateStorage;
     }
 
@@ -25,7 +28,14 @@ public class GenerateStorageService implements IGenerateStorageService {
     public void loadState(@NotNull GenerateStateStorage state) {
         this.stateStorage = state;
 
+        load(state);
+    }
+
+    private void load(@NotNull GenerateStateStorage state) {
         try {
+            if( state.getGenerateSetting() == null)
+                state.setGenerateSetting(new GenerateSetting());
+
             if (state.getGlobalConfigGroup() == null) {
                 String json  = UrlUtil.loadText(GenerateStateStorage.class.getResource("/Default/vmConfig.json"));
                 var group = JsonUtils.fromJson(json, GlobalConfigGroup.class);

@@ -23,7 +23,7 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/",$mapperFo
     </resultMap>
 
     <sql id="Base_Column_List">
-#allSqlColumn()
+        #allSqlColumn()
 
     </sql>
 
