@@ -107,10 +107,10 @@ public class GenerateCodeForm extends DialogWrapper {
         return returnFlag;
     }
 
-    public GenerateCodeForm(@Nullable Project project,List<DbTable> tables) {
+    public GenerateCodeForm(@Nullable Project project, List<DbTable> tables) {
         super(project);
 
-        this.tables =  tables;
+        this.tables = tables;
 
         this.project = project;
 
@@ -711,14 +711,13 @@ public class GenerateCodeForm extends DialogWrapper {
 
     private List<Template> getTemplate(String moduleGroup, JTextField moduleField, JTextField packageField, JCheckBox chk) {
 
-
         var module = (Module) cachedValue.get(moduleField);
         String modulePath = getModulePath(module, null);
         if (StringUtils.isEmpty(modulePath))
             return Collections.emptyList();
 
         String packageName = packageField.getText();
-        String templateRootPath = TemplateConfiguration.getTemplatePath().getPath();
+
 
         List<Template> ary = new ArrayList<>();
 
@@ -729,7 +728,7 @@ public class GenerateCodeForm extends DialogWrapper {
 
         for (var item : items) {
             Template template = item.clone();
-            String content = getTemplateContent(templateRootPath, template);
+            String content = getTemplateContent(template);
             template.setContent(content);
             template.setPath(packageName);
             template.setPackageName(packageName);
@@ -741,7 +740,8 @@ public class GenerateCodeForm extends DialogWrapper {
         return ary;
     }
 
-    private String getTemplateContent(String resourcePath, Template template) {
+    private String getTemplateContent(Template template) {
+        String resourcePath = TemplateConfiguration.getTemplatePath().getPath();
 
         String templateFile = resourcePath + "/" + templateGroup.getName() + "/";
         if (template.getName().equals("mapper") && this.isOracleDataSource) {
@@ -751,6 +751,7 @@ public class GenerateCodeForm extends DialogWrapper {
         } else {
             templateFile += template.getFile();
         }
+
         return FileUtil.readUtf8String(templateFile);
     }
 

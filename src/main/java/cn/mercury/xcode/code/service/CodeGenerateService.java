@@ -25,21 +25,21 @@ public class CodeGenerateService {
     private static final String FILTER_PACKAGE_NAME = "java.lang";
 
     final Project project;
-    private final List<Template> templates;
-    private final GenerateOptions options;
-    private final List<TableInfo> tables;
+    private List<Template> templates;
+    private GenerateOptions options;
+    private List<TableInfo> tables;
 
     ProgressIndicator indicator;
+
+    public CodeGenerateService(Project project){
+        this.project = project;
+    }
 
     public CodeGenerateService(Project project, List<Template> templates, GenerateOptions generateOptions, List<DbTable> tables) {
         this.project = project;
         this.templates = templates;
         this.options = generateOptions;
-        this.tables = tables.stream().map(item ->
-        {
-            TableInfoDTO dto = new TableInfoDTO(item);
-            return dto.toTableInfo(item);
-        }).collect(Collectors.toList());
+        this.tables = tables.stream().map(item ->TableInfo.from(item)).collect(Collectors.toList());
 
     }
 
@@ -234,5 +234,16 @@ public class CodeGenerateService {
         param.put("dbUtil", ReflectionUtil.newInstance(DbUtil.class));
         param.put("dasUtil", ReflectionUtil.newInstance(DasUtil.class));
         return param;
+    }
+
+    public String generate(Template template, TableInfo tableInfo) {
+        // 获取默认参数
+        Map<String, Object> param = getDefaultParam();
+        // 表信息对象，进行克隆，防止篡改
+        param.put("tableInfo", tableInfo);
+        // 设置模型路径与导包列表
+        setModulePathAndImportList(param, tableInfo,template);
+
+        return VelocityUtils.generate(template, param);
     }
 }
