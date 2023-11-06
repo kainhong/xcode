@@ -4,7 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.mercury.mybatis.JsonUtils;
 import cn.mercury.xcode.code.setting.TemplateGroup;
-import cn.mercury.xcode.model.GlobalConfigGroup;
+import cn.mercury.xcode.model.GlobalConfigEntryGroup;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class UtilsTest {
 
     @Test
     public void test() throws IOException {
-        var group = JsonUtils.fromJson(ResourceUtil.readUtf8Str("Default/vmConfig.json"), GlobalConfigGroup.class);
+        var group = JsonUtils.fromJson(ResourceUtil.readUtf8Str("Default/vmConfig.json"), GlobalConfigEntryGroup.class);
         assertNotNull(group);
     }
 }

@@ -1,6 +1,6 @@
 package cn.mercury.xcode.model.template;
 
-import cn.mercury.xcode.code.setting.AbstractItem;
+import cn.mercury.xcode.code.setting.IEntry;
 
 /**
  * 抽象的可编辑元素
@@ -9,7 +9,7 @@ import cn.mercury.xcode.code.setting.AbstractItem;
  * @version 1.0.0
  * @date 2021/08/11 13:45
  */
-public interface AbstractEditorItem<T extends AbstractItem> extends AbstractItem<T> {
+public interface IEditorEntry<T extends IEntry> extends IEntry<T> {
     /**
      * 更改文件名称
      *

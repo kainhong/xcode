@@ -9,7 +9,7 @@ import cn.mercury.xcode.utils.CloneUtils;
  * @version 1.0.0
  * @date 2021/08/11 09:47
  */
-public interface AbstractItem<T extends AbstractItem> {
+public interface IEntry<T extends IEntry> {
     /**
      * 默认值
      *

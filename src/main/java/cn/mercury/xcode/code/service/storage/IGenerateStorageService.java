@@ -1,6 +1,6 @@
 package cn.mercury.xcode.code.service.storage;
 
-import cn.mercury.xcode.code.setting.type.DbTypeMappingGroup;
+import cn.mercury.xcode.code.setting.type.DbTypeMappingEntryGroup;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 
@@ -19,7 +19,7 @@ public interface IGenerateStorageService extends PersistentStateComponent<Genera
     }
 
 
-    static DbTypeMappingGroup getDbTypeMappingGroup() {
+    static DbTypeMappingEntryGroup getDbTypeMappingGroup() {
         if (getInstance().getState() == null)
             return null;
 

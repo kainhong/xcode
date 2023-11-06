@@ -1,15 +1,15 @@
 package cn.mercury.xcode.setting.ui.component;
 
 import cn.mercury.xcode.GlobalDict;
-import cn.mercury.xcode.code.setting.AbstractGroup;
-import cn.mercury.xcode.code.setting.AbstractItem;
-
+import cn.mercury.xcode.code.setting.IEntry;
+import cn.mercury.xcode.code.setting.IEntryGroup;
 import cn.mercury.xcode.setting.ui.base.InputExistsValidator;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.components.JBLabel;
+import kotlin.jvm.functions.Function0;
 import lombok.Getter;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -25,11 +25,10 @@ import java.util.function.Consumer;
 /**
  * 分组编辑组件
  *
-
  * @version 1.0.0
  * @date 2021/08/10 14:13
  */
-public class GroupNameComponent<E extends AbstractItem<E>, T extends AbstractGroup<T, E>> {
+public class GroupNameComponent<E extends IEntry<E>, T extends IEntryGroup<T, E>> {
 
     private Consumer<T> switchGroupConsumer;
 
@@ -47,10 +46,13 @@ public class GroupNameComponent<E extends AbstractItem<E>, T extends AbstractGro
 
     private Map<String, T> groupMap;
 
-    public GroupNameComponent(Consumer<T> switchGroupConsumer, Map<String, T> groupMap) {
+    private Function0<E> createItem;
+
+    public GroupNameComponent(Consumer<T> switchGroupConsumer, Map<String, T> groupMap, Function0<E> createItem) {
         this.switchGroupConsumer = switchGroupConsumer;
         this.groupMap = groupMap;
         this.currGroupName = groupMap.keySet().stream().findFirst().orElse(null);
+        this.createItem = createItem;
         this.init();
     }
 
@@ -74,7 +76,7 @@ public class GroupNameComponent<E extends AbstractItem<E>, T extends AbstractGro
             public void actionPerformed(@NotNull AnActionEvent e) {
                 inputGroupName(currGroupName + "Copy", groupName -> {
                     // 复制一份，重名命
-                    T cloneObj = groupMap.get(currGroupName).cloneObj();
+                    T cloneObj = groupMap.get(currGroupName).clone();
                     cloneObj.setName(groupName);
                     // 添加分组
                     groupMap.put(groupName, cloneObj);
@@ -86,15 +88,16 @@ public class GroupNameComponent<E extends AbstractItem<E>, T extends AbstractGro
     }
 
     private AnAction addAction() {
+        final var newItem = this.createItem;
         return new AnAction(AllIcons.General.Add) {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 inputGroupName("GroupName", groupName -> {
-                    T obj = groupMap.get(currGroupName).cloneObj();
-                    E item = obj.defaultChild();
+                    T obj = groupMap.get(currGroupName).clone();
+                    E item = newItem.invoke();
                     obj.setName(groupName);
-                    obj.setElementList(new ArrayList<>());
-                    obj.getElementList().add(item);
+                    obj.setItems(new ArrayList<>());
+                    obj.getItems().add(item);
                     groupMap.put(groupName, obj);
                     // 切换分组
                     switchGroupConsumer.accept(obj);

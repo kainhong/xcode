@@ -142,7 +142,7 @@ public class GenerateAction extends AnAction {
         // 处理所有列
         Set<String> allColumnTypes = getAllColumnsDataType(dbTables);
 
-        List<DbTypeMapping> typeMapperList = IGenerateStorageService.getDbTypeMappingGroup().getElementList();
+        List<DbTypeMapping> typeMapperList = IGenerateStorageService.getDbTypeMappingGroup().getItems();
 
         // 简单的记录报错弹窗次数，避免重复报错
         Set<String> errorCount = new HashSet<>();
@@ -210,7 +210,7 @@ public class GenerateAction extends AnAction {
             typeMapper.setJavaType(selectedItem);
             typeMapper.setColumnType(typeName);
 
-            IGenerateStorageService.getDbTypeMappingGroup().getElementList().add(typeMapper);
+            IGenerateStorageService.getDbTypeMappingGroup().getItems().add(typeMapper);
         }
     }
 }

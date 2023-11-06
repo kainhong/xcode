@@ -155,7 +155,7 @@ public class GenerateCodeForm extends DialogWrapper {
         moduleCheckboxes.put("manager", chekManager);
         moduleCheckboxes.put("controller", chekController);
 
-        var temps = TemplateConfiguration.instance().getTemplateList();
+        var temps = TemplateConfiguration.instance().getTemplateGrops();
 
         for (var temp : temps) {
             cmbTemplate.addItem(temp.getName());
@@ -165,7 +165,7 @@ public class GenerateCodeForm extends DialogWrapper {
             String templateGroupName = (String) cmbTemplate.getSelectedItem();
             this.isOldVersion = "spring".equalsIgnoreCase(templateGroupName);
             this.templateGroup = TemplateConfiguration.instance()
-                    .getTemplateList().stream()
+                    .getTemplateGrops().stream()
                     .filter(item -> item.getName().equals(templateGroupName))
                     .findFirst().orElse(null);
         };
@@ -721,7 +721,7 @@ public class GenerateCodeForm extends DialogWrapper {
 
         List<Template> ary = new ArrayList<>();
 
-        List<Template> items = this.templateGroup.getTemplates()
+        List<Template> items = this.templateGroup.getItems()
                 .stream()
                 .filter(r -> r.getGroup().equals(moduleGroup))
                 .collect(Collectors.toList());

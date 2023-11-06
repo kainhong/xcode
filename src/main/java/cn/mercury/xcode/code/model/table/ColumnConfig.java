@@ -1,6 +1,6 @@
 package cn.mercury.xcode.code.model.table;
 
-import cn.mercury.xcode.code.setting.AbstractItem;
+import cn.mercury.xcode.code.setting.IEntry;
 
 /**
  * 列配置信息
@@ -9,7 +9,7 @@ import cn.mercury.xcode.code.setting.AbstractItem;
  * @version 1.0.0
  * @since 2018/07/17 13:10
  */
-public class ColumnConfig implements AbstractItem<ColumnConfig> {
+public class ColumnConfig implements IEntry<ColumnConfig> {
     /**
      * 标题
      */

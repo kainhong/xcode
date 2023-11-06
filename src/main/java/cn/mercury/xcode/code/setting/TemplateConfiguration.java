@@ -27,11 +27,11 @@ public class TemplateConfiguration {
     List<TemplateGroup> templateList;
 
     public TemplateGroup getTemplateGroup(String name) {
-        return getTemplateList().stream().filter(item -> item.getName().equals(name)).findFirst().orElse(null);
+        return getTemplateGrops().stream().filter(item -> item.getName().equals(name)).findFirst().orElse(null);
     }
 
 
-    public List<TemplateGroup> getTemplateList() {
+    public List<TemplateGroup> getTemplateGrops() {
         File resourceDirectory = null;
 
         try {

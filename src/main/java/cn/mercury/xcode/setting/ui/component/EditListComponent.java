@@ -1,8 +1,8 @@
 package cn.mercury.xcode.setting.ui.component;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.mercury.xcode.code.setting.AbstractItemFactory;
-import cn.mercury.xcode.model.template.AbstractEditorItem;
+import cn.mercury.xcode.code.setting.EntryFactory;
+import cn.mercury.xcode.model.template.IEditorEntry;
 
 import cn.mercury.xcode.setting.ui.base.InputExistsValidator;
 import com.intellij.icons.AllIcons;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * @version 1.0.0
  * @date 2021/08/10 16:57
  */
-public class EditListComponent<E extends AbstractEditorItem<E>> {
+public class EditListComponent<E extends IEditorEntry<E>> {
     @Getter
     private JPanel mainPanel;
 
@@ -105,7 +105,7 @@ public class EditListComponent<E extends AbstractEditorItem<E>> {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 inputItemName("demo", itemName -> {
-                    E defaultVal = AbstractItemFactory.createDefaultVal(cls);
+                    E defaultVal = EntryFactory.createDefaultVal(cls);
                     defaultVal.changeFileName(itemName);
                     elementList.add(defaultVal);
                     switchItemFun.accept(defaultVal);
@@ -215,7 +215,7 @@ public class EditListComponent<E extends AbstractEditorItem<E>> {
         if (CollectionUtil.isEmpty(elementList)) {
             return Collections.emptyList();
         }
-        return elementList.stream().map(AbstractEditorItem::fileName).collect(Collectors.toList());
+        return elementList.stream().map(IEditorEntry::fileName).collect(Collectors.toList());
     }
 
     public void setElementList(List<E> elementList) {

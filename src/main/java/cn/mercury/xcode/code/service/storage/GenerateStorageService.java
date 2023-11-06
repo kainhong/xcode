@@ -1,8 +1,8 @@
 package cn.mercury.xcode.code.service.storage;
 
 import cn.mercury.mybatis.JsonUtils;
-import cn.mercury.xcode.code.setting.type.DbTypeMappingGroup;
-import cn.mercury.xcode.model.GlobalConfigGroup;
+import cn.mercury.xcode.code.setting.type.DbTypeMappingEntryGroup;
+import cn.mercury.xcode.model.GlobalConfigEntryGroup;
 import com.intellij.ide.fileTemplates.impl.UrlUtil;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
@@ -38,12 +38,12 @@ public class GenerateStorageService implements IGenerateStorageService {
 
             if (state.getGlobalConfigGroup() == null) {
                 String json  = UrlUtil.loadText(GenerateStateStorage.class.getResource("/Default/vmConfig.json"));
-                var group = JsonUtils.fromJson(json, GlobalConfigGroup.class);
+                var group = JsonUtils.fromJson(json, GlobalConfigEntryGroup.class);
                 state.setGlobalConfigGroup(group);
             }
             if (state.getDbTypeMappingGroup() == null) {
                 String json  = UrlUtil.loadText(GenerateStateStorage.class.getResource("/Default/dbTypeMapping.json"));
-                var group = JsonUtils.fromJson(json, DbTypeMappingGroup.class);
+                var group = JsonUtils.fromJson(json, DbTypeMappingEntryGroup.class);
                 state.setDbTypeMappingGroup(group);
             }
         } catch (Exception ex) {

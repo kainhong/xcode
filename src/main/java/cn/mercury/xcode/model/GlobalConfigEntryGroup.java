@@ -1,6 +1,6 @@
 package cn.mercury.xcode.model;
 
-import cn.mercury.xcode.code.setting.AbstractGroup;
+import cn.mercury.xcode.code.setting.IEntryGroup;
 import lombok.Data;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * @since 2018/07/27 13:10
  */
 @Data
-public class GlobalConfigGroup implements AbstractGroup<GlobalConfigGroup, GlobalConfig> {
+public class GlobalConfigEntryGroup implements IEntryGroup<GlobalConfigEntryGroup, GlobalConfig> {
     /**
      * 分组名称
      */

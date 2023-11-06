@@ -1,8 +1,8 @@
 package cn.mercury.xcode.setting.ui.component;
 
 
-import cn.mercury.xcode.code.setting.AbstractItem;
-import cn.mercury.xcode.code.setting.AbstractItemFactory;
+import cn.mercury.xcode.code.setting.IEntry;
+import cn.mercury.xcode.code.setting.EntryFactory;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.EditableModel;
@@ -27,7 +27,7 @@ import java.util.function.Function;
  * @version 1.0.0
  * @date 2021/08/10 09:52
  */
-public class TableComponent<T extends AbstractItem<T>> extends DefaultTableModel implements EditableModel {
+public class TableComponent<T extends IEntry<T>> extends DefaultTableModel implements EditableModel {
     /**
      * 列信息
      */
@@ -124,7 +124,7 @@ public class TableComponent<T extends AbstractItem<T>> extends DefaultTableModel
 
     @Override
     public void addRow() {
-        T entity = AbstractItemFactory.createDefaultVal(cls);
+        T entity = EntryFactory.createDefaultVal(cls);
         this.dataList.add(entity);
         addRow(entity);
     }

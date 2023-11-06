@@ -89,7 +89,7 @@ public class TemplateSelectComponent {
     public void refreshData() {
         this.groupComboBox.removeAllItems();
 
-        for (var group : TemplateConfiguration.instance().getTemplateList()) {
+        for (var group : TemplateConfiguration.instance().getTemplateGrops()) {
             this.groupComboBox.addItem(group.getName());
         }
     }
@@ -99,7 +99,7 @@ public class TemplateSelectComponent {
         this.templatePanel.removeAll();
         this.checkBoxList = new ArrayList<>();
         TemplateGroup templateGroup = TemplateConfiguration.instance().getTemplateGroup(groupName);//   SettingsStorageService.getSettingsStorage().getTemplateGroupMap().get(groupName);
-        for (var template : templateGroup.getTemplates()) {
+        for (var template : templateGroup.getItems()) {
             JBCheckBox checkBox = new JBCheckBox(template.getName());
             this.checkBoxList.add(checkBox);
             this.templatePanel.add(checkBox);
@@ -121,7 +121,7 @@ public class TemplateSelectComponent {
             return Collections.emptyList();
         }
         TemplateGroup templateGroup = TemplateConfiguration.instance().getTemplateGroup(groupName);
-        Map<String, Template> map = templateGroup.getTemplates().stream().collect(Collectors.toMap(Template::getName, val -> val));
+        Map<String, Template> map = templateGroup.getItems().stream().collect(Collectors.toMap(Template::getName, val -> val));
         List<Template> result = new ArrayList<>();
         for (JBCheckBox checkBox : this.checkBoxList) {
             if (checkBox.isSelected()) {

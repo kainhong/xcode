@@ -1,7 +1,5 @@
 package cn.mercury.xcode.code.setting;
 
-import cn.mercury.xcode.code.setting.AbstractItem;
-
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -11,9 +9,9 @@ import java.lang.reflect.InvocationTargetException;
  * @version 1.0.0
  * @date 2021/08/11 10:44
  */
-public class AbstractItemFactory {
+public class EntryFactory {
 
-    public static <T extends AbstractItem<T>> T createDefaultVal(Class<T> cls) {
+    public static <T extends IEntry<T>> T createDefaultVal(Class<T> cls) {
         try {
             T instance = cls.getDeclaredConstructor().newInstance();
             return instance.defaultVal();

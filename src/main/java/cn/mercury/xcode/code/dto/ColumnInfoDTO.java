@@ -35,7 +35,7 @@ public class ColumnInfoDTO {
     }
 
     private String getJavaType(String dbType) {
-        for (var typeMapper : IGenerateStorageService.getDbTypeMappingGroup().getElementList()) {
+        for (var typeMapper : IGenerateStorageService.getDbTypeMappingGroup().getItems()) {
             if( typeMapper.match(dbType))
                 return typeMapper.getJavaType();
 

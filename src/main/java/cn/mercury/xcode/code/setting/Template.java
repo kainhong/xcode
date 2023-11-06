@@ -1,11 +1,11 @@
 package cn.mercury.xcode.code.setting;
 
-import cn.mercury.xcode.model.template.AbstractEditorItem;
+import cn.mercury.xcode.model.template.IEditorEntry;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Data
-public class Template implements Cloneable, AbstractEditorItem<Template> {
+public class Template   implements Cloneable, IEditorEntry<Template> {
 
     private String name;
 

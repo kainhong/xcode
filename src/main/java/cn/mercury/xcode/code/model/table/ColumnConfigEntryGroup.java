@@ -1,6 +1,6 @@
 package cn.mercury.xcode.code.model.table;
 
-import cn.mercury.xcode.code.setting.AbstractGroup;
+import cn.mercury.xcode.code.setting.IEntryGroup;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * @since 2018/07/18 09:33
  */
 
-public class ColumnConfigGroup implements AbstractGroup<ColumnConfigGroup, ColumnConfig> {
+public class ColumnConfigEntryGroup implements IEntryGroup<ColumnConfigEntryGroup, ColumnConfig> {
     @Override
     public String getName() {
         return name;
@@ -29,19 +29,19 @@ public class ColumnConfigGroup implements AbstractGroup<ColumnConfigGroup, Colum
     private String name;
 
     @Override
-    public List<ColumnConfig> getElementList() {
-        return elementList;
+    public List<ColumnConfig> getItems() {
+        return items;
     }
 
     @Override
-    public void setElementList(List<ColumnConfig> elementList) {
-        this.elementList = elementList;
+    public void setItems(List<ColumnConfig> values) {
+        this.items = values;
     }
 
     /**
      * 元素对象
      */
-    private List<ColumnConfig> elementList;
+    private List<ColumnConfig> items;
 
 
 

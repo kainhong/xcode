@@ -1,18 +1,11 @@
 package cn.mercury.xcode.code.setting;
 
 import cn.mercury.xcode.utils.CloneUtils;
-import cn.mercury.xcode.utils.ReflectionUtils;
 
 import java.util.List;
 
-/**
- * 抽象分组类
- *
 
- * @version 1.0.0
- * @since 2018/07/17 13:10
- */
-public interface AbstractGroup<T, E extends AbstractItem<E>> {
+public interface IEntryGroup<T, E extends IEntry<E>> {
     /**
      * 获取分组名称
      *
@@ -32,25 +25,14 @@ public interface AbstractGroup<T, E extends AbstractItem<E>> {
      *
      * @return 元素集合
      */
-    List<E> getElementList();
+    List<E> getItems();
 
     /**
      * 设置元素集合
      *
-     * @param elementList 元素集合
+     * @param values 元素集合
      */
-    void setElementList(List<E> elementList);
-
-    /**
-     * 默认子元素
-     *
-     * @return {@link E}
-     */
-    @SuppressWarnings("unchecked")
-    default E defaultChild() {
-        Class<E> cls = (Class<E>) ReflectionUtils.getGenericClass(this, 1);
-        return AbstractItemFactory.createDefaultVal(cls);
-    }
+    void setItems(List<E> values);
 
     /**
      * 克隆对象
@@ -58,7 +40,7 @@ public interface AbstractGroup<T, E extends AbstractItem<E>> {
      * @return {@link T}
      */
     @SuppressWarnings("unchecked")
-    default T cloneObj() {
+    default T clone() {
         return (T) CloneUtils.cloneByJson(this);
     }
 }

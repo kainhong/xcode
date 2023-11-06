@@ -1,6 +1,6 @@
 package cn.mercury.xcode.code.setting.type;
 
-import cn.mercury.xcode.code.setting.AbstractGroup;
+import cn.mercury.xcode.code.setting.IEntryGroup;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * @since 2018/07/17 13:10
  */
 
-public class DbTypeMappingGroup implements AbstractGroup<DbTypeMappingGroup, DbTypeMapping> {
+public class DbTypeMappingEntryGroup implements IEntryGroup<DbTypeMappingEntryGroup, DbTypeMapping> {
     /**
      * 分组名称
      */
@@ -20,7 +20,7 @@ public class DbTypeMappingGroup implements AbstractGroup<DbTypeMappingGroup, DbT
     /**
      * 元素对象
      */
-    private List<DbTypeMapping> elementList;
+    private List<DbTypeMapping> items;
 
     @Override
     public String getName() {
@@ -33,12 +33,12 @@ public class DbTypeMappingGroup implements AbstractGroup<DbTypeMappingGroup, DbT
     }
 
     @Override
-    public List<DbTypeMapping> getElementList() {
-        return elementList;
+    public List<DbTypeMapping> getItems() {
+        return items;
     }
 
     @Override
-    public void setElementList(List<DbTypeMapping> elementList) {
-        this.elementList = elementList;
+    public void setItems(List<DbTypeMapping> items) {
+        this.items = items;
     }
 }

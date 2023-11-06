@@ -1,6 +1,6 @@
 package cn.mercury.xcode.code.setting.type;
 
-import cn.mercury.xcode.code.setting.AbstractItem;
+import cn.mercury.xcode.code.setting.IEntry;
 import lombok.Data;
 
 import java.util.regex.Pattern;
@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * @since 2018/07/17 13:10
  */
 @Data
-public class DbTypeMapping implements AbstractItem<DbTypeMapping> {
+public class DbTypeMapping implements IEntry<DbTypeMapping> {
     /**
      * 匹配类型
      */

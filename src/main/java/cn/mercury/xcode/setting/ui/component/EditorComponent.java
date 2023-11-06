@@ -1,6 +1,6 @@
 package cn.mercury.xcode.setting.ui.component;
 
-import cn.mercury.xcode.model.template.AbstractEditorItem;
+import cn.mercury.xcode.model.template.IEditorEntry;
 import cn.mercury.xcode.setting.ui.base.EditorSettingsInit;
 import cn.mercury.xcode.utils.ProjectUtils;
 import com.intellij.ide.IdeBundle;
@@ -32,7 +32,7 @@ import java.awt.*;
  * @version 1.0.0
  * @date 2021/08/11 13:16
  */
-public class EditorComponent<T extends AbstractEditorItem> {
+public class EditorComponent<T extends IEditorEntry> {
     /**
      * 主面板
      */

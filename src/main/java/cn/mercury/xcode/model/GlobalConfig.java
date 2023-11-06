@@ -1,6 +1,6 @@
 package cn.mercury.xcode.model;
 
-import cn.mercury.xcode.model.template.AbstractEditorItem;
+import cn.mercury.xcode.model.template.IEditorEntry;
 
 /**
  * 全局配置实体类
@@ -10,7 +10,7 @@ import cn.mercury.xcode.model.template.AbstractEditorItem;
  * @since 2018/07/27 13:07
  */
 
-public class GlobalConfig implements AbstractEditorItem<GlobalConfig> {
+public class GlobalConfig implements IEditorEntry<GlobalConfig> {
     /**
      * 名称
      */
