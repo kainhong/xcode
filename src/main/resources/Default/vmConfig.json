@@ -1,6 +1,6 @@
 {
   "name":"Default",
-  "elementList":[
+  "items":[
     {
       "name":"autoImport.vm",
       "uri":"classpath:/Default/autoImport.vm"
