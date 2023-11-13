@@ -1,6 +1,7 @@
 package cn.mercury.xcode.code.setting;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class TemplateGroup implements IEntryGroup<TemplateGroup,Template>{
     private String author;
     private String path;
 
+    @JsonProperty("templates")
     private List<Template> items;
 
     public Template getTemplate(String name) {

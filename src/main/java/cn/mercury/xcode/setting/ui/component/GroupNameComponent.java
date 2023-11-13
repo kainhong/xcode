@@ -76,7 +76,7 @@ public class GroupNameComponent<E extends IEntry<E>, T extends IEntryGroup<T, E>
             public void actionPerformed(@NotNull AnActionEvent e) {
                 inputGroupName(currGroupName + "Copy", groupName -> {
                     // 复制一份，重名命
-                    T cloneObj = groupMap.get(currGroupName).clone();
+                    T cloneObj = groupMap.get(currGroupName).deepclone();
                     cloneObj.setName(groupName);
                     // 添加分组
                     groupMap.put(groupName, cloneObj);
@@ -93,7 +93,7 @@ public class GroupNameComponent<E extends IEntry<E>, T extends IEntryGroup<T, E>
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
                 inputGroupName("GroupName", groupName -> {
-                    T obj = groupMap.get(currGroupName).clone();
+                    T obj = groupMap.get(currGroupName).deepclone();
                     E item = newItem.invoke();
                     obj.setName(groupName);
                     obj.setItems(new ArrayList<>());

@@ -21,5 +21,6 @@ public class GlobalConfigEntryGroup implements IEntryGroup<GlobalConfigEntryGrou
     /**
      * 元素对象集合
      */
-    private List<GlobalConfig> elementList;
+    private List<GlobalConfig> items;
+
 }

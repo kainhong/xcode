@@ -1,6 +1,6 @@
 {
   "name": "Default",
-  "elementList": [
+  "items": [
     {
       "matchType": "REGEX",
       "columnType": "varchar\\w?",

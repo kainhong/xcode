@@ -5,7 +5,7 @@ import cn.mercury.xcode.utils.CloneUtils;
 import java.util.List;
 
 
-public interface IEntryGroup<T, E extends IEntry<E>> {
+public interface IEntryGroup<T, E extends IEntry<E>> extends Cloneable {
     /**
      * 获取分组名称
      *
@@ -40,7 +40,7 @@ public interface IEntryGroup<T, E extends IEntry<E>> {
      * @return {@link T}
      */
     @SuppressWarnings("unchecked")
-    default T clone() {
-        return (T) CloneUtils.cloneByJson(this);
+    default T deepclone() {
+        return  (T)CloneUtils.cloneByJson(this);
     }
 }

@@ -329,7 +329,7 @@ public class GenerateCodeForm extends DialogWrapper {
 
                 reSetPackageName(prePackage, pk.getQualifiedName());
             } catch (Exception ex) {
-
+                ex.printStackTrace();
             }
         });
 

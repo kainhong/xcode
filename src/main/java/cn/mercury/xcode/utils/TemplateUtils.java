@@ -54,6 +54,6 @@ public final class TemplateUtils {
 
 
     public static String parseTemplate(String template) {
-        return addGlobalConfig(template, IGenerateStorageService.getInstance().getState().getGlobalConfigGroup().getElementList());
+        return addGlobalConfig(template, IGenerateStorageService.getInstance().getState().getGlobalConfigGroup().getItems());
     }
 }
