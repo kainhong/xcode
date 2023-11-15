@@ -26,11 +26,9 @@ public class GlobalSetting {
 
         final File file = new File(path);
 
-        extensionsRootType.extractBundledResources(id, "");
-
-//        if (!file.exists()) {
-//            extensionsRootType.extractBundledResources(id, "");
-//        }
+        if (!file.exists()) {
+            extensionsRootType.extractBundledResources(id, "");
+        }
 
         return file;
     }

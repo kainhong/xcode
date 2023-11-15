@@ -45,27 +45,6 @@ public class CodeGenerateService {
 
     public void generate(Map<String, Object> otherParam) {
         doGenerate(otherParam);
-//        CountDownLatch countDownLatch = new CountDownLatch(1);
-//
-//        ProgressManager.getInstance().run(new Task.Backgroundable(null, "Loading Data", false) {
-//            @Override
-//            public void run(@org.jetbrains.annotations.NotNull ProgressIndicator indicator) {
-//                CodeGenerateService.this.indicator = indicator;
-//
-//                try {
-//                    doGenerate(otherParam);
-//                } finally {
-//                    CodeGenerateService.this.indicator = null;
-//                    countDownLatch.countDown();
-//                }
-//            }
-//        });
-//
-//        try {
-//            countDownLatch.await(2, TimeUnit.MINUTES);
-//        } catch (InterruptedException e) {
-//
-//        }
     }
 
     private void doGenerate(Map<String, Object> otherParam) {

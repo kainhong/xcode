@@ -21,11 +21,11 @@ configurations.all{
 
 plugins {
     id("java")
-    id("org.jetbrains.intellij") version "1.5.2"
+    id("org.jetbrains.intellij") version "1.14.2"
 }
 
 group = "cn.mercury"
-version = "2.0.6"
+version = "2.0.7"
 
 repositories {
     mavenLocal()
@@ -34,12 +34,12 @@ repositories {
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
-    version.set("2022.1")
+    version.set("2023.2.4")
     type.set("IU")
     plugins.set(
         listOf(
             "DatabaseTools", "java", "Spring",
-            "SpringBoot",
+            //"SpringBoot",
         )
     )
     updateSinceUntilBuild.set(true)
@@ -48,31 +48,33 @@ intellij {
 
 
 dependencies {
-    //implementation("uk.com.robust-it:cloning:1.9.2")
-    //implementation("com.itranswarp:compiler:1.0")
-    implementation("cn.hutool:hutool-core:5.8.0")
+    /*
+implementation("uk.com.robust-it:cloning:1.9.2")
+implementation("com.itranswarp:compiler:1.0")
+*/
+    implementation("cn.hutool:hutool-core:5.8.11")
     implementation("org.slf4j:slf4j-nop:1.7.25")
     implementation("org.dom4j:dom4j:2.1.3")
     //implementation("jaxen:jaxen:1.1.1")
     implementation("commons-lang:commons-lang:2.6")
 
-    testImplementation("junit:junit:4.12")
+    testImplementation("junit:junit:4.13.1")
     testImplementation("commons-io:commons-io:2.8.0")
 
     //implementation("cn.wonhigh.mercury:mybatis-x:3.4.6.6-SNAPSHOT")
     implementation("cn.wonhigh.mercury:mercury-mybatis-parser:3.2.1-SNAPSHOT")
 
-    compileOnly("org.projectlombok:lombok:1.18.24")
-    annotationProcessor("org.projectlombok:lombok:1.18.24")
-    testImplementation("org.projectlombok:lombok:1.18.24")
-    testCompileOnly("org.projectlombok:lombok:1.18.24")
+    compileOnly("org.projectlombok:lombok:1.18.28")
+    annotationProcessor("org.projectlombok:lombok:1.18.28")
+    testImplementation("org.projectlombok:lombok:1.18.28")
+    testCompileOnly("org.projectlombok:lombok:1.18.28")
 }
 
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
-        sourceCompatibility = "11"
-        targetCompatibility = "11"
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
         options.encoding = "UTF-8"
     }
 
