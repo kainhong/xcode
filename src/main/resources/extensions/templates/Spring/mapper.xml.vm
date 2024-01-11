@@ -23,8 +23,9 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/",$mapperFo
     </resultMap>
 
     <sql id="Base_Column_List">
-        #allSqlColumn()
-
+#foreach($column in $tableInfo.fullColumn)
+    $column.obj.name#if($foreach.hasNext),#end
+#end
     </sql>
 
     <sql id="condition">
@@ -87,12 +88,12 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/",$mapperFo
         Insert Into $!{tableInfo.obj.name}
         (
 #foreach($column in $tableInfo.fullColumn)
-            `$!column.obj.name`#if($velocityHasNext),#end
+            `$!column.obj.name`#if($foreach.hasNext),#end
 
 #end)
        Values (
 #foreach($column in $tableInfo.fullColumn)
-        #{$!{column.name}}#if($velocityHasNext),#end
+        #{$!{column.name}}#if($foreach.hasNext),#end
 
 #end)
     </insert>
@@ -100,14 +101,14 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/",$mapperFo
     <insert id="insertBatch" keyProperty="$!pk.name" useGeneratedKeys="true">
         Insert Into `$!{tableInfo.obj.name}` (
 #foreach($column in $tableInfo.fullColumn)
-           `$!column.obj.name`#if($velocityHasNext), #end
+           `$!column.obj.name`#if($foreach.hasNext), #end
 
 #end )
         Values
         <foreach collection="entities" item="entity" separator=",">
          (
 #foreach($column in $tableInfo.fullColumn)
-            #{entity.$!{column.name}}#if($velocityHasNext),#end
+            #{entity.$!{column.name}}#if($foreach.hasNext),#end
 
 #end
         )
@@ -135,19 +136,19 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/",$mapperFo
     <insert id="insertOrUpdateBatch" keyProperty="$!pk.name" useGeneratedKeys="true">
         Insert Into `$!{tableInfo.obj.name}`(
 #foreach($column in $tableInfo.fullColumn)
-            `$!column.obj.name` #if($velocityHasNext),
+            `$!column.obj.name` #if($foreach.hasNext),
 #end#end )
         Values
         <foreach collection="entities" item="entity" separator=",">
         (
 #foreach($column in $tableInfo.fullColumn)
-            #{entity.$!{column.name}}#if($velocityHasNext),
+            #{entity.$!{column.name}}#if($foreach.hasNext),
 #end
 #end )
         </foreach>
         On Duplicate Key Update
 #foreach($column in $tableInfo.otherColumn)
-           `$!column.obj.name` = values($!column.obj.name) #if($velocityHasNext),
+           `$!column.obj.name` = values($!column.obj.name) #if($foreach.hasNext),
 #end#end
 
     </insert>

@@ -22,8 +22,9 @@ $!context.setSavePath($tool.append($modulePath, "/src/main/resources/",$mapperFo
     </resultMap>
 
     <sql id="column_list">
-#allSqlColumn()
-
+#foreach($column in $tableInfo.fullColumn)
+    $column.obj.name#if($foreach.hasNext),#end
+#end
     </sql>
 
     <sql id="condition">
