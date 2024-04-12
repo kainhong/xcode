@@ -25,7 +25,7 @@ plugins {
 }
 
 group = "cn.mercury"
-version = "2.0.10"
+version = "2.1.0"
 
 repositories {
     mavenLocal()
@@ -79,8 +79,8 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("212")
-        untilBuild.set("233.*")
+        sinceBuild.set("221")
+        untilBuild.set("241.*")
     }
     //perm:a2Fpbmhvbmc=.OTItODkxMg==.8D5cBBcclh5jWm21HkcdZc2zCpEgg1
     signPlugin {

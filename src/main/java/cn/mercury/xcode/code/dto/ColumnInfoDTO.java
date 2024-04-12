@@ -29,7 +29,8 @@ public class ColumnInfoDTO {
     public ColumnInfoDTO(DasColumn column) {
         this.name = NameUtils.getInstance().getJavaName(column.getName());
         this.comment = column.getComment();
-        this.type = getJavaType(column.getDataType().toString());
+        this.type = getJavaType(column.getDasType().toDataType().toString());
+        this.defaultVal = column.getDefault();
         this.custom = false;
         this.ext = "{}";
     }
@@ -73,4 +74,6 @@ public class ColumnInfoDTO {
      * 扩展数据(JSON字符串)
      */
     private String ext;
+
+    private String defaultVal;
 }

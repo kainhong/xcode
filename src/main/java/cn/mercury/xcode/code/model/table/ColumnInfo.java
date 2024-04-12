@@ -46,6 +46,16 @@ public class ColumnInfo {
      */
     private Map<String, Object> ext;
 
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    private String defaultValue;
+
     public DasColumn getObj() {
         return obj;
     }

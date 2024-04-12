@@ -154,8 +154,13 @@ public class DatasourceHelper {
         try {
             LocalDataSource localDataSource = (LocalDataSource) realDataSource;
 
+            DatabaseConnectionManager.Builder build = DatabaseConnectionManager.getInstance().build(project, localDataSource);
+
+            Method method = ReflectUtil.getMethod(build.getClass(),"build");
+            if(method == null )
+                method = ReflectUtil.getMethod(build.getClass(),"createBlocking");
             //通过数据库连接管理创建连接
-            GuardedRef<DatabaseConnection> connectionGuardedRef = DatabaseConnectionManager.getInstance().build(project, localDataSource).create();
+            GuardedRef<DatabaseConnection> connectionGuardedRef = (GuardedRef<DatabaseConnection>) method.invoke(build);
 
             // 获取数据库连接
             DatabaseConnection databaseConnection = connectionGuardedRef.get();

@@ -245,12 +245,17 @@ public class TableInfoDTO {
         for (DasColumn column : columns) {
             nameToObj.put(NameUtils.getInstance().getJavaName(column.getName()), column);
         }
+
         for (ColumnInfoDTO dto : this.getFullColumn()) {
+            DasColumn dasColumn = nameToObj.get(dto.getName());
             ColumnInfo columnInfo = new ColumnInfo();
-            columnInfo.setObj(nameToObj.get(dto.getName()));
+            columnInfo.setObj(dasColumn);
+            columnInfo.setDefaultValue(dto.getDefaultVal());
+
             columnInfo.setName(dto.getName());
             columnInfo.setType(dto.getType());
             columnInfo.setJdbcType(getJdbcType(dto.getType()));
+
             // 最后一节为短类型
             String[] split = dto.getType().split("\\.");
             columnInfo.setShortType(split[split.length - 1]);
