@@ -82,5 +82,6 @@
 <!--            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="CopyUrl"/>-->
 <!--            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt C"/>-->
 <!--        </action>-->
+
     </actions>
 </idea-plugin>

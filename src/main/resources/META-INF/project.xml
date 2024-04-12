@@ -9,7 +9,13 @@
                 text="X-Generator" popup="true" icon="cn.mercury.xcode.XCodeIcons.RUN"
                 description="X generator idea plugin">
             <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
+            <add-to-group group-id="DatabaseView.NewGroup" anchor="first"/>
         </action>
+
+<!--        <action id="$GenerateAction" class="cn.mercury.xcode.code.actions.GenerateAction2"-->
+<!--                text="Generate">-->
+<!--            <add-to-group group-id="DatabaseView.NewGroup" anchor="first"/>-->
+<!--        </action>-->
 
         <group id="$MybatisAnalyzer" text="Mybatis Analyzer" popup="true"
                icon="AllIcons.CodeWithMe.CwmPermissionView">
