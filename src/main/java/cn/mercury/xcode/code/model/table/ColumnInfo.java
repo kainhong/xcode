@@ -8,7 +8,6 @@ import java.util.Map;
 /**
  * 列信息
  *
-
  * @version 1.0.0
  * @since 2018/07/17 13:10
  */
@@ -36,11 +35,76 @@ public class ColumnInfo {
     /**
      * 短类型
      */
-    private String shortType;
+    private String dbType;
     /**
      * 标记是否为自定义附加列
      */
     private Boolean custom;
+
+    private String defaultValue;
+
+    private boolean unique = false;
+
+    private boolean nullable = true;
+
+    private boolean primaryKey = false;
+
+    private Integer length;
+
+    private Integer precision;
+
+    private Integer scale;
+
+    public boolean isUnique() {
+        return unique;
+    }
+
+    public void setUnique(boolean unique) {
+        this.unique = unique;
+    }
+
+    public boolean isNullable() {
+        return nullable;
+    }
+
+    public void setNullable(boolean nullable) {
+        this.nullable = nullable;
+    }
+
+    public boolean isPrimaryKey() {
+        return primaryKey;
+    }
+
+    public void setPrimaryKey(boolean primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+
+    public Integer getLength() {
+        return length;
+    }
+
+    public void setLength(Integer length) {
+        this.length = length;
+    }
+
+    public Integer getPrecision() {
+        return precision;
+    }
+
+    public void setPrecision(Integer precision) {
+        this.precision = precision;
+    }
+
+    public Integer getScale() {
+        return scale;
+    }
+
+    public void setScale(Integer scale) {
+        this.scale = scale;
+    }
+
+
+
     /**
      * 扩展数据
      */
@@ -53,8 +117,6 @@ public class ColumnInfo {
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
     }
-
-    private String defaultValue;
 
     public DasColumn getObj() {
         return obj;
@@ -88,13 +150,6 @@ public class ColumnInfo {
         this.type = type;
     }
 
-    public String getShortType() {
-        return shortType;
-    }
-
-    public void setShortType(String shortType) {
-        this.shortType = shortType;
-    }
 
     public Boolean getCustom() {
         return custom;
@@ -118,5 +173,13 @@ public class ColumnInfo {
 
     public void setJdbcType(String jdbcType) {
         this.jdbcType = jdbcType;
+    }
+
+    public String getDbType() {
+        return dbType;
+    }
+
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
     }
 }

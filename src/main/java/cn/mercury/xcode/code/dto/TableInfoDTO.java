@@ -8,7 +8,9 @@ import cn.mercury.xcode.utils.JSON;
 import cn.mercury.xcode.utils.NameUtils;
 import cn.mercury.xcode.utils.PsiClassGenerateUtils;
 import com.intellij.database.model.DasColumn;
+import com.intellij.database.model.DataType;
 import com.intellij.database.psi.DbTable;
+import com.intellij.database.types.DasType;
 import com.intellij.database.util.DasUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
@@ -192,38 +194,6 @@ public class TableInfoDTO {
      */
     private String saveModelName;
 
-    public TableInfo toTableInfo(PsiClass psiClass) {
-        TableInfo tableInfo = new TableInfo();
-        tableInfo.setPsiClassObj(psiClass);
-        tableInfo.setName(this.getName());
-        tableInfo.setPreName(this.getPreName());
-        tableInfo.setTemplateGroupName(this.getTemplateGroupName());
-        tableInfo.setSavePackageName(this.getSavePackageName());
-        tableInfo.setSavePath(this.getSavePath());
-        tableInfo.setComment(this.getComment());
-        tableInfo.setSaveModelName(this.getSaveModelName());
-        tableInfo.setFullColumn(new ArrayList<>());
-        tableInfo.setPkColumn(new ArrayList<>());
-        tableInfo.setOtherColumn(new ArrayList<>());
-        for (PsiField field : psiClass.getAllFields()) {
-            if (PsiClassGenerateUtils.isSkipField(field)) {
-                continue;
-            }
-            ColumnInfo columnInfo = new ColumnInfo();
-            columnInfo.setName(field.getName());
-            columnInfo.setShortType(field.getType().getPresentableText());
-            columnInfo.setType(field.getType().getCanonicalText());
-            columnInfo.setComment(DocCommentUtils.getComment(field.getDocComment()));
-            columnInfo.setCustom(false);
-            tableInfo.getFullColumn().add(columnInfo);
-            if (PsiClassGenerateUtils.isPkField(field)) {
-                tableInfo.getPkColumn().add(columnInfo);
-            } else {
-                tableInfo.getOtherColumn().add(columnInfo);
-            }
-        }
-        return tableInfo;
-    }
 
     @SuppressWarnings("unchecked")
     public TableInfo toTableInfo(DbTable dbTable) {
@@ -248,25 +218,33 @@ public class TableInfoDTO {
 
         for (ColumnInfoDTO dto : this.getFullColumn()) {
             DasColumn dasColumn = nameToObj.get(dto.getName());
-            ColumnInfo columnInfo = new ColumnInfo();
-            columnInfo.setObj(dasColumn);
-            columnInfo.setDefaultValue(dto.getDefaultVal());
+            DataType dataType = dasColumn.getDasType().toDataType();
 
-            columnInfo.setName(dto.getName());
-            columnInfo.setType(dto.getType());
-            columnInfo.setJdbcType(getJdbcType(dto.getType()));
 
+            ColumnInfo col = new ColumnInfo();
+            col.setObj(dasColumn);
+            col.setDefaultValue(dto.getDefaultVal());
+            col.setName(dto.getName());
+            col.setType(dto.getType());
+            col.setJdbcType(getJdbcType(dto.getType()));
+            col.setNullable(!dasColumn.isNotNull());
             // 最后一节为短类型
-            String[] split = dto.getType().split("\\.");
-            columnInfo.setShortType(split[split.length - 1]);
-            columnInfo.setComment(dto.getComment());
-            columnInfo.setCustom(dto.getCustom());
-            columnInfo.setExt(JSON.parse(dto.getExt(), HashMap.class));
-            tableInfo.getFullColumn().add(columnInfo);
-            if (columnInfo.getObj() != null && DasUtil.isPrimary(columnInfo.getObj())) {
-                tableInfo.getPkColumn().add(columnInfo);
+            col.setDbType( dataType.typeName );
+            col.setScale(dataType.getScale());
+            col.setPrecision(dataType.getPrecision());
+            col.setComment(dto.getComment());
+            col.setCustom(dto.getCustom());
+
+
+            col.setExt(JSON.parse(dto.getExt(), HashMap.class));
+            tableInfo.getFullColumn().add(col);
+
+            if (col.getObj() != null && DasUtil.isPrimary(col.getObj())) {
+                tableInfo.getPkColumn().add(col);
+                col.setPrimaryKey(true);
+                col.setUnique(true);
             } else {
-                tableInfo.getOtherColumn().add(columnInfo);
+                tableInfo.getOtherColumn().add(col);
             }
         }
         return tableInfo;
